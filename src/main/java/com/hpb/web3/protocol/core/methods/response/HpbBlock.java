@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import com.hpb.web3.protocol.ObjectMapperFactory;
 import com.hpb.web3.protocol.core.Response;
 import com.hpb.web3.utils.Numeric;
@@ -544,7 +545,8 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 return objectReader.readValue(jsonParser, Block.class);
             } else {
-                return null;              }
+                return null;  // null is wrapped by Optional in above getter
+            }
         }
     }
 }

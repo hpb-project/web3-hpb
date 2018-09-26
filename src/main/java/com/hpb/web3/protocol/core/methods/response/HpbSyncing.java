@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import com.hpb.web3.protocol.ObjectMapperFactory;
 import com.hpb.web3.protocol.core.Response;
 
@@ -41,7 +42,8 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
     }
 
     @JsonIgnoreProperties({"knownStates", "pulledStates"})
-        public static class Syncing extends Result {
+    // these fields although not present in the RPC specification are returned by Ghpb 1.4.10
+    public static class Syncing extends Result {
 
         private String startingBlock;
         private String currentBlock;

@@ -1,14 +1,10 @@
 package com.hpb.web3.crypto;
 
-import static com.hpb.web3.crypto.SecureRandomUtils.secureRandom;
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.UUID;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -22,6 +18,9 @@ import org.bouncycastle.crypto.generators.SCrypt;
 import org.bouncycastle.crypto.params.KeyParameter;
 
 import com.hpb.web3.utils.Numeric;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static com.hpb.web3.crypto.SecureRandomUtils.secureRandom;
 
 
 public class Wallet {
@@ -83,7 +82,6 @@ public class Wallet {
         WalletFile.Crypto crypto = new WalletFile.Crypto();
         crypto.setCipher(CIPHER);
         crypto.setCiphertext(Numeric.toHexStringNoPrefix(cipherText));
-        walletFile.setCrypto(crypto);
 
         WalletFile.CipherParams cipherParams = new WalletFile.CipherParams();
         cipherParams.setIv(Numeric.toHexStringNoPrefix(iv));
@@ -118,7 +116,9 @@ public class Wallet {
             throw new CipherException("Unsupported prf:" + prf);
         }
 
-                
+        // Java 8 supports this, but you have to convert the password to a character array, see
+        // http://stackoverflow.com/a/27928435/3211687
+
         PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
         gen.init(password, salt, c);
         return ((KeyParameter) gen.generateDerivedParameters(256)).getKey();

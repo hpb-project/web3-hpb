@@ -1,18 +1,19 @@
 package com.hpb.web3.codegen;
 
-import static com.hpb.web3.codegen.Console.exitError;
-import static com.hpb.web3.utils.Collection.tail;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.hpb.web3.protocol.ObjectMapperFactory;
 import com.hpb.web3.protocol.core.methods.response.AbiDefinition;
 import com.hpb.web3.utils.Files;
 import com.hpb.web3.utils.Strings;
+
+import static com.hpb.web3.codegen.Console.exitError;
+import static com.hpb.web3.utils.Collection.tail;
 
 
 public class SolidityFunctionWrapperGenerator extends FunctionWrapperGenerator {

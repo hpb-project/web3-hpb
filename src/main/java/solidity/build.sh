@@ -21,7 +21,7 @@ for target in ${targets}; do
     web3j solidity generate \
         build/${fileName}.bin \
         build/${fileName}.abi \
-        -p org.web3j.ens.contracts.generated \
+        -p com.hpb.web3.ens.contracts.generated \
         -o ../../../../main/java/ > /dev/null
     echo "Complete"
 

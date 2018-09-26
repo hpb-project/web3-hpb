@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ResolvableDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
 import com.hpb.web3.protocol.core.Response;
 
 
@@ -32,7 +33,9 @@ public class RawResponseDeserializer
         return deserializedResponse;
     }
 
-            @Override
+    // Must implement ResolvableDeserializer when modifying BeanDeserializer
+    // otherwise deserializing throws JsonMappingException
+    @Override
     public void resolve(DeserializationContext ctxt) throws JsonMappingException {
         ((ResolvableDeserializer) defaultDeserializer).resolve(ctxt);
     }

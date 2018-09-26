@@ -3,6 +3,8 @@ package com.hpb.web3.rlp;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+import com.hpb.web3.utils.Numeric;
+
 
 public class RlpString implements RlpType {
     private static final byte[] EMPTY = new byte[]{ };
@@ -17,6 +19,17 @@ public class RlpString implements RlpType {
         return value;
     }
 
+    public BigInteger asBigInteger() {
+        if (value.length == 0) {
+            return BigInteger.ZERO;
+        }
+        return new BigInteger(value);
+    }
+
+    public String asString() {
+        return Numeric.toHexString(value);
+    }
+
     public static RlpString create(byte[] value) {
         return new RlpString(value);
     }
@@ -26,11 +39,13 @@ public class RlpString implements RlpType {
     }
 
     public static RlpString create(BigInteger value) {
-                if (value.signum() < 1) {
+        // RLP encoding only supports positive integer values
+        if (value.signum() < 1) {
             return new RlpString(EMPTY);
         } else {
             byte[] bytes = value.toByteArray();
-            if (bytes[0] == 0) {                  return new RlpString(Arrays.copyOfRange(bytes, 1, bytes.length));
+            if (bytes[0] == 0) {  // remove leading zero
+                return new RlpString(Arrays.copyOfRange(bytes, 1, bytes.length));
             } else {
                 return new RlpString(bytes);
             }

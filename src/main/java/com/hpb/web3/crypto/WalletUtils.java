@@ -1,9 +1,5 @@
 package com.hpb.web3.crypto;
 
-import static com.hpb.web3.crypto.Hash.sha256;
-import static com.hpb.web3.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
-import static com.hpb.web3.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
-
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -17,7 +13,12 @@ import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.hpb.web3.utils.Numeric;
+
+import static com.hpb.web3.crypto.Hash.sha256;
+import static com.hpb.web3.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
+import static com.hpb.web3.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
 
 
 public class WalletUtils {
@@ -42,6 +43,12 @@ public class WalletUtils {
             InvalidAlgorithmParameterException, CipherException, IOException {
 
         return generateNewWalletFile(password, destinationDirectory, false);
+    }
+
+    public static String generateNewWalletFile(String password, File destinationDirectory)
+            throws CipherException, InvalidAlgorithmParameterException,
+            NoSuchAlgorithmException, NoSuchProviderException, IOException {
+        return generateFullNewWalletFile(password, destinationDirectory);
     }
 
     public static String generateNewWalletFile(
@@ -120,12 +127,12 @@ public class WalletUtils {
 
         if (osName.startsWith("mac")) {
             return String.format(
-                    "%s%sLibrary%sHpblockChain", System.getProperty("user.home"), File.separator,
+                    "%s%sLibrary%sHpbereum", System.getProperty("user.home"), File.separator,
                     File.separator);
         } else if (osName.startsWith("win")) {
-            return String.format("%s%sHpblockChain", System.getenv("APPDATA"), File.separator);
+            return String.format("%s%sHpbereum", System.getenv("APPDATA"), File.separator);
         } else {
-            return String.format("%s%s.hpblockChain", System.getProperty("user.home"), File.separator);
+            return String.format("%s%s.hpbereum", System.getProperty("user.home"), File.separator);
         }
     }
 
@@ -136,6 +143,12 @@ public class WalletUtils {
 
     public static String getMainnetKeyDirectory() {
         return String.format("%s%skeystore", getDefaultKeyDirectory(), File.separator);
+    }
+    
+    
+    public static String getRinkebyKeyDirectory() {
+        return String.format(
+                "%s%srinkeby%skeystore", getDefaultKeyDirectory(), File.separator, File.separator);
     }
 
     public static boolean isValidPrivateKey(String privateKey) {

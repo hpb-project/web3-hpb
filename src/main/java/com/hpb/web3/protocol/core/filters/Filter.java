@@ -13,8 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hpb.web3.protocol.Web3;
+
 import com.hpb.web3.protocol.core.Request;
 import com.hpb.web3.protocol.core.Response;
+import com.hpb.web3.protocol.core.Response.Error;
+import com.hpb.web3.protocol.core.RpcErrors;
 import com.hpb.web3.protocol.core.methods.response.HpbFilter;
 import com.hpb.web3.protocol.core.methods.response.HpbLog;
 import com.hpb.web3.protocol.core.methods.response.HpbUninstallFilter;
@@ -31,6 +34,10 @@ public abstract class Filter<T> {
     private volatile BigInteger filterId;
 
     private ScheduledFuture<?> schedule;
+    
+    private ScheduledExecutorService scheduledExecutorService;
+
+    private long blockTime;
 
     public Filter(Web3 web3, Callback<T> callback) {
         this.web3 = web3;
@@ -45,7 +52,11 @@ public abstract class Filter<T> {
             }
 
             filterId = hpbFilter.getFilterId();
-                                    getInitialFilterLogs();
+            this.scheduledExecutorService = scheduledExecutorService;
+            this.blockTime = blockTime;
+            // this runs in the caller thread as if any exceptions are encountered, we shouldn't
+            // proceed with creating the scheduled task below
+            getInitialFilterLogs();
 
             
             schedule = scheduledExecutorService.scheduleAtFixedRate(
@@ -53,7 +64,9 @@ public abstract class Filter<T> {
                         try {
                             this.pollFilter(hpbFilter);
                         } catch (Throwable e) {
-                                                                                    log.error("Error sending request", e);
+                            // All exceptions must be caught, otherwise our job terminates without
+                            // any notification
+                            log.error("Error sending request", e);
                         }
                     },
                     0, blockTime, TimeUnit.MILLISECONDS);
@@ -87,7 +100,13 @@ public abstract class Filter<T> {
             throwException(e);
         }
         if (hpbLog.hasError()) {
-            throwException(hpbLog.getError());
+            Error error = hpbLog.getError();
+            switch (error.getCode()) {
+                case RpcErrors.FILTER_NOT_FOUND: reinstallFilter();
+                    break;
+                default: throwException(error);
+                    break;
+            }
         } else {
             process(hpbLog.getLogs());
         }
@@ -96,6 +115,12 @@ public abstract class Filter<T> {
     abstract HpbFilter sendRequest() throws IOException;
 
     abstract void process(List<HpbLog.LogResult> logResults);
+    
+    private void reinstallFilter() {
+        log.warn("The filter has not been found. Filter id: " + filterId);
+        schedule.cancel(true);
+        this.run(scheduledExecutorService, blockTime);
+    }
 
     public void cancel() {
         schedule.cancel(false);
@@ -126,4 +151,3 @@ public abstract class Filter<T> {
         throw new FilterException("Error sending request", cause);
     }
 }
-

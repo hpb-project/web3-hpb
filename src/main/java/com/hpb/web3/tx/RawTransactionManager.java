@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import com.hpb.web3.crypto.Credentials;
+import com.hpb.web3.crypto.Hash;
 import com.hpb.web3.crypto.RawTransaction;
 import com.hpb.web3.crypto.TransactionEncoder;
 import com.hpb.web3.protocol.Web3;
 import com.hpb.web3.protocol.core.DefaultBlockParameterName;
 import com.hpb.web3.protocol.core.methods.response.HpbGetTransactionCount;
 import com.hpb.web3.protocol.core.methods.response.HpbSendTransaction;
+import com.hpb.web3.tx.exceptions.TxHashMismatchException;
 import com.hpb.web3.tx.response.TransactionReceiptProcessor;
 import com.hpb.web3.utils.Numeric;
+import com.hpb.web3.utils.TxHashVerifier;
 
 
 public class RawTransactionManager extends TransactionManager {
@@ -20,6 +23,8 @@ public class RawTransactionManager extends TransactionManager {
     final Credentials credentials;
 
     private final byte chainId;
+
+    protected TxHashVerifier txHashVerifier = new TxHashVerifier();
 
     public RawTransactionManager(Web3 web3, Credentials credentials, byte chainId) {
         super(web3, credentials.getAddress());
@@ -67,6 +72,14 @@ public class RawTransactionManager extends TransactionManager {
         return hpbGetTransactionCount.getTransactionCount();
     }
 
+    public TxHashVerifier getTxHashVerifier() {
+        return txHashVerifier;
+    }
+
+    public void setTxHashVerifier(TxHashVerifier txHashVerifier) {
+        this.txHashVerifier = txHashVerifier;
+    }
+
     @Override
     public HpbSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
@@ -97,7 +110,16 @@ public class RawTransactionManager extends TransactionManager {
         }
 
         String hexValue = Numeric.toHexString(signedMessage);
+        HpbSendTransaction hpbSendTransaction = web3.hpbSendRawTransaction(hexValue).send();
 
-        return web3.hpbSendRawTransaction(hexValue).send();
+        if (hpbSendTransaction != null && !hpbSendTransaction.hasError()) {
+            String txHashLocal = Hash.sha3(hexValue);
+            String txHashRemote = hpbSendTransaction.getTransactionHash();
+            if (!txHashVerifier.verify(txHashLocal, txHashRemote)) {
+                throw new TxHashMismatchException(txHashLocal, txHashRemote);
+            }
+        }
+
+        return hpbSendTransaction;
     }
 }

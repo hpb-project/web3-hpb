@@ -2,7 +2,12 @@ package com.hpb.web3.tuples.generated;
 
 import com.hpb.web3.tuples.Tuple;
 
-
+/**
+ * Auto generated code.
+ * <p><strong>Do not modifiy!</strong>
+ * <p>Please use com.hpb.web3.codegen.TupleGenerator in the 
+ * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ */
 public final class Tuple1<T1> implements Tuple {
     private static final int SIZE = 1;
 

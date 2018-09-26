@@ -37,7 +37,8 @@ public class TypeDecoder {
             return 0;
         } else if (DynamicBytes.class.isAssignableFrom(type)
                 || Utf8String.class.isAssignableFrom(type)) {
-                        return (decodeUintAsInt(input, offset) / Type.MAX_BYTE_LENGTH) + 2;
+            // length field + data value
+            return (decodeUintAsInt(input, offset) / Type.MAX_BYTE_LENGTH) + 2;
         } else {
             return 1;
         }
@@ -95,7 +96,8 @@ public class TypeDecoder {
             byte[] resultByteArray = new byte[typeLengthAsBytes + 1];
 
             if (Int.class.isAssignableFrom(type) || Fixed.class.isAssignableFrom(type)) {
-                resultByteArray[0] = inputByteArray[0];              }
+                resultByteArray[0] = inputByteArray[0];  // take MSB as sign bit
+            }
 
             int valueOffset = Type.MAX_BYTE_LENGTH - typeLengthAsBytes;
             System.arraycopy(inputByteArray, valueOffset, resultByteArray, 1, typeLengthAsBytes);
@@ -112,7 +114,8 @@ public class TypeDecoder {
     }
 
     static <T extends NumericType> int getTypeLengthInBytes(Class<T> type) {
-        return getTypeLength(type) >> 3;      }
+        return getTypeLength(type) >> 3;  // divide by 8
+    }
 
     static <T extends NumericType> int getTypeLength(Class<T> type) {
         if (IntType.class.isAssignableFrom(type)) {
@@ -210,7 +213,8 @@ public class TypeDecoder {
             Class<List> listClass = List.class;
             return typeReference.getClassType().getConstructor(listClass).newInstance(elements);
         } catch (ReflectiveOperationException e) {
-                        return (T) new StaticArray<>(elements);
+            //noinspection unchecked
+            return (T) new StaticArray<>(elements);
         }
     }
 

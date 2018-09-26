@@ -1,8 +1,5 @@
 package com.hpb.web3.console;
 
-import static com.hpb.web3.codegen.Console.exitError;
-import static com.hpb.web3.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -10,6 +7,9 @@ import com.hpb.web3.crypto.CipherException;
 import com.hpb.web3.crypto.Credentials;
 import com.hpb.web3.crypto.WalletUtils;
 import com.hpb.web3.utils.Files;
+
+import static com.hpb.web3.codegen.Console.exitError;
+import static com.hpb.web3.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
 
 
 public class KeyImporter extends WalletManager {

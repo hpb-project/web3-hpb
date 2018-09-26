@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.hpb.web3.protocol.Web3Service;
-
 import rx.Observable;
+
+import com.hpb.web3.protocol.Web3Service;
 
 public class Request<S, T extends Response> {
     private static AtomicLong nextId = new AtomicLong(0);
@@ -19,7 +19,9 @@ public class Request<S, T extends Response> {
 
     private Web3Service web3Service;
 
-            private Class<T> responseType;
+    // Unfortunately require an instance of the type too, see
+    // http://stackoverflow.com/a/3437930/3211687
+    private Class<T> responseType;
 
     public Request() {
     }

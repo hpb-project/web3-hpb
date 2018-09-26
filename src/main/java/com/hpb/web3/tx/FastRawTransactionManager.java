@@ -5,6 +5,8 @@ import java.math.BigInteger;
 
 import com.hpb.web3.crypto.Credentials;
 import com.hpb.web3.protocol.Web3;
+import com.hpb.web3.tx.response.Callback;
+import com.hpb.web3.tx.response.QueuingTransactionReceiptProcessor;
 import com.hpb.web3.tx.response.TransactionReceiptProcessor;
 
 
@@ -35,7 +37,8 @@ public class FastRawTransactionManager extends RawTransactionManager {
     @Override
     protected synchronized BigInteger getNonce() throws IOException {
         if (nonce.signum() == -1) {
-                        nonce = super.getNonce();
+            // obtain lock
+            nonce = super.getNonce();
         } else {
             nonce = nonce.add(BigInteger.ONE);
         }

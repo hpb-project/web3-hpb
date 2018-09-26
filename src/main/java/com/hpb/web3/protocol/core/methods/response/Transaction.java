@@ -6,6 +6,9 @@ import com.hpb.web3.utils.Numeric;
 
 
 public class Transaction {
+    private static final int CHAIN_ID_INC = 35;
+    private static final int LOWER_REAL_V = 27;
+
     private String hash;
     private String nonce;
     private String blockHash;
@@ -22,14 +25,15 @@ public class Transaction {
     private String raw;
     private String r;
     private String s;
-    private int v;  
+    private long v;  // see https://github.com/web3/web3/issues/44
+
     public Transaction() {
     }
 
     public Transaction(String hash, String nonce, String blockHash, String blockNumber,
                        String transactionIndex, String from, String to, String value,
                        String gas, String gasPrice, String input, String creates,
-                       String publicKey, String raw, String r, String s, int v) {
+                       String publicKey, String raw, String r, String s, long v) {
         this.hash = hash;
         this.nonce = nonce;
         this.blockHash = blockHash;
@@ -201,16 +205,32 @@ public class Transaction {
         this.s = s;
     }
 
-    public int getV() {
+    public long getV() {
         return v;
     }
 
-            
-                public void setV(Object v) {
+    public Long getChainId() {
+        if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
+            return null;
+        }
+        Long chainId = (v - CHAIN_ID_INC) / 2;
+        return chainId;
+    }
+
+    // public void setV(byte v) {
+    //     this.v = v;
+    // }
+
+    // Workaround until Ghpb & Parity return consistent values. At present
+    // Parity returns a byte value, Ghpb returns a hex-encoded string
+    // https://github.com/hpbereum/go-hpbereum/issues/3339
+    public void setV(Object v) {
         if (v instanceof String) {
-            this.v = Numeric.toBigInt((String) v).intValueExact();
+            this.v = Numeric.toBigInt((String) v).longValueExact();
+        } else if (v instanceof Integer) {
+            this.v = ((Integer) v).longValue();
         } else {
-            this.v = ((Integer) v);
+            this.v = (Long) v;
         }
     }
 
@@ -306,7 +326,7 @@ public class Transaction {
         result = 31 * result + (getRaw() != null ? getRaw().hashCode() : 0);
         result = 31 * result + (getR() != null ? getR().hashCode() : 0);
         result = 31 * result + (getS() != null ? getS().hashCode() : 0);
-        result = 31 * result + getV();
+        result = 31 * result + BigInteger.valueOf(getV()).hashCode();
         return result;
     }
 }

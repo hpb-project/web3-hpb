@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
+
 import com.hpb.web3.protocol.Web3;
 import com.hpb.web3.protocol.core.DefaultBlockParameter;
 import com.hpb.web3.protocol.core.DefaultBlockParameterName;
@@ -17,12 +23,6 @@ import com.hpb.web3.protocol.core.methods.response.HpbBlock;
 import com.hpb.web3.protocol.core.methods.response.Log;
 import com.hpb.web3.protocol.core.methods.response.Transaction;
 import com.hpb.web3.utils.Observables;
-
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
 
 
 public class JsonRpc2_0Rx {
@@ -81,6 +81,7 @@ public class JsonRpc2_0Rx {
         return hpbPendingTransactionHashObservable(pollingInterval)
                 .flatMap(transactionHash ->
                         web3.hpbGetTransactionByHash(transactionHash).observable())
+                .filter(hpbTransaction -> hpbTransaction.getTransaction().isPresent())
                 .map(hpbTransaction -> hpbTransaction.getTransaction().get());
     }
 
@@ -100,7 +101,9 @@ public class JsonRpc2_0Rx {
     public Observable<HpbBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
-                        return replayBlocksObservableSync(startBlock, endBlock, fullTransactionObjects, ascending)
+        // We use a scheduler to ensure this Observable runs asynchronously for users to be
+        // consistent with the other Observables
+        return replayBlocksObservableSync(startBlock, endBlock, fullTransactionObjects, ascending)
                 .subscribeOn(scheduler);
     }
 
@@ -145,7 +148,9 @@ public class JsonRpc2_0Rx {
     public Observable<HpbBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
             Observable<HpbBlock> onCompleteObservable) {
-                        return catchUpToLatestBlockObservableSync(
+        // We use a scheduler to ensure this Observable runs asynchronously for users to be
+        // consistent with the other Observables
+        return catchUpToLatestBlockObservableSync(
                 startBlock, fullTransactionObjects, onCompleteObservable)
                 .subscribeOn(scheduler);
     }
@@ -223,7 +228,9 @@ public class JsonRpc2_0Rx {
     }
 
     private static List<Transaction> toTransactions(HpbBlock hpbBlock) {
-                        return hpbBlock.getBlock().getTransactions().stream()
+        // If you ever see an exception thrown here, it's probably due to an incomplete chain in
+        // Ghpb/Parity. You should resync to solve.
+        return hpbBlock.getBlock().getTransactions().stream()
                 .map(transactionResult -> (Transaction) transactionResult.get())
                 .collect(Collectors.toList());
     }

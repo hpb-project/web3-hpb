@@ -23,7 +23,7 @@ public class Version {
 
     private static Properties loadProperties() throws IOException {
         Properties properties = new Properties();
-        properties.load(Version.class.getResourceAsStream("/version.properties"));
+        properties.load(Version.class.getResourceAsStream("/web3-version.properties"));
         return properties;
     }
 }

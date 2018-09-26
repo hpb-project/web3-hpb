@@ -1,9 +1,15 @@
 package com.hpb.web3.protocol.core;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
+
+import rx.Observable;
 
 import com.hpb.web3.protocol.Web3;
 import com.hpb.web3.protocol.Web3Service;
@@ -42,6 +48,7 @@ import com.hpb.web3.protocol.core.methods.response.HpbProtocolVersion;
 import com.hpb.web3.protocol.core.methods.response.HpbSign;
 import com.hpb.web3.protocol.core.methods.response.HpbSubmitHashrate;
 import com.hpb.web3.protocol.core.methods.response.HpbSubmitWork;
+import com.hpb.web3.protocol.core.methods.response.HpbSubscribe;
 import com.hpb.web3.protocol.core.methods.response.HpbSyncing;
 import com.hpb.web3.protocol.core.methods.response.HpbTransaction;
 import com.hpb.web3.protocol.core.methods.response.HpbUninstallFilter;
@@ -60,10 +67,10 @@ import com.hpb.web3.protocol.core.methods.response.ShhVersion;
 import com.hpb.web3.protocol.core.methods.response.Web3ClientVersion;
 import com.hpb.web3.protocol.core.methods.response.Web3Sha3;
 import com.hpb.web3.protocol.rx.JsonRpc2_0Rx;
+import com.hpb.web3.protocol.websocket.events.LogNotification;
+import com.hpb.web3.protocol.websocket.events.NewHeadsNotification;
 import com.hpb.web3.utils.Async;
 import com.hpb.web3.utils.Numeric;
-
-import rx.Observable;
 
 
 public class JsonRpc2_0Web3 implements Web3 {
@@ -73,6 +80,7 @@ public class JsonRpc2_0Web3 implements Web3 {
     protected final Web3Service web3Service;
     private final JsonRpc2_0Rx web3Rx;
     private final long blockTime;
+    private final ScheduledExecutorService scheduledExecutorService;
 
     public JsonRpc2_0Web3(Web3Service web3Service) {
         this(web3Service, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
@@ -84,6 +92,7 @@ public class JsonRpc2_0Web3 implements Web3 {
         this.web3Service = web3Service;
         this.web3Rx = new JsonRpc2_0Rx(this, scheduledExecutorService);
         this.blockTime = pollingInterval;
+        this.scheduledExecutorService = scheduledExecutorService;
     }
 
     @Override
@@ -683,6 +692,47 @@ public class JsonRpc2_0Web3 implements Web3 {
     }
 
     @Override
+    public Observable<NewHeadsNotification> newHeadsNotifications() {
+        return web3Service.subscribe(
+                new Request<>(
+                        "hpb_subscribe",
+                        Collections.singletonList("newHeads"),
+                        web3Service,
+                        HpbSubscribe.class),
+                "hpb_unsubscribe",
+                NewHeadsNotification.class
+        );
+    }
+
+    @Override
+    public Observable<LogNotification> logsNotifications(
+            List<String> addresses, List<String> topics) {
+
+        Map<String, Object> params = createLogsParams(addresses, topics);
+
+        return web3Service.subscribe(
+                new Request<>(
+                        "hpb_subscribe",
+                        Arrays.asList("logs", params),
+                        web3Service,
+                        HpbSubscribe.class),
+                "hpb_unsubscribe",
+                LogNotification.class
+        );
+    }
+
+    private Map<String, Object> createLogsParams(List<String> addresses, List<String> topics) {
+        Map<String, Object> params = new HashMap<>();
+        if (!addresses.isEmpty()) {
+            params.put("address", addresses);
+        }
+        if (!topics.isEmpty()) {
+            params.put("topics", topics);
+        }
+        return params;
+    }
+
+    @Override
     public Observable<String> hpbBlockHashObservable() {
         return web3Rx.hpbBlockHashObservable(blockTime);
     }
@@ -770,5 +820,15 @@ public class JsonRpc2_0Web3 implements Web3 {
             DefaultBlockParameter startBlock) {
         return web3Rx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
                 startBlock, blockTime);
+    }
+
+    @Override
+    public void shutdown() {
+        scheduledExecutorService.shutdown();
+        try {
+            web3Service.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to close web3 service", e);
+        }
     }
 }

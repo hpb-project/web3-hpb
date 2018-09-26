@@ -1,7 +1,6 @@
 package com.hpb.web3.abi.datatypes.generated;
 
 import java.util.List;
-
 import com.hpb.web3.abi.datatypes.StaticArray;
 import com.hpb.web3.abi.datatypes.Type;
 

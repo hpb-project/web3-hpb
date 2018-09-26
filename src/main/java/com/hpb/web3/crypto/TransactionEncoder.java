@@ -63,16 +63,20 @@ public class TransactionEncoder {
         result.add(RlpString.create(rawTransaction.getGasPrice()));
         result.add(RlpString.create(rawTransaction.getGasLimit()));
 
-                String to = rawTransaction.getTo();
+        // an empty to address (contract creation) should not be encoded as a numeric 0 value
+        String to = rawTransaction.getTo();
         if (to != null && to.length() > 0) {
-                                    result.add(RlpString.create(Numeric.hexStringToByteArray(to)));
+            // addresses that start with zeros should be encoded with the zeros included, not
+            // as numeric values
+            result.add(RlpString.create(Numeric.hexStringToByteArray(to)));
         } else {
             result.add(RlpString.create(""));
         }
 
         result.add(RlpString.create(rawTransaction.getValue()));
 
-                byte[] data = Numeric.hexStringToByteArray(rawTransaction.getData());
+        // value field will already be hex encoded, so we need to convert into binary first
+        byte[] data = Numeric.hexStringToByteArray(rawTransaction.getData());
         result.add(RlpString.create(data));
 
         if (signatureData != null) {

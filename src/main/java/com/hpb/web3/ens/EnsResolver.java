@@ -11,6 +11,7 @@ import com.hpb.web3.protocol.core.methods.response.NetVersion;
 import com.hpb.web3.tx.ClientTransactionManager;
 import com.hpb.web3.tx.ManagedTransaction;
 import com.hpb.web3.tx.TransactionManager;
+import com.hpb.web3.tx.gas.DefaultGasProvider;
 import com.hpb.web3.utils.Numeric;
 
 
@@ -21,10 +22,12 @@ public class EnsResolver {
 
     private final Web3 web3;
     private final TransactionManager transactionManager;
-    private long syncThreshold;  
+    private long syncThreshold;  // non-final in case this value needs to be tweaked
+
     public EnsResolver(Web3 web3, long syncThreshold) {
         this.web3 = web3;
-        transactionManager = new ClientTransactionManager(web3, null);          this.syncThreshold = syncThreshold;
+        transactionManager = new ClientTransactionManager(web3, null);  // don't use empty string
+        this.syncThreshold = syncThreshold;
     }
 
     public EnsResolver(Web3 web3) {
@@ -66,7 +69,7 @@ public class EnsResolver {
             try {
                 contractAddress = resolver.addr(nameHash).send();
             } catch (Exception e) {
-                throw new RuntimeException("Unable to execute HpblockChain request", e);
+                throw new RuntimeException("Unable to execute Hpbereum request", e);
             }
 
             if (!WalletUtils.isValidAddress(contractAddress)) {
@@ -90,7 +93,7 @@ public class EnsResolver {
             try {
                 name = resolver.name(nameHash).send();
             } catch (Exception e) {
-                throw new RuntimeException("Unable to execute HpblockChain request", e);
+                throw new RuntimeException("Unable to execute Hpbereum request", e);
             }
 
             if (!isValidEnsName(name)) {
@@ -109,14 +112,14 @@ public class EnsResolver {
 
         ENS ensRegistry = ENS.load(
                 registryContract, web3, transactionManager,
-                ManagedTransaction.GAS_PRICE, com.hpb.web3.tx.Contract.GAS_LIMIT);
+                DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
 
         byte[] nameHash = NameHash.nameHashAsBytes(ensName);
 
         String resolverAddress = ensRegistry.resolver(nameHash).send();
         PublicResolver resolver = PublicResolver.load(
                 resolverAddress, web3, transactionManager,
-                ManagedTransaction.GAS_PRICE, com.hpb.web3.tx.Contract.GAS_LIMIT);
+                DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
 
         return resolver;
     }
@@ -135,6 +138,7 @@ public class EnsResolver {
     }
 
     public static boolean isValidEnsName(String input) {
-        return input != null                  && (input.contains(".") || !WalletUtils.isValidAddress(input));
+        return input != null  // will be set to null on new Contract creation
+                && (input.contains(".") || !WalletUtils.isValidAddress(input));
     }
 }

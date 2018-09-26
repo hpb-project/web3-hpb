@@ -1,8 +1,8 @@
 package com.hpb.web3.codegen;
 
-import static com.hpb.web3.codegen.Console.exitError;
-
 import java.io.File;
+
+import static com.hpb.web3.codegen.Console.exitError;
 
 
 abstract class FunctionWrapperGenerator {

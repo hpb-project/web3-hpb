@@ -1,7 +1,5 @@
 package com.hpb.web3.crypto;
 
-import static com.hpb.web3.crypto.SecureRandomUtils.secureRandom;
-
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -17,6 +15,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import com.hpb.web3.utils.Numeric;
 import com.hpb.web3.utils.Strings;
 
+import static com.hpb.web3.crypto.SecureRandomUtils.secureRandom;
+
 
 
 public class Keys {
@@ -30,7 +30,9 @@ public class Keys {
     public static final int PRIVATE_KEY_LENGTH_IN_HEX = PRIVATE_KEY_SIZE << 1;
 
     static {
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
     }
 
     private Keys() { }
@@ -69,11 +71,13 @@ public class Keys {
                     + publicKeyNoPrefix;
         }
         String hash = Hash.sha3(publicKeyNoPrefix);
-        return hash.substring(hash.length() - ADDRESS_LENGTH_IN_HEX);      }
+        return hash.substring(hash.length() - ADDRESS_LENGTH_IN_HEX);  // right most 160 bits
+    }
 
     public static byte[] getAddress(byte[] publicKey) {
         byte[] hash = Hash.sha3(publicKey);
-        return Arrays.copyOfRange(hash, hash.length - 20, hash.length);      }
+        return Arrays.copyOfRange(hash, hash.length - 20, hash.length);  // right most 160 bits
+    }
 
     
     public static String toChecksumAddress(String address) {

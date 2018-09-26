@@ -18,7 +18,8 @@ public class Uint extends IntType {
     }
 
     public Uint(BigInteger value) {
-                this(MAX_BIT_LENGTH, value);
+        // "int" values should be declared as int256 in computing function selectors
+        this(MAX_BIT_LENGTH, value);
     }
 
     @Override

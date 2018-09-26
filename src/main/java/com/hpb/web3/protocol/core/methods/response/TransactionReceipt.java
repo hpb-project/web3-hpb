@@ -16,7 +16,9 @@ public class TransactionReceipt {
     private String gasUsed;
     private String contractAddress;
     private String root;
-            private String status;
+    // status is only present on Byzantium transactions onwards
+    // see EIP 658 https://github.com/hpbereum/EIPs/pull/658
+    private String status;
     private String from;
     private String to;
     private List<Log> logs;
@@ -130,6 +132,14 @@ public class TransactionReceipt {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isStatusOK() {
+        if (null == status) {
+            return true;
+        }
+        BigInteger statusQuantity = Numeric.decodeQuantity(status);
+        return BigInteger.ONE.equals(statusQuantity);
     }
 
     public String getFrom() {

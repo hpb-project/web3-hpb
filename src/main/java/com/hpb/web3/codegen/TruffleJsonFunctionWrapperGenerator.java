@@ -1,8 +1,5 @@
 package com.hpb.web3.codegen;
 
-import static com.hpb.web3.codegen.Console.exitError;
-import static com.hpb.web3.utils.Collection.tail;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -22,10 +19,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.hpb.web3.protocol.ObjectMapperFactory;
 import com.hpb.web3.protocol.core.methods.response.AbiDefinition;
 import com.hpb.web3.tx.ChainId;
 import com.hpb.web3.utils.Strings;
+
+import static com.hpb.web3.codegen.Console.exitError;
+import static com.hpb.web3.utils.Collection.tail;
 
 
 public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerator {
@@ -244,10 +245,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         enum Network {
             olympic(0),
             mainnet(ChainId.MAINNET),
-            morden(ChainId.EXPANSE_MAINNET),
-            ropsten(ChainId.ROPSTEN),
-            rinkeby(ChainId.RINKEBY),
-            kovan(ChainId.KOVAN);
+            morden(ChainId.EXPANSE_MAINNET);
 
             public final long id;
 
@@ -298,7 +296,8 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
     }
 
 
-        @JsonIgnoreProperties(ignoreUnknown = true)
+    // For now we just ignore "events"
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonPropertyOrder({
             "events",

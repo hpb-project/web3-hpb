@@ -8,21 +8,33 @@ public abstract class TypeReference<T extends com.hpb.web3.abi.datatypes.Type>
         implements Comparable<TypeReference<T>> {
 
     private final Type type;
+    private final boolean indexed;
 
     protected TypeReference() {
+        this(false);
+    }
+
+    protected TypeReference(boolean indexed) {
         Type superclass = getClass().getGenericSuperclass();
         if (superclass instanceof Class) {
             throw new RuntimeException("Missing type parameter.");
         }
         this.type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
+        this.indexed = indexed;
     }
 
     public int compareTo(TypeReference<T> o) {
-                        return 0;
+        // taken from the blog post comments - this results in an errror if the
+        // type parameter is left out.
+        return 0;
     }
 
     public Type getType() {
         return type;
+    }
+
+    public boolean isIndexed() {
+        return indexed;
     }
 
     

@@ -21,7 +21,6 @@ class Generator {
         return "Auto generated code.\n"
                 + "<p><strong>Do not modifiy!</strong>\n"
                 + "<p>Please use " + cls.getName() + " in the \n"
-               // + "<a href=\"https://github.com/web3j/web3j/tree/master/codegen\">"
                 + "codegen module</a> to update.\n";
     }
 }

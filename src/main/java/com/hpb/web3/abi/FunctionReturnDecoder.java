@@ -1,7 +1,5 @@
 package com.hpb.web3.abi;
 
-import static com.hpb.web3.abi.TypeDecoder.MAX_BYTE_LENGTH_FOR_HEX_STRING;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +14,9 @@ import com.hpb.web3.abi.datatypes.Type;
 import com.hpb.web3.abi.datatypes.Utf8String;
 import com.hpb.web3.abi.datatypes.generated.Bytes32;
 import com.hpb.web3.utils.Numeric;
+import com.hpb.web3.utils.Strings;
+
+import static com.hpb.web3.abi.TypeDecoder.MAX_BYTE_LENGTH_FOR_HEX_STRING;
 
 
 public class FunctionReturnDecoder {
@@ -27,7 +28,7 @@ public class FunctionReturnDecoder {
             String rawInput, List<TypeReference<Type>> outputParameters) {
         String input = Numeric.cleanHexPrefix(rawInput);
 
-        if (input.isEmpty()) {
+        if (Strings.isEmpty(input)) {
             return Collections.emptyList();
         } else {
             return build(input, outputParameters);

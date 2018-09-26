@@ -26,8 +26,8 @@ public class PendingTransactionFilter extends Filter<String> {
     void process(List<HpbLog.LogResult> logResults) {
         for (HpbLog.LogResult logResult : logResults) {
             if (logResult instanceof HpbLog.Hash) {
-                String blockHash = ((HpbLog.Hash) logResult).get();
-                callback.onEvent(blockHash);
+                String transactionHash = ((HpbLog.Hash) logResult).get();
+                callback.onEvent(transactionHash);
             } else {
                 throw new FilterException(
                         "Unexpected result type: " + logResult.get() + ", required Hash");

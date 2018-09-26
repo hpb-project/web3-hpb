@@ -5,8 +5,12 @@ import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import rx.Observable;
+
 import com.hpb.web3.protocol.core.Request;
 import com.hpb.web3.protocol.core.Response;
+import com.hpb.web3.protocol.websocket.events.Notification;
 import com.hpb.web3.utils.Async;
 
 
@@ -38,5 +42,16 @@ public abstract class Service implements Web3Service {
     public <T extends Response> CompletableFuture<T> sendAsync(
             Request jsonRpc20Request, Class<T> responseType) {
         return Async.run(() -> send(jsonRpc20Request, responseType));
+    }
+
+    @Override
+    public <T extends Notification<?>> Observable<T> subscribe(
+            Request request,
+            String unsubscribeMethod,
+            Class<T> responseType) {
+        throw new UnsupportedOperationException(
+                String.format(
+                        "Service %s does not support subscriptions",
+                        this.getClass().getSimpleName()));
     }
 }

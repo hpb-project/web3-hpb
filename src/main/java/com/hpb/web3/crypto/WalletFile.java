@@ -39,7 +39,8 @@ public class WalletFile {
         this.crypto = crypto;
     }
 
-    @JsonSetter("Crypto")      public void setCryptoV1(Crypto crypto) {
+    @JsonSetter("Crypto")  // older wallet files may have this attribute name
+    public void setCryptoV1(Crypto crypto) {
         setCrypto(crypto);
     }
 
@@ -154,7 +155,11 @@ public class WalletFile {
                 @JsonSubTypes.Type(value = Aes128CtrKdfParams.class, name = Wallet.AES_128_CTR),
                 @JsonSubTypes.Type(value = ScryptKdfParams.class, name = Wallet.SCRYPT)
         })
-                                        public void setKdfparams(KdfParams kdfparams) {
+        // To support my Hpber Wallet keys uncomment this annotation & comment out the above
+        //  @JsonDeserialize(using = KdfParamsDeserialiser.class)
+        // Also add the following to the ObjectMapperFactory
+        // objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        public void setKdfparams(KdfParams kdfparams) {
             this.kdfparams = kdfparams;
         }
 
@@ -427,7 +432,9 @@ public class WalletFile {
         }     
     }
 
-            static class KdfParamsDeserialiser extends JsonDeserializer<KdfParams> {
+    // If we need to work with MyHpberWallet we'll need to use this deserializer, see the
+    // following issue https://github.com/kvhnuke/hpberwallet/issues/269
+    static class KdfParamsDeserialiser extends JsonDeserializer<KdfParams> {
 
         @Override
         public KdfParams deserialize(
@@ -438,7 +445,9 @@ public class WalletFile {
             ObjectNode root = objectMapper.readTree(jsonParser);
             KdfParams kdfParams;
 
-                                    JsonNode n = root.get("n");
+            // it would be preferable to detect the class to use based on the kdf parameter in the
+            // container object instance
+            JsonNode n = root.get("n");
             if (n == null) {
                 kdfParams = objectMapper.convertValue(root, Aes128CtrKdfParams.class);
             } else {

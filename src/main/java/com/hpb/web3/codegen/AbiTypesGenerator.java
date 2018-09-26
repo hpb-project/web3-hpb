@@ -4,14 +4,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.lang.model.element.Modifier;
 
-import com.hpb.web3.abi.datatypes.Bytes;
-import com.hpb.web3.abi.datatypes.Int;
-import com.hpb.web3.abi.datatypes.StaticArray;
-import com.hpb.web3.abi.datatypes.Type;
-import com.hpb.web3.abi.datatypes.Uint;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -19,6 +13,14 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
+
+import com.hpb.web3.abi.datatypes.Bytes;
+import com.hpb.web3.abi.datatypes.Fixed;
+import com.hpb.web3.abi.datatypes.Int;
+import com.hpb.web3.abi.datatypes.StaticArray;
+import com.hpb.web3.abi.datatypes.Type;
+import com.hpb.web3.abi.datatypes.Ufixed;
+import com.hpb.web3.abi.datatypes.Uint;
 
 
 public class AbiTypesGenerator extends Generator {
@@ -40,7 +42,11 @@ public class AbiTypesGenerator extends Generator {
         generateIntTypes(Int.class, destinationDir);
         generateIntTypes(Uint.class, destinationDir);
 
-                                
+        // TODO: Enable once Solidity supports fixed types - see
+        // https://github.com/hpbereum/solidity/issues/409
+        // generateFixedTypes(Fixed.class, destinationDir);
+        // generateFixedTypes(Ufixed.class, destinationDir);
+
         generateBytesTypes(Bytes.class, destinationDir);
         generateStaticArrayTypes(StaticArray.class, destinationDir);
     }

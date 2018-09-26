@@ -1,8 +1,5 @@
 package com.hpb.web3.abi;
 
-import static com.hpb.web3.abi.datatypes.Type.MAX_BIT_LENGTH;
-import static com.hpb.web3.abi.datatypes.Type.MAX_BYTE_LENGTH;
-
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
@@ -20,6 +17,9 @@ import com.hpb.web3.abi.datatypes.Ufixed;
 import com.hpb.web3.abi.datatypes.Uint;
 import com.hpb.web3.abi.datatypes.Utf8String;
 import com.hpb.web3.utils.Numeric;
+
+import static com.hpb.web3.abi.datatypes.Type.MAX_BIT_LENGTH;
+import static com.hpb.web3.abi.datatypes.Type.MAX_BYTE_LENGTH;
 
 
 public class TypeEncoder {
@@ -89,7 +89,10 @@ public class TypeEncoder {
         BigInteger value = numericType.getValue();
         if (numericType instanceof Ufixed || numericType instanceof Uint) {
             if (value.bitLength() == MAX_BIT_LENGTH) {
-                                                                byte[] byteArray = new byte[MAX_BYTE_LENGTH];
+                // As BigInteger is signed, if we have a 256 bit value, the resultant byte array
+                // will contain a sign byte in it's MSB, which we should ignore for this unsigned
+                // integer type.
+                byte[] byteArray = new byte[MAX_BYTE_LENGTH];
                 System.arraycopy(value.toByteArray(), 1, byteArray, 0, MAX_BYTE_LENGTH);
                 return byteArray;
             }

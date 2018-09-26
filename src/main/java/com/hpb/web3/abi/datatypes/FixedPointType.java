@@ -40,7 +40,8 @@ public abstract class FixedPointType extends NumericType {
         BigInteger mPadded = m.shiftLeft(nBitSize);
         int nBitLength = n.bitLength();
 
-                int shift = (nBitLength + 3) & ~0x03;
+        // find next multiple of 4
+        int shift = (nBitLength + 3) & ~0x03;
         return mPadded.or(n.shiftLeft(nBitSize - shift));
     }
 }

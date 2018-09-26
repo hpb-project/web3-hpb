@@ -3,12 +3,14 @@ package com.hpb.web3.protocol.core.methods.request;
 import java.math.BigInteger;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import com.hpb.web3.utils.Numeric;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Transaction {
-        public static final BigInteger DEFAULT_GAS = BigInteger.valueOf(9000);
+    // default as per https://github.com/hpbereum/wiki/wiki/JSON-RPC#hpb_sendtransaction
+    public static final BigInteger DEFAULT_GAS = BigInteger.valueOf(9000);
 
     private String from;
     private String to;
@@ -16,7 +18,8 @@ public class Transaction {
     private BigInteger gasPrice;
     private BigInteger value;
     private String data;
-    private BigInteger nonce;  
+    private BigInteger nonce;  // nonce field is not present on hpb_call/hpb_estimateGas
+
     public Transaction(String from, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
                        String to, BigInteger value, String data) {
         this.from = from;
@@ -103,6 +106,7 @@ public class Transaction {
         if (value != null) {
             return Numeric.encodeQuantity(value);
         } else {
-            return null;          }
+            return null;  // we don't want the field to be encoded if not present
+        }
     }
 }

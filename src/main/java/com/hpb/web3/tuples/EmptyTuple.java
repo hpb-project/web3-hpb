@@ -1,6 +1,8 @@
 package com.hpb.web3.tuples;
 
-
+/**
+ * Empty Tuple type.
+ */
 public class EmptyTuple implements Tuple {
 
     @Override

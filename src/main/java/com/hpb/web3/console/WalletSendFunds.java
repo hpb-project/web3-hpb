@@ -1,7 +1,5 @@
 package com.hpb.web3.console;
 
-import static com.hpb.web3.codegen.Console.exitError;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,6 +16,8 @@ import com.hpb.web3.protocol.exceptions.TransactionException;
 import com.hpb.web3.protocol.http.HttpService;
 import com.hpb.web3.tx.Transfer;
 import com.hpb.web3.utils.Convert;
+
+import static com.hpb.web3.codegen.Console.exitError;
 
 
 public class WalletSendFunds extends WalletManager {
@@ -42,7 +42,7 @@ public class WalletSendFunds extends WalletManager {
             exitError("Invalid destination address specified");
         }
 
-        Web3 web3 = getHpblockChainClient();
+        Web3 web3 = getHpbereumClient();
 
         BigDecimal amountToTransfer = getAmountToTransfer();
         Convert.Unit transferUnit = getTransferUnit();
@@ -79,7 +79,7 @@ public class WalletSendFunds extends WalletManager {
 
         Convert.Unit transferUnit;
         if (unit.equals("")) {
-            transferUnit = Convert.Unit.HPBER;
+            transferUnit = Convert.Unit.HPB;
         } else {
             transferUnit = Convert.Unit.fromString(unit.toLowerCase());
         }
@@ -123,16 +123,16 @@ public class WalletSendFunds extends WalletManager {
         throw new RuntimeException("Application exit failure");
     }
 
-    private Web3 getHpblockChainClient() {
+    private Web3 getHpbereumClient() {
         String clientAddress = console.readLine(
-                "Please confirm address of running HpblockChain client you wish to send "
+                "Please confirm address of running Hpbereum client you wish to send "
                 + "the transfer request to [" + HttpService.DEFAULT_URL + "]: ")
                 .trim();
 
         Web3 web3;
         if (clientAddress.equals("")) {
             web3 = Web3.build(new HttpService());
-        } else {
+        }else {
             web3 = Web3.build(new HttpService(clientAddress));
         }
 

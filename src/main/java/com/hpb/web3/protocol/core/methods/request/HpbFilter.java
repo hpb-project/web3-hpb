@@ -7,8 +7,10 @@ import com.hpb.web3.protocol.core.DefaultBlockParameter;
 
 
 public class HpbFilter extends Filter<HpbFilter> {
-    private DefaultBlockParameter fromBlock;      private DefaultBlockParameter toBlock;
-    private List<String> address;  
+    private DefaultBlockParameter fromBlock;  // optional, params - defaults to latest for both
+    private DefaultBlockParameter toBlock;
+    private List<String> address;  // spec. implies this can be single address as string or list
+
     public HpbFilter() {
         super();
     }

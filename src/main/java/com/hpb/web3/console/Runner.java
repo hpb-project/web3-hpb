@@ -1,18 +1,19 @@
 package com.hpb.web3.console;
 
-import static com.hpb.web3.utils.Collection.tail;
-
 import com.hpb.web3.codegen.Console;
 import com.hpb.web3.codegen.SolidityFunctionWrapperGenerator;
 import com.hpb.web3.codegen.TruffleJsonFunctionWrapperGenerator;
 import com.hpb.web3.utils.Version;
+
+import static com.hpb.web3.utils.Collection.tail;
 
 
 public class Runner {
 
     private static String USAGE = "Usage: web3 version|wallet|solidity ...";
 
-    private static String LOGO = "\n"             + "              _      _____ _     _        \n"
+    private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
+            + "              _      _____ _     _        \n"
             + "             | |    |____ (_)   (_)       \n"
             + "__      _____| |__      / /_     _   ___  \n"
             + "\\ \\ /\\ / / _ \\ '_ \\     \\ \\ |   | | / _ \\ \n"

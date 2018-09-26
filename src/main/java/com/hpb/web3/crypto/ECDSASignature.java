@@ -21,7 +21,13 @@ public class ECDSASignature {
 
     public ECDSASignature toCanonicalised() {
         if (!isCanonical()) {
-                                                                                    return new ECDSASignature(r, Sign.CURVE.getN().subtract(s));
+            // The order of the curve is the number of valid points that exist on that curve.
+            // If S is in the upper half of the number of valid points, then bring it back to
+            // the lower half. Otherwise, imagine that
+            //    N = 10
+            //    s = 8, so (-8 % 10 == 2) thus both (r, 8) and (r, 2) are valid solutions.
+            //    10 - 8 == 2, giving us always the latter solution, which is canonical.
+            return new ECDSASignature(r, Sign.CURVE.getN().subtract(s));
         } else {
             return this;
         }

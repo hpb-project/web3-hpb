@@ -13,6 +13,7 @@ import com.hpb.web3.protocol.exceptions.TransactionException;
 
 public abstract class ManagedTransaction {
 
+    
     public static final BigInteger GAS_PRICE = BigInteger.valueOf(22_000_000_000L);
 
     protected Web3 web3;

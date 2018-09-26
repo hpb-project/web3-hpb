@@ -48,7 +48,10 @@ public class ECKeyPair {
 
         BigInteger privateKeyValue = privateKey.getD();
 
-                                byte[] publicKeyBytes = publicKey.getQ().getEncoded(false);
+        // Hpbereum does not use encoded public keys like bitcoin - see
+        // https://en.bitcoin.it/wiki/Elliptic_Curve_Digital_Signature_Algorithm for details
+        // Additionally, as the first bit is a constant prefix (0x04) we ignore this value
+        byte[] publicKeyBytes = publicKey.getQ().getEncoded(false);
         BigInteger publicKeyValue =
                 new BigInteger(1, Arrays.copyOfRange(publicKeyBytes, 1, publicKeyBytes.length));
 

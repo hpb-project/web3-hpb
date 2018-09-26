@@ -227,7 +227,10 @@ public class HpbCompileSolidity extends Response<Map<String, HpbCompileSolidity.
     }
 
     public static class Documentation {
-                        private Map<String, String> methods;  
+        // No documentation available
+        // See https://github.com/hpbereum/wiki/wiki/JSON-RPC#hpb_compilesolidity
+        private Map<String, String> methods;  // unknown object type
+
         public Documentation() {
             this.methods = Collections.emptyMap();
         }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectReader;
+
 import com.hpb.web3.protocol.ObjectMapperFactory;
 import com.hpb.web3.protocol.core.Response;
 
@@ -29,7 +30,8 @@ public class HpbGetTransactionReceipt extends Response<TransactionReceipt> {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 return objectReader.readValue(jsonParser, TransactionReceipt.class);
             } else {
-                return null;              }
+                return null;  // null is wrapped by Optional in above getter
+            }
         }
     }
 }

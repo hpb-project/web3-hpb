@@ -1,8 +1,13 @@
 package com.hpb.web3.codegen;
 
 import java.io.IOException;
-
 import javax.lang.model.element.Modifier;
+
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.WildcardTypeName;
 
 import com.hpb.web3.abi.datatypes.Address;
 import com.hpb.web3.abi.datatypes.Bool;
@@ -14,11 +19,6 @@ import com.hpb.web3.abi.datatypes.Type;
 import com.hpb.web3.abi.datatypes.Ufixed;
 import com.hpb.web3.abi.datatypes.Uint;
 import com.hpb.web3.abi.datatypes.Utf8String;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.WildcardTypeName;
 
 
 public class AbiTypesMapperGenerator extends Generator {
@@ -86,14 +86,18 @@ public class AbiTypesMapperGenerator extends Generator {
         builder = addStatement(builder, packageName,
                 DynamicBytes.TYPE_NAME, DynamicBytes.class.getSimpleName());
 
-                return builder;
+        // TODO: Fixed array & dynamic array support
+        return builder;
     }
 
     private MethodSpec.Builder addGeneratedTypes(MethodSpec.Builder builder, String packageName) {
 
         builder = generateIntTypes(builder, packageName);
 
-                        
+        // TODO: Enable once Solidity supports fixed types - see
+        // https://github.com/hpbereum/solidity/issues/409
+        // builder = generateFixedTypes(builder, packageName);
+
         builder = generateFixedBytesTypes(builder, packageName);
 
         return builder;

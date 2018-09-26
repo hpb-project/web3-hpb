@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import com.hpb.web3.protocol.Web3Service;
 import com.hpb.web3.protocol.admin.methods.response.NewAccountIdentifier;
@@ -22,6 +23,11 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
         super(web3Service);
     }
     
+    public JsonRpc2_0Admin(Web3Service web3Service, long pollingInterval,
+            ScheduledExecutorService scheduledExecutorService) {
+        super(web3Service, pollingInterval, scheduledExecutorService);
+    }
+
     @Override
     public Request<?, PersonalListAccounts> personalListAccounts() {
         return new Request<>(
@@ -49,9 +55,12 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
         attributes.add(password);
         
         if (duration != null) {
-                                    attributes.add(duration.longValue());
+            // Parity has a bug where it won't support a duration
+            // See https://github.com/hpbcore/parity/issues/1215
+            attributes.add(duration.longValue());
         } else {
-                        attributes.add(null);
+            // we still need to include the null value, otherwise Parity rejects request
+            attributes.add(null);
         }
         
         return new Request<>(

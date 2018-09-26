@@ -17,7 +17,8 @@ import com.hpb.web3.utils.Numeric;
 
 public class Transfer extends ManagedTransaction {
 
-        public static final BigInteger GAS_LIMIT = BigInteger.valueOf(21000);
+    // This is the cost to send Hpber between parties
+    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(21000);
 
     public Transfer(Web3 web3, TransactionManager transactionManager) {
         super(web3, transactionManager);

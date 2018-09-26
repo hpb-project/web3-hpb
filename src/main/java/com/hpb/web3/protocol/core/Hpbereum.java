@@ -53,7 +53,7 @@ import com.hpb.web3.protocol.core.methods.response.Web3ClientVersion;
 import com.hpb.web3.protocol.core.methods.response.Web3Sha3;
 
 
-public interface HpblockChain {
+public interface Hpbereum {
     Request<?, Web3ClientVersion> web3ClientVersion();
 
     Request<?, Web3Sha3> web3Sha3(String data);

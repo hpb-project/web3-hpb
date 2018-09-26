@@ -1,10 +1,10 @@
 package com.hpb.web3.rlp;
 
-import static com.hpb.web3.rlp.RlpDecoder.OFFSET_SHORT_LIST;
-import static com.hpb.web3.rlp.RlpDecoder.OFFSET_SHORT_STRING;
-
 import java.util.Arrays;
 import java.util.List;
+
+import static com.hpb.web3.rlp.RlpDecoder.OFFSET_SHORT_LIST;
+import static com.hpb.web3.rlp.RlpDecoder.OFFSET_SHORT_STRING;
 
 
 public class RlpEncoder {
@@ -23,7 +23,7 @@ public class RlpEncoder {
                 && bytesValue[0] >= (byte) 0x00
                 && bytesValue[0] <= (byte) 0x7f) {
             return bytesValue;
-        } else if (bytesValue.length < 55) {
+        } else if (bytesValue.length <= 55) {
             byte[] result = new byte[bytesValue.length + 1];
             result[0] = (byte) (offset + bytesValue.length);
             System.arraycopy(bytesValue, 0, result, 1, bytesValue.length);

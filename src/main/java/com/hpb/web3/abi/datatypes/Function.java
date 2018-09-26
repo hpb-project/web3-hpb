@@ -1,10 +1,10 @@
 package com.hpb.web3.abi.datatypes;
 
-import static com.hpb.web3.abi.Utils.convert;
-
 import java.util.List;
 
 import com.hpb.web3.abi.TypeReference;
+
+import static com.hpb.web3.abi.Utils.convert;
 
 
 public class Function {
