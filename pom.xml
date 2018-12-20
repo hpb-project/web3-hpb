@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hpb.web3</groupId>
+	<groupId>io.hpb.web3</groupId>
 	<artifactId>web3-hpb</artifactId>
-	<version>0.0.4</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>web3-hpb</name>
@@ -45,9 +45,9 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
 		<dependency>
-		    <groupId>org.bouncycastle</groupId>
-		    <artifactId>bcprov-jdk15on</artifactId>
-		    <version>1.60</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.60</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
@@ -80,20 +80,15 @@
 		</dependency>
 
 	</dependencies>
-	<!-- (you don't need this if you are using a .RELEASE version) -->
-	<repositories>
-		<repository>
-			<id>maven-releases</id>
-			<name>Nexus Release Repository</name>
-			<url>http://47.75.203.209:8081/nexus3/repository/maven-releases/</url>
-		</repository>
-	</repositories>
 	<distributionManagement>
 		<repository>
-			<id>maven-releases</id>
-			<name>Nexus Release Repository</name>
-			<url>http://47.75.203.209:8081/nexus3/repository/maven-releases/</url>
+			<id>snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
 	</distributionManagement>
 	<build>
 		<plugins>
@@ -114,7 +109,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		
+
 	</build>
 	<licenses>
 		<license>
