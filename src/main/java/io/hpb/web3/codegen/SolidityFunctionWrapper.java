@@ -54,7 +54,9 @@ import io.hpb.web3.protocol.core.methods.response.AbiDefinition;
 import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.tx.Contract;
+import io.hpb.web3.tx.RawTransactionManager;
 import io.hpb.web3.tx.TransactionManager;
+import io.hpb.web3.tx.gas.StaticGasProvider;
 import io.hpb.web3.utils.Collection;
 import io.hpb.web3.utils.Strings;
 import io.hpb.web3.utils.Version;
@@ -70,6 +72,9 @@ public class SolidityFunctionWrapper extends Generator {
     private static final String CONTRACT_ADDRESS = "contractAddress";
     private static final String GAS_PRICE = "gasPrice";
     private static final String GAS_LIMIT = "gasLimit";
+    private static final String STATIC_GAS_PROVIDER = "new StaticGasProvider(gasPrice, gasLimit)";
+    private static final String RAWTRANSACTION_MANAGER = "new RawTransactionManager(web3, credentials)";
+    private static final String GAS_PROVIDER = "gasProvider";
     private static final String FILTER = "filter";
     private static final String START_BLOCK = "startBlock";
     private static final String END_BLOCK = "endBlock";
@@ -80,12 +85,7 @@ public class SolidityFunctionWrapper extends Generator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SolidityFunctionWrapper.class);
 
     private static final String CODEGEN_WARNING = "<p>Auto generated code.\n"
-            + "<p><strong>Do not modify!</strong>\n"
-            + "<p>Please use the "
-            + "<a href=\"https://docs.web3.io/command_line.html\">web3 command line tools</a>,\n"
-            + "or the " + SolidityFunctionWrapperGenerator.class.getName() + " in the \n"
-            + "<a href=\"https://github.com/web3/web3/tree/master/codegen\">"
-            + "codegen module</a> to update.\n";
+            + "<p><strong>Do not modify!</strong>";
 
     private final boolean useNativeJavaTypes;
     private static final String regex = "(\\w+)(?:\\[(.*?)\\])(?:\\[(.*?)\\])?";
@@ -121,8 +121,8 @@ public class SolidityFunctionWrapper extends Generator {
         TypeSpec.Builder classBuilder = createClassBuilder(className, bin);
 
         classBuilder.addMethod(buildConstructor(Credentials.class, CREDENTIALS));
-        classBuilder.addMethod(buildConstructor(TransactionManager.class,
-                TRANSACTION_MANAGER));
+        classBuilder.addMethod(buildConstructor(TransactionManager.class,TRANSACTION_MANAGER));
+        classBuilder.addMethod(buildConstructorWithProvider());
         classBuilder.addFields(buildFuncNameConstants(abi));
         classBuilder.addMethods(
                 buildFunctionDefinitions(className, classBuilder, abi));
@@ -303,6 +303,18 @@ public class SolidityFunctionWrapper extends Generator {
     }
 
     private static MethodSpec buildConstructor(Class authType, String authName) {
+    	if(CREDENTIALS.equals(authName)) {
+    		return MethodSpec.constructorBuilder()
+                    .addModifiers(Modifier.PROTECTED)
+                    .addParameter(String.class, CONTRACT_ADDRESS)
+                    .addParameter(Web3.class, Web3)
+                    .addParameter(authType, authName)
+                    .addParameter(BigInteger.class, GAS_PRICE)
+                    .addParameter(BigInteger.class, GAS_LIMIT)
+                    .addStatement("super($N, $N, $N, $N, $N)",
+                            BINARY, CONTRACT_ADDRESS, Web3, RAWTRANSACTION_MANAGER, STATIC_GAS_PROVIDER)
+                    .build();
+    	}
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
@@ -310,9 +322,20 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
-                .addStatement("super($N, $N, $N, $N, $N, $N)",
-                        BINARY, CONTRACT_ADDRESS, Web3, authName, GAS_PRICE, GAS_LIMIT)
+                .addStatement("super($N, $N, $N, $N, $N)",
+                        BINARY, CONTRACT_ADDRESS, Web3, authName, STATIC_GAS_PROVIDER)
                 .build();
+    }
+    private static MethodSpec buildConstructorWithProvider() {
+    	return MethodSpec.constructorBuilder()
+    			.addModifiers(Modifier.PROTECTED)
+    			.addParameter(String.class, CONTRACT_ADDRESS)
+    			.addParameter(Web3.class, Web3)
+    			.addParameter(TransactionManager.class,TRANSACTION_MANAGER)
+    			.addParameter(StaticGasProvider.class, GAS_PROVIDER)
+    			.addStatement("super($N, $N, $N, $N, $N)",
+    					BINARY, CONTRACT_ADDRESS, Web3, TRANSACTION_MANAGER, GAS_PROVIDER)
+    			.build();
     }
 
     private MethodSpec buildDeploy(
