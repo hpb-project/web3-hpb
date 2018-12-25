@@ -22,8 +22,8 @@ public interface Prometheus extends Web3 {
         return new JsonRpc2_0Prometheus(web3Service, pollingInterval, scheduledExecutorService);
     }
 
-    public Request<?, HpbGetCandidateNodes> hpbGetCandidateNodes(DefaultBlockParameter defaultBlockParameter);
+    public Request<?, HpbGetCandidateNodes> hpbGetCandidateNodes(DefaultBlockParameter ... defaultBlockParameter);
 
-    public Request<?, HpbGetHpbNodes> hpbGetHpbNodes(DefaultBlockParameter defaultBlockParameter);
+    public Request<?, HpbGetHpbNodes> hpbGetHpbNodes(DefaultBlockParameter ... defaultBlockParameter);
 
 }   

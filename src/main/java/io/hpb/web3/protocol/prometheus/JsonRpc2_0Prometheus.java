@@ -22,12 +22,12 @@ public class JsonRpc2_0Prometheus extends JsonRpc2_0Web3 implements Prometheus {
     }
 
     @Override
-    public Request<?, HpbGetCandidateNodes> hpbGetCandidateNodes(DefaultBlockParameter defaultBlockParameter) {
+    public Request<?, HpbGetCandidateNodes> hpbGetCandidateNodes(DefaultBlockParameter ... defaultBlockParameter) {
         return new Request<>("prometheus_getCandidateNodes",      Arrays.asList(defaultBlockParameter), web3Service, HpbGetCandidateNodes.class);
     }
 
     @Override
-    public Request<?, HpbGetHpbNodes> hpbGetHpbNodes(DefaultBlockParameter defaultBlockParameter) {
+    public Request<?, HpbGetHpbNodes> hpbGetHpbNodes(DefaultBlockParameter ... defaultBlockParameter) {
         return new Request<>("prometheus_getHpbNodes",   Arrays.asList(defaultBlockParameter), web3Service, HpbGetHpbNodes.class);
     }
 }

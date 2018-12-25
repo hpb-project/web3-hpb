@@ -38,4 +38,7 @@ public interface Admin extends Web3 {
     public Request<?, HpbSendTransaction> personalSendTransaction(
             Transaction transaction, String password);
 
+
+
+
 }   
