@@ -388,7 +388,12 @@ public abstract class Contract extends ManagedTransaction {
         }
         return new EventValues(indexedValues, nonIndexedValues);
     }
-
+    protected static TransactionManager getTransactionManager(Web3 web3, Credentials credentials) {
+    	return new RawTransactionManager(web3, credentials);
+    }
+    protected static ContractGasProvider getContractGasProvider(BigInteger gasPrice, BigInteger gasLimit) {
+    	return new StaticGasProvider(gasPrice, gasLimit);
+    }
     protected EventValues extractEventParameters(Event event, Log log) {
         return staticExtractEventParameters(event, log);
     }

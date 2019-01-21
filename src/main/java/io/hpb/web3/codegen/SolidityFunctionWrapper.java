@@ -14,7 +14,11 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 import javax.lang.model.element.Modifier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.AnnotationSpec;
@@ -27,9 +31,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rx.functions.Func1;
 
 import io.hpb.web3.abi.EventEncoder;
 import io.hpb.web3.abi.FunctionEncoder;
@@ -54,12 +55,12 @@ import io.hpb.web3.protocol.core.methods.response.AbiDefinition;
 import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.tx.Contract;
-import io.hpb.web3.tx.RawTransactionManager;
 import io.hpb.web3.tx.TransactionManager;
-import io.hpb.web3.tx.gas.StaticGasProvider;
+import io.hpb.web3.tx.gas.ContractGasProvider;
 import io.hpb.web3.utils.Collection;
 import io.hpb.web3.utils.Strings;
 import io.hpb.web3.utils.Version;
+import rx.functions.Func1;
 
 
 public class SolidityFunctionWrapper extends Generator {
@@ -72,8 +73,8 @@ public class SolidityFunctionWrapper extends Generator {
     private static final String CONTRACT_ADDRESS = "contractAddress";
     private static final String GAS_PRICE = "gasPrice";
     private static final String GAS_LIMIT = "gasLimit";
-    private static final String STATIC_GAS_PROVIDER = "new StaticGasProvider(gasPrice, gasLimit)";
-    private static final String RAWTRANSACTION_MANAGER = "new RawTransactionManager(web3, credentials)";
+    private static final String GET_TRANSACTION_MANAGER = "getTransactionManager(web3, credentials)";
+    private static final String GET_CONTRACT_GAS_PROVIDER = "getContractGasProvider(gasPrice, gasLimit)";
     private static final String GAS_PROVIDER = "gasProvider";
     private static final String FILTER = "filter";
     private static final String START_BLOCK = "startBlock";
@@ -101,7 +102,6 @@ public class SolidityFunctionWrapper extends Generator {
         this.reporter = reporter;
     }
 
-    @SuppressWarnings("unchecked")
     public void generateJavaFiles(
             String contractName, String bin, String abi, String destinationDir,
             String basePackageName)
@@ -194,6 +194,9 @@ public class SolidityFunctionWrapper extends Generator {
 
         return TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class)
+                		.addMember("value", "$S", "rawtypes")
+                		.build())
                 .addJavadoc(javadoc)
                 .superclass(Contract.class)
                 .addField(createBinaryDefinition(binary));
@@ -312,7 +315,7 @@ public class SolidityFunctionWrapper extends Generator {
                     .addParameter(BigInteger.class, GAS_PRICE)
                     .addParameter(BigInteger.class, GAS_LIMIT)
                     .addStatement("super($N, $N, $N, $N, $N)",
-                            BINARY, CONTRACT_ADDRESS, Web3, RAWTRANSACTION_MANAGER, STATIC_GAS_PROVIDER)
+                            BINARY, CONTRACT_ADDRESS, Web3, GET_TRANSACTION_MANAGER, GET_CONTRACT_GAS_PROVIDER)
                     .build();
     	}
         return MethodSpec.constructorBuilder()
@@ -323,7 +326,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
                 .addStatement("super($N, $N, $N, $N, $N)",
-                        BINARY, CONTRACT_ADDRESS, Web3, authName, STATIC_GAS_PROVIDER)
+                        BINARY, CONTRACT_ADDRESS, Web3, authName, GET_CONTRACT_GAS_PROVIDER)
                 .build();
     }
     private static MethodSpec buildConstructorWithProvider() {
@@ -332,7 +335,7 @@ public class SolidityFunctionWrapper extends Generator {
     			.addParameter(String.class, CONTRACT_ADDRESS)
     			.addParameter(Web3.class, Web3)
     			.addParameter(TransactionManager.class,TRANSACTION_MANAGER)
-    			.addParameter(StaticGasProvider.class, GAS_PROVIDER)
+    			.addParameter(ContractGasProvider.class, GAS_PROVIDER)
     			.addStatement("super($N, $N, $N, $N, $N)",
     					BINARY, CONTRACT_ADDRESS, Web3, TRANSACTION_MANAGER, GAS_PROVIDER)
     			.build();
