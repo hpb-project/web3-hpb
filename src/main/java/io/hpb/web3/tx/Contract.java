@@ -388,7 +388,9 @@ public abstract class Contract extends ManagedTransaction {
         }
         return new EventValues(indexedValues, nonIndexedValues);
     }
-
+    protected static RawTransactionManager getRawTransactionManager(Web3 web3, Credentials credentials) {
+    	return new RawTransactionManager(web3, credentials);
+    }
     protected EventValues extractEventParameters(Event event, Log log) {
         return staticExtractEventParameters(event, log);
     }
