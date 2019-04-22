@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
-import rx.Observable;
-
 import io.hpb.web3.protocol.Web3;
 import io.hpb.web3.protocol.Web3Service;
 import io.hpb.web3.protocol.core.methods.request.ShhFilter;
@@ -71,6 +69,7 @@ import io.hpb.web3.protocol.websocket.events.LogNotification;
 import io.hpb.web3.protocol.websocket.events.NewHeadsNotification;
 import io.hpb.web3.utils.Async;
 import io.hpb.web3.utils.Numeric;
+import rx.Observable;
 
 
 public class JsonRpc2_0Web3 implements Web3 {

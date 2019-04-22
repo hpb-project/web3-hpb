@@ -1,13 +1,13 @@
 package io.hpb.web3.console;
 
+import static io.hpb.web3.codegen.Console.exitError;
+
 import java.io.File;
 import java.io.IOException;
 
 import io.hpb.web3.crypto.CipherException;
 import io.hpb.web3.crypto.Credentials;
 import io.hpb.web3.crypto.WalletUtils;
-
-import static io.hpb.web3.codegen.Console.exitError;
 
 
 public class WalletUpdater extends WalletManager {

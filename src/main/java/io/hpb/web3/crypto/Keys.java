@@ -1,5 +1,7 @@
 package io.hpb.web3.crypto;
 
+import static io.hpb.web3.crypto.SecureRandomUtils.secureRandom;
+
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -14,8 +16,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import io.hpb.web3.utils.Numeric;
 import io.hpb.web3.utils.Strings;
-
-import static io.hpb.web3.crypto.SecureRandomUtils.secureRandom;
 
 
 

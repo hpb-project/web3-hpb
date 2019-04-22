@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.ArrayTypeName;
@@ -15,11 +16,9 @@ import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
 import io.hpb.web3.abi.datatypes.Bytes;
-import io.hpb.web3.abi.datatypes.Fixed;
 import io.hpb.web3.abi.datatypes.Int;
 import io.hpb.web3.abi.datatypes.StaticArray;
 import io.hpb.web3.abi.datatypes.Type;
-import io.hpb.web3.abi.datatypes.Ufixed;
 import io.hpb.web3.abi.datatypes.Uint;
 
 

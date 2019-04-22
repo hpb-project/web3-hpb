@@ -1,5 +1,7 @@
 package io.hpb.web3.console;
 
+import static io.hpb.web3.codegen.Console.exitError;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,8 +18,6 @@ import io.hpb.web3.protocol.exceptions.TransactionException;
 import io.hpb.web3.protocol.http.HttpService;
 import io.hpb.web3.tx.Transfer;
 import io.hpb.web3.utils.Convert;
-
-import static io.hpb.web3.codegen.Console.exitError;
 
 
 public class WalletSendFunds extends WalletManager {

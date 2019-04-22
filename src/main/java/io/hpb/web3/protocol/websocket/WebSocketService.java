@@ -1,11 +1,9 @@
 package io.hpb.web3.protocol.websocket;
 
 import java.io.IOException;
-
 import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -15,15 +13,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.Web3Service;
@@ -32,6 +27,8 @@ import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.protocol.core.methods.response.HpbSubscribe;
 import io.hpb.web3.protocol.core.methods.response.HpbUnsubscribe;
 import io.hpb.web3.protocol.websocket.events.Notification;
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 
 public class WebSocketService implements Web3Service {

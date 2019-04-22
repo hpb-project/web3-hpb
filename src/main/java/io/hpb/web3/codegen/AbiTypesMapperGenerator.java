@@ -1,6 +1,7 @@
 package io.hpb.web3.codegen;
 
 import java.io.IOException;
+
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.ClassName;

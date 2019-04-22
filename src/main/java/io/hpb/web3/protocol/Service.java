@@ -6,12 +6,11 @@ import java.util.concurrent.CompletableFuture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import rx.Observable;
-
 import io.hpb.web3.protocol.core.Request;
 import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.protocol.websocket.events.Notification;
 import io.hpb.web3.utils.Async;
+import rx.Observable;
 
 
 public abstract class Service implements Web3Service {

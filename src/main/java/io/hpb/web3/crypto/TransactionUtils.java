@@ -14,7 +14,7 @@ public class TransactionUtils {
 
     
     public static byte[] generateTransactionHash(
-            RawTransaction rawTransaction, byte chainId, Credentials credentials) {
+            RawTransaction rawTransaction, int chainId, Credentials credentials) {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
         return Hash.sha3(signedMessage);
     }
@@ -27,7 +27,7 @@ public class TransactionUtils {
 
     
     public static String generateTransactionHashHexEncoded(
-            RawTransaction rawTransaction, byte chainId, Credentials credentials) {
+            RawTransaction rawTransaction, int chainId, Credentials credentials) {
         return Numeric.toHexString(generateTransactionHash(rawTransaction, chainId, credentials));
     }
 }

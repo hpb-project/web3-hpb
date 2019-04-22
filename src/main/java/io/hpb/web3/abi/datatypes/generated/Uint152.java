@@ -1,6 +1,7 @@
 package io.hpb.web3.abi.datatypes.generated;
 
 import java.math.BigInteger;
+
 import io.hpb.web3.abi.datatypes.Uint;
 
 

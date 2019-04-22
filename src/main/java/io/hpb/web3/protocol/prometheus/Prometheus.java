@@ -1,13 +1,13 @@
 package io.hpb.web3.protocol.prometheus;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 import io.hpb.web3.protocol.Web3;
 import io.hpb.web3.protocol.Web3Service;
 import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.Request;
 import io.hpb.web3.protocol.core.methods.response.HpbGetCandidateNodes;
 import io.hpb.web3.protocol.core.methods.response.HpbGetHpbNodes;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 
 public interface Prometheus extends Web3 {

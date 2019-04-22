@@ -1,8 +1,8 @@
 package io.hpb.web3.protocol.core.methods.response;
 
-import io.hpb.web3.protocol.core.Response;
-
 import java.util.List;
+
+import io.hpb.web3.protocol.core.Response;
 /**
  * @author will
  *   get hpb nodes

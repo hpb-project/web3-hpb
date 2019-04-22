@@ -1,10 +1,14 @@
 package io.hpb.web3.crypto;
 
+import static io.hpb.web3.crypto.SecureRandomUtils.secureRandom;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.UUID;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -18,9 +22,6 @@ import org.bouncycastle.crypto.generators.SCrypt;
 import org.bouncycastle.crypto.params.KeyParameter;
 
 import io.hpb.web3.utils.Numeric;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static io.hpb.web3.crypto.SecureRandomUtils.secureRandom;
 
 
 public class Wallet {

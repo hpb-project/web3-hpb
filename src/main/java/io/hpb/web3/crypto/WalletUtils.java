@@ -1,5 +1,9 @@
 package io.hpb.web3.crypto;
 
+import static io.hpb.web3.crypto.Hash.sha256;
+import static io.hpb.web3.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
+import static io.hpb.web3.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
+
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -15,10 +19,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.hpb.web3.utils.Numeric;
-
-import static io.hpb.web3.crypto.Hash.sha256;
-import static io.hpb.web3.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
-import static io.hpb.web3.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
 
 
 public class WalletUtils {

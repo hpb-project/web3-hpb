@@ -1,5 +1,7 @@
 package io.hpb.web3.abi;
 
+import static io.hpb.web3.abi.TypeDecoder.MAX_BYTE_LENGTH_FOR_HEX_STRING;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +17,6 @@ import io.hpb.web3.abi.datatypes.Utf8String;
 import io.hpb.web3.abi.datatypes.generated.Bytes32;
 import io.hpb.web3.utils.Numeric;
 import io.hpb.web3.utils.Strings;
-
-import static io.hpb.web3.abi.TypeDecoder.MAX_BYTE_LENGTH_FOR_HEX_STRING;
 
 
 public class FunctionReturnDecoder {

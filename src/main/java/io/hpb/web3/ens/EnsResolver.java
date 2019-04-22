@@ -9,7 +9,6 @@ import io.hpb.web3.protocol.core.methods.response.HpbBlock;
 import io.hpb.web3.protocol.core.methods.response.HpbSyncing;
 import io.hpb.web3.protocol.core.methods.response.NetVersion;
 import io.hpb.web3.tx.ClientTransactionManager;
-import io.hpb.web3.tx.ManagedTransaction;
 import io.hpb.web3.tx.TransactionManager;
 import io.hpb.web3.tx.gas.DefaultGasProvider;
 import io.hpb.web3.utils.Numeric;

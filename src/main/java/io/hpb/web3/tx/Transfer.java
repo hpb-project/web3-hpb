@@ -3,8 +3,6 @@ package io.hpb.web3.tx;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import io.hpb.web3.crypto.Credentials;
 import io.hpb.web3.protocol.Web3;

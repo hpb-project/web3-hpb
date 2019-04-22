@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
-
 import io.hpb.web3.protocol.Web3;
 import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.DefaultBlockParameterName;
@@ -23,6 +17,11 @@ import io.hpb.web3.protocol.core.methods.response.HpbBlock;
 import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.Transaction;
 import io.hpb.web3.utils.Observables;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 
 
 public class JsonRpc2_0Rx {

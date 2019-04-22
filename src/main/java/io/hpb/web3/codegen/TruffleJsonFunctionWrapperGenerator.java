@@ -1,5 +1,8 @@
 package io.hpb.web3.codegen;
 
+import static io.hpb.web3.codegen.Console.exitError;
+import static io.hpb.web3.utils.Collection.tail;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -24,9 +27,6 @@ import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.core.methods.response.AbiDefinition;
 import io.hpb.web3.tx.ChainId;
 import io.hpb.web3.utils.Strings;
-
-import static io.hpb.web3.codegen.Console.exitError;
-import static io.hpb.web3.utils.Collection.tail;
 
 
 public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerator {

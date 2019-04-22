@@ -1,10 +1,10 @@
 package io.hpb.web3.rlp;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static io.hpb.web3.rlp.RlpDecoder.OFFSET_SHORT_LIST;
 import static io.hpb.web3.rlp.RlpDecoder.OFFSET_SHORT_STRING;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class RlpEncoder {

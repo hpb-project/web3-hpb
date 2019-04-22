@@ -22,11 +22,11 @@ public class RawTransactionManager extends TransactionManager {
     private final Web3 web3;
     final Credentials credentials;
 
-    private final byte chainId;
+    private final int chainId;
 
     protected TxHashVerifier txHashVerifier = new TxHashVerifier();
 
-    public RawTransactionManager(Web3 web3, Credentials credentials, byte chainId) {
+    public RawTransactionManager(Web3 web3, Credentials credentials, int chainId) {
         super(web3, credentials.getAddress());
 
         this.web3 = web3;
@@ -36,7 +36,7 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     public RawTransactionManager(
-            Web3 web3, Credentials credentials, byte chainId,
+            Web3 web3, Credentials credentials, int chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(transactionReceiptProcessor, credentials.getAddress());
 
@@ -47,7 +47,7 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     public RawTransactionManager(
-            Web3 web3, Credentials credentials, byte chainId, int attempts, long sleepDuration) {
+            Web3 web3, Credentials credentials, int chainId, int attempts, long sleepDuration) {
         super(web3, attempts, sleepDuration, credentials.getAddress());
 
         this.web3 = web3;

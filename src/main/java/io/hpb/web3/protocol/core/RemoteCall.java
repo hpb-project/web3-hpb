@@ -3,9 +3,8 @@ package io.hpb.web3.protocol.core;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
-import rx.Observable;
-
 import io.hpb.web3.utils.Async;
+import rx.Observable;
 
 
 public class RemoteCall<T> {
