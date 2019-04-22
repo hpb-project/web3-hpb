@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.hpb.web3.protocol.Web3;
-
 import io.hpb.web3.protocol.core.Request;
 import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.protocol.core.Response.Error;

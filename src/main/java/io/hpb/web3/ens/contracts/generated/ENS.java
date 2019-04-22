@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func1;
-
 import io.hpb.web3.abi.EventEncoder;
 import io.hpb.web3.abi.EventValues;
 import io.hpb.web3.abi.TypeReference;
@@ -27,6 +24,8 @@ import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.tx.Contract;
 import io.hpb.web3.tx.TransactionManager;
+import rx.Observable;
+import rx.functions.Func1;
 
 
 public final class ENS extends Contract {

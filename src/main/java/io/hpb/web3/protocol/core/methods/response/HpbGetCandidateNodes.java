@@ -1,17 +1,18 @@
 package io.hpb.web3.protocol.core.methods.response;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.core.Response;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author will

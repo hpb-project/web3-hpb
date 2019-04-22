@@ -3,11 +3,10 @@ package io.hpb.web3.protocol;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-import rx.Observable;
-
 import io.hpb.web3.protocol.core.Request;
 import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.protocol.websocket.events.Notification;
+import rx.Observable;
 
 
 public interface Web3Service {

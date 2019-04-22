@@ -1,26 +1,21 @@
 package io.hpb.web3.crypto;
 
+import static io.hpb.web3.utils.Assertions.verifyPrecondition;
+
 import java.math.BigInteger;
 import java.security.SignatureException;
 import java.util.Arrays;
-import java.util.Optional;
 
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.asn1.x9.X9IntegerConverter;
-import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import org.bouncycastle.crypto.signers.ECDSASigner;
-import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
 import org.bouncycastle.math.ec.ECAlgorithms;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve;
 
 import io.hpb.web3.utils.Numeric;
-
-import static io.hpb.web3.utils.Assertions.verifyPrecondition;
 
 
 public class Sign {
@@ -61,7 +56,7 @@ public class Sign {
         int headerByte = recId + 27;
 
         // 1 header + 32 bytes for R + 32 bytes for S
-        byte v = (byte) headerByte;
+        int v =headerByte;
         byte[] r = Numeric.toBytesPadded(sig.r, 32);
         byte[] s = Numeric.toBytesPadded(sig.s, 32);
 
@@ -182,17 +177,17 @@ public class Sign {
     }
 
     public static class SignatureData {
-        private final byte v;
+        private final int v;
         private final byte[] r;
         private final byte[] s;
 
-        public SignatureData(byte v, byte[] r, byte[] s) {
+        public SignatureData(int v, byte[] r, byte[] s) {
             this.v = v;
             this.r = r;
             this.s = s;
         }
 
-        public byte getV() {
+        public int getV() {
             return v;
         }
 
@@ -226,7 +221,7 @@ public class Sign {
 
         @Override
         public int hashCode() {
-            int result = (int) v;
+            int result =v;
             result = 31 * result + Arrays.hashCode(r);
             result = 31 * result + Arrays.hashCode(s);
             return result;

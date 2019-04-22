@@ -1,11 +1,11 @@
 package io.hpb.web3.console;
 
+import static io.hpb.web3.utils.Collection.tail;
+
 import io.hpb.web3.codegen.Console;
 import io.hpb.web3.codegen.SolidityFunctionWrapperGenerator;
 import io.hpb.web3.codegen.TruffleJsonFunctionWrapperGenerator;
 import io.hpb.web3.utils.Version;
-
-import static io.hpb.web3.utils.Collection.tail;
 
 
 public class Runner {

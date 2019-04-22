@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
-import rx.Observable;
-
 import io.hpb.web3.protocol.Web3Service;
+import rx.Observable;
 
 public class Request<S, T extends Response> {
     private static AtomicLong nextId = new AtomicLong(0);

@@ -6,6 +6,11 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.hpb.web3.protocol.Service;
+import io.hpb.web3.protocol.exceptions.ClientConnectionException;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -14,11 +19,6 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import okio.BufferedSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.hpb.web3.protocol.Service;
-import io.hpb.web3.protocol.exceptions.ClientConnectionException;
 
 
 public class HttpService extends Service {

@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import rx.Observable;
-import rx.functions.Func1;
 
 import io.hpb.web3.abi.EventEncoder;
 import io.hpb.web3.abi.EventValues;
@@ -16,7 +12,6 @@ import io.hpb.web3.abi.FunctionEncoder;
 import io.hpb.web3.abi.TypeReference;
 import io.hpb.web3.abi.datatypes.Address;
 import io.hpb.web3.abi.datatypes.Bool;
-import io.hpb.web3.abi.datatypes.DynamicBytes;
 import io.hpb.web3.abi.datatypes.Event;
 import io.hpb.web3.abi.datatypes.Function;
 import io.hpb.web3.abi.datatypes.Type;
@@ -32,6 +27,8 @@ import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.tx.Contract;
 import io.hpb.web3.tx.TransactionManager;
+import rx.Observable;
+import rx.functions.Func1;
 
 
 public final class PublicResolver extends Contract {

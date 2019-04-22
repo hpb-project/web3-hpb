@@ -3,8 +3,6 @@ package io.hpb.web3.protocol.ghpb;
 import java.util.Arrays;
 import java.util.Collections;
 
-import rx.Observable;
-
 import io.hpb.web3.protocol.Web3Service;
 import io.hpb.web3.protocol.admin.JsonRpc2_0Admin;
 import io.hpb.web3.protocol.admin.methods.response.BooleanResponse;
@@ -16,6 +14,7 @@ import io.hpb.web3.protocol.ghpb.response.PersonalEcRecover;
 import io.hpb.web3.protocol.ghpb.response.PersonalImportRawKey;
 import io.hpb.web3.protocol.websocket.events.PendingTransactionNotification;
 import io.hpb.web3.protocol.websocket.events.SyncingNotfication;
+import rx.Observable;
 
 
 public class JsonRpc2_0Ghpb extends JsonRpc2_0Admin implements Ghpb {

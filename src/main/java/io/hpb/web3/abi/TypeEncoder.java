@@ -1,5 +1,8 @@
 package io.hpb.web3.abi;
 
+import static io.hpb.web3.abi.datatypes.Type.MAX_BIT_LENGTH;
+import static io.hpb.web3.abi.datatypes.Type.MAX_BYTE_LENGTH;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
@@ -17,9 +20,6 @@ import io.hpb.web3.abi.datatypes.Ufixed;
 import io.hpb.web3.abi.datatypes.Uint;
 import io.hpb.web3.abi.datatypes.Utf8String;
 import io.hpb.web3.utils.Numeric;
-
-import static io.hpb.web3.abi.datatypes.Type.MAX_BIT_LENGTH;
-import static io.hpb.web3.abi.datatypes.Type.MAX_BYTE_LENGTH;
 
 
 public class TypeEncoder {

@@ -1,8 +1,8 @@
 package io.hpb.web3.console;
 
-import io.hpb.web3.codegen.Console;
-
 import static io.hpb.web3.utils.Collection.tail;
+
+import io.hpb.web3.codegen.Console;
 
 
 public class WalletRunner {

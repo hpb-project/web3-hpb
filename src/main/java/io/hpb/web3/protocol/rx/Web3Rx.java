@@ -9,7 +9,6 @@ import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.Transaction;
 import io.hpb.web3.protocol.websocket.events.LogNotification;
 import io.hpb.web3.protocol.websocket.events.NewHeadsNotification;
-
 import rx.Observable;
 
 

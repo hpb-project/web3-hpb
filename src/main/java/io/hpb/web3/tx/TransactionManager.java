@@ -1,5 +1,7 @@
 package io.hpb.web3.tx;
 
+import static io.hpb.web3.protocol.core.JsonRpc2_0Web3.DEFAULT_BLOCK_TIME;
+
 import java.io.IOException;
 import java.math.BigInteger;
 
@@ -9,8 +11,6 @@ import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.protocol.exceptions.TransactionException;
 import io.hpb.web3.tx.response.PollingTransactionReceiptProcessor;
 import io.hpb.web3.tx.response.TransactionReceiptProcessor;
-
-import static io.hpb.web3.protocol.core.JsonRpc2_0Web3.DEFAULT_BLOCK_TIME;
 
 
 public abstract class TransactionManager {
