@@ -81,15 +81,14 @@
 		</dependency>
 
 	</dependencies>
-	 <scm>  
-        <developerConnection>scm:git:ssh://git@https://github.com/hpb-project/web3-hpb.git</developerConnection>  
-        <url>scm:git:ssh://git@https://github.com/hpb-project/web3-hpb.git</url>  
-        <connection>scm:git:ssh://git@https://github.com/hpb-project/web3-hpb.git</connection>
-    </scm>  
+	<scm>
+		<developerConnection>scm:git:ssh://git@https://github.com/hpb-project/web3-hpb.git</developerConnection>
+		<url>scm:git:ssh://git@https://github.com/hpb-project/web3-hpb.git</url>
+		<connection>scm:git:ssh://git@https://github.com/hpb-project/web3-hpb.git</connection>
+	</scm>
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
-			<!-- <url>https://oss.sonatype.org/content/repositories/releases/</url> -->
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 		<snapshotRepository>
@@ -99,18 +98,26 @@
 	</distributionManagement>
 	<build>
 		<plugins>
-			<!-- 要将源码放上去，需要加入这个插件 -->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<configuration>
-					<attach>true</attach>
-				</configuration>
+				<version>2.2.1</version>
 				<executions>
 					<execution>
-						<phase>compile</phase>
+						<id>attach-sources</id>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -118,6 +125,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -129,56 +137,22 @@
 				</executions>
 			</plugin>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <encoding>utf-8</encoding>
-                    <charset>utf-8</charset>
-                    <docencoding>utf-8</docencoding>
-                    <destDir>doc</destDir>
-                    <tags>
-                        <tag>
-                            <head>描述</head>
-                            <name>Description</name>
-                            <placement>a</placement>
-                        </tag>
-                        <tag>
-                            <head>return</head>
-                            <name>return</name>
-                            <placement>a</placement>
-                        </tag>
-                        <tag>
-                            <head>参数</head>
-                            <name>param...</name>
-                            <placement>a</placement>
-                        </tag>
-                        <tag>
-                            <head>时间</head>
-                            <name>date</name>
-                            <placement>a</placement>
-                        </tag>
-                        <tag>
-                            <head>时间</head>
-                            <name>Date</name>
-                            <placement>a</placement>
-                        </tag>
-                    </tags>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadoc</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadoc</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<licenses>
