@@ -84,6 +84,7 @@
 		<repository>
 			<id>releases</id>
 			<url>https://oss.sonatype.org/content/repositories/releases/</url>
+<!-- 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> -->
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
@@ -118,4 +119,12 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	<developers>
+		<developer>
+			<name>wgl</name>
+			<email>gene@hpb.io</email>
+			<organization>hpb</organization>
+			<organizationUrl>http://www.hpb.io</organizationUrl>
+		</developer>
+	</developers>
 </project>
