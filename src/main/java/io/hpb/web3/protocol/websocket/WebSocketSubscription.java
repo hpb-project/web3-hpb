@@ -1,6 +1,6 @@
 package io.hpb.web3.protocol.websocket;
 
-import rx.subjects.BehaviorSubject;
+import io.reactivex.subjects.BehaviorSubject;
 
 
 public class WebSocketSubscription<T> {

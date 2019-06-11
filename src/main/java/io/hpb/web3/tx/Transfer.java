@@ -15,7 +15,7 @@ import io.hpb.web3.utils.Numeric;
 
 public class Transfer extends ManagedTransaction {
 
-    // This is the cost to send Hpber between parties
+    
     public static final BigInteger GAS_LIMIT = BigInteger.valueOf(21000);
 
     public Transfer(Web3 web3, TransactionManager transactionManager) {
@@ -43,8 +43,7 @@ public class Transfer extends ManagedTransaction {
                             + " = " + weiValue + " Wei");
         }
 
-        String resolvedAddress = ensResolver.resolve(toAddress);
-        return send(resolvedAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
+        return send(toAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(

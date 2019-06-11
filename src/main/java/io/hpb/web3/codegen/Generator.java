@@ -20,7 +20,6 @@ class Generator {
     static String buildWarning(Class cls) {
         return "Auto generated code.\n"
                 + "<p><strong>Do not modifiy!</strong>\n"
-                + "<p>Please use " + cls.getName() + " in the \n"
-                + "codegen module</a> to update.\n";
+                + "<p>Please use " + cls.getName() + "to update.\n";
     }
 }

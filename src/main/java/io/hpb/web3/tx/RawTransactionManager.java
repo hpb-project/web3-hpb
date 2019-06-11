@@ -8,7 +8,9 @@ import io.hpb.web3.crypto.Hash;
 import io.hpb.web3.crypto.RawTransaction;
 import io.hpb.web3.crypto.TransactionEncoder;
 import io.hpb.web3.protocol.Web3;
+import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.DefaultBlockParameterName;
+import io.hpb.web3.protocol.core.methods.request.Transaction;
 import io.hpb.web3.protocol.core.methods.response.HpbGetTransactionCount;
 import io.hpb.web3.protocol.core.methods.response.HpbSendTransaction;
 import io.hpb.web3.tx.exceptions.TxHashMismatchException;
@@ -22,11 +24,11 @@ public class RawTransactionManager extends TransactionManager {
     private final Web3 web3;
     final Credentials credentials;
 
-    private final int chainId;
+    private final long chainId;
 
     protected TxHashVerifier txHashVerifier = new TxHashVerifier();
 
-    public RawTransactionManager(Web3 web3, Credentials credentials, int chainId) {
+    public RawTransactionManager(Web3 web3, Credentials credentials, long chainId) {
         super(web3, credentials.getAddress());
 
         this.web3 = web3;
@@ -36,7 +38,7 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     public RawTransactionManager(
-            Web3 web3, Credentials credentials, int chainId,
+            Web3 web3, Credentials credentials, long chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(transactionReceiptProcessor, credentials.getAddress());
 
@@ -47,7 +49,7 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     public RawTransactionManager(
-            Web3 web3, Credentials credentials, int chainId, int attempts, long sleepDuration) {
+            Web3 web3, Credentials credentials, long chainId, int attempts, long sleepDuration) {
         super(web3, attempts, sleepDuration, credentials.getAddress());
 
         this.web3 = web3;
@@ -98,8 +100,17 @@ public class RawTransactionManager extends TransactionManager {
         return signAndSend(rawTransaction);
     }
 
-    public HpbSendTransaction signAndSend(RawTransaction rawTransaction)
+    @Override
+    public String sendCall(String to, String data, DefaultBlockParameter defaultBlockParameter)
             throws IOException {
+        return web3.hpbCall(
+                Transaction.createHpbCallTransaction(getFromAddress(), to, data),
+                defaultBlockParameter)
+                .send().getValue();
+    }
+
+    
+    public String sign(RawTransaction rawTransaction) {
 
         byte[] signedMessage;
 
@@ -109,7 +120,12 @@ public class RawTransactionManager extends TransactionManager {
             signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
         }
 
-        String hexValue = Numeric.toHexString(signedMessage);
+        return Numeric.toHexString(signedMessage);
+    }
+
+    public HpbSendTransaction signAndSend(RawTransaction rawTransaction)
+            throws IOException {
+        String hexValue = sign(rawTransaction);
         HpbSendTransaction hpbSendTransaction = web3.hpbSendRawTransaction(hexValue).send();
 
         if (hpbSendTransaction != null && !hpbSendTransaction.hasError()) {

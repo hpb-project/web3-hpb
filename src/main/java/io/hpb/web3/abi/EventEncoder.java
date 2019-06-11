@@ -15,18 +15,18 @@ public class EventEncoder {
 
     public static String encode(Event event) {
 
-        String methodSignature = buildMethodSignature(
+        String methodsignature = buildmethodsignature(
                 event.getName(),
                 event.getParameters());
 
-        return buildEventSignature(methodSignature);
+        return buildEventSignature(methodsignature);
     }
 
-    static <T extends Type> String buildMethodSignature(
-            String methodName, List<TypeReference<T>> parameters) {
+    static <T extends Type> String buildmethodsignature(
+            String MethodName, List<TypeReference<T>> parameters) {
 
         StringBuilder result = new StringBuilder();
-        result.append(methodName);
+        result.append(MethodName);
         result.append("(");
         String params = parameters.stream()
                 .map(p -> Utils.getTypeName(p))
@@ -36,8 +36,8 @@ public class EventEncoder {
         return result.toString();
     }
 
-    public static String buildEventSignature(String methodSignature) {
-        byte[] input = methodSignature.getBytes();
+    public static String buildEventSignature(String methodsignature) {
+        byte[] input = methodsignature.getBytes();
         byte[] hash = Hash.sha3(input);
         return Numeric.toHexString(hash);
     }

@@ -227,19 +227,19 @@ public class HpbCompileSolidity extends Response<Map<String, HpbCompileSolidity.
     }
 
     public static class Documentation {
-        // No documentation available
-        // See https://github.com/Hpb/wiki/wiki/JSON-RPC#hpb_compilesolidity
-        private Map<String, String> methods;  // unknown object type
+        
+        
+        private Map<String, String> methods;  
 
         public Documentation() {
             this.methods = Collections.emptyMap();
         }
 
-        public Map<String, String> getMethods() {
+        public Map<String, String> getmethods() {
             return methods;
         }
 
-        public void setMethods(Map<String, String> methods) {
+        public void setmethods(Map<String, String> methods) {
             this.methods = methods;
         }
 
@@ -254,13 +254,13 @@ public class HpbCompileSolidity extends Response<Map<String, HpbCompileSolidity.
 
             Documentation that = (Documentation) o;
 
-            return getMethods() != null
-                    ? getMethods().equals(that.getMethods()) : that.getMethods() == null;
+            return getmethods() != null
+                    ? getmethods().equals(that.getmethods()) : that.getmethods() == null;
         }
 
         @Override
         public int hashCode() {
-            return getMethods() != null ? getMethods().hashCode() : 0;
+            return getmethods() != null ? getmethods().hashCode() : 0;
         }
     }
 }

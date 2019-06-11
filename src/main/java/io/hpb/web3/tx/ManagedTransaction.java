@@ -3,8 +3,8 @@ package io.hpb.web3.tx;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import io.hpb.web3.ens.EnsResolver;
 import io.hpb.web3.protocol.Web3;
+import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.methods.response.HpbGasPrice;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.protocol.exceptions.TransactionException;
@@ -20,25 +20,12 @@ public abstract class ManagedTransaction {
 
     protected TransactionManager transactionManager;
 
-    protected EnsResolver ensResolver;
 
     protected ManagedTransaction(Web3 web3, TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
         this.web3 = web3;
-        this.ensResolver = new EnsResolver(web3);
     }
 
-    
-    public long getSyncThreshold() {
-        return ensResolver.getSyncThreshold();
-    }
-
-    
-    public void setSyncThreshold(long syncThreshold) {
-        ensResolver.setSyncThreshold(syncThreshold);
-    }
-
-    
     public BigInteger requestCurrentGasPrice() throws IOException {
         HpbGasPrice hpbGasPrice = web3.hpbGasPrice().send();
 
@@ -51,5 +38,12 @@ public abstract class ManagedTransaction {
 
         return transactionManager.executeTransaction(
                 gasPrice, gasLimit, to, data, value);
+    }
+
+    protected String call(
+            String to, String data, DefaultBlockParameter defaultBlockParameter)
+            throws IOException {
+
+        return transactionManager.sendCall(to, data, defaultBlockParameter);
     }
 }

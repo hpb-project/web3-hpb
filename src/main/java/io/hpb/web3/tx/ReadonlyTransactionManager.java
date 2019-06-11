@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import io.hpb.web3.protocol.Web3;
+import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.methods.response.HpbSendTransaction;
 
 
@@ -19,5 +20,11 @@ public class ReadonlyTransactionManager extends TransactionManager {
             throws IOException {
         throw new UnsupportedOperationException(
                 "Only read operations are supported by this transaction manager");
+    }
+
+    @Override
+    public String sendCall(String to, String data, DefaultBlockParameter defaultBlockParameter)
+            throws IOException {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

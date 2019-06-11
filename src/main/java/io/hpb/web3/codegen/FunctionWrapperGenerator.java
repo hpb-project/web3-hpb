@@ -15,11 +15,11 @@ abstract class FunctionWrapperGenerator {
     final boolean useJavaNativeTypes;
 
     FunctionWrapperGenerator(
-            String destinationDirLocation,
+            File destinationDirLocation,
             String basePackageName,
             boolean useJavaNativeTypes) {
 
-        this.destinationDirLocation = new File(destinationDirLocation);
+        this.destinationDirLocation = destinationDirLocation;
         this.basePackageName = basePackageName;
         this.useJavaNativeTypes = useJavaNativeTypes;
     }

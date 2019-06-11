@@ -6,7 +6,7 @@ import java.util.List;
 import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.RemoteCall;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 @SuppressWarnings("unused")
@@ -20,7 +20,7 @@ public interface ERC20Interface<R, T> extends ERC20BasicInterface<T> {
 
     List<R> getApprovalEvents(TransactionReceipt transactionReceipt);
 
-    Observable<R> approvalEventObservable(DefaultBlockParameter startBlock,
-            DefaultBlockParameter endBlock);
+    Flowable<R> approvalEventFlowable(DefaultBlockParameter startBlock,
+                                        DefaultBlockParameter endBlock);
 
 }

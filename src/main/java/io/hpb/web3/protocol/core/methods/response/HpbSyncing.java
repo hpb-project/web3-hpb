@@ -42,7 +42,7 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
     }
 
     @JsonIgnoreProperties({"knownStates", "pulledStates"})
-    // these fields although not present in the RPC specification are returned by Ghpb 1.4.10
+    
     public static class Syncing extends Result {
 
         private String startingBlock;
@@ -80,11 +80,11 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
             this.currentBlock = currentBlock;
         }
 
-        public String getHighestBlock() {
+        public String ghpbighestBlock() {
             return highestBlock;
         }
 
-        public void setHighestBlock(String highestBlock) {
+        public void shpbighestBlock(String highestBlock) {
             this.highestBlock = highestBlock;
         }
 
@@ -112,9 +112,9 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
                     : syncing.getCurrentBlock() != null) {
                 return false;
             }
-            if (getHighestBlock() != null
-                    ? !getHighestBlock().equals(syncing.getHighestBlock())
-                    : syncing.getHighestBlock() != null) {
+            if (ghpbighestBlock() != null
+                    ? !ghpbighestBlock().equals(syncing.ghpbighestBlock())
+                    : syncing.ghpbighestBlock() != null) {
                 return false;
             }
             if (knownStates != null
@@ -132,7 +132,7 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
             int result = getStartingBlock() != null ? getStartingBlock().hashCode() : 0;
             result = 31 * result + Boolean.hashCode(isSyncing());
             result = 31 * result + (getCurrentBlock() != null ? getCurrentBlock().hashCode() : 0);
-            result = 31 * result + (getHighestBlock() != null ? getHighestBlock().hashCode() : 0);
+            result = 31 * result + (ghpbighestBlock() != null ? ghpbighestBlock().hashCode() : 0);
             result = 31 * result + (knownStates != null ? knownStates.hashCode() : 0);
             result = 31 * result + (pulledStates != null ? pulledStates.hashCode() : 0);
             return result;

@@ -30,7 +30,7 @@ public class HpbTransaction extends Response<Transaction> {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 return objectReader.readValue(jsonParser, Transaction.class);
             } else {
-                return null;  // null is wrapped by Optional in above getter
+                return null;  
             }
         }
     }

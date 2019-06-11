@@ -55,11 +55,11 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
         attributes.add(password);
         
         if (duration != null) {
-            // Parity has a bug where it won't support a duration
-            // See https://github.com/hpbcore/parity/issues/1215
+            
+            
             attributes.add(duration.longValue());
         } else {
-            // we still need to include the null value, otherwise Parity rejects request
+            
             attributes.add(null);
         }
         

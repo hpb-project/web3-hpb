@@ -9,67 +9,67 @@ import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.Transaction;
 import io.hpb.web3.protocol.websocket.events.LogNotification;
 import io.hpb.web3.protocol.websocket.events.NewHeadsNotification;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 public interface Web3Rx {
 
     
-    Observable<Log> hpbLogObservable(HpbFilter hpbFilter);
+    Flowable<Log> hpbLogFlowable(HpbFilter hpbFilter);
 
     
-    Observable<String> hpbBlockHashObservable();
+    Flowable<String> hpbBlockHashFlowable();
 
     
-    Observable<String> hpbPendingTransactionHashObservable();
+    Flowable<String> hpbPendingTransactionHashFlowable();
 
     
-    Observable<Transaction> transactionObservable();
+    Flowable<Transaction> transactionFlowable();
 
     
-    Observable<Transaction> pendingTransactionObservable();
+    Flowable<Transaction> pendingTransactionFlowable();
 
     
-    Observable<HpbBlock> blockObservable(boolean fullTransactionObjects);
+    Flowable<HpbBlock> blockFlowable(boolean fullTransactionObjects);
 
     
-    Observable<HpbBlock> replayBlocksObservable(
+    Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects);
 
     
-    Observable<HpbBlock> replayBlocksObservable(
+    Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending);
 
     
-    Observable<Transaction> replayTransactionsObservable(
+    Flowable<HpbBlock> replayPastBlocksFlowable(
+            DefaultBlockParameter startBlock, boolean fullTransactionObjects,
+            Flowable<HpbBlock> onCompleteFlowable);
+
+    
+    Flowable<HpbBlock> replayPastBlocksFlowable(
+            DefaultBlockParameter startBlock, boolean fullTransactionObjects);
+
+    
+    Flowable<Transaction> replayPastTransactionsFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock);
 
     
-    Observable<HpbBlock> catchUpToLatestBlockObservable(
-            DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<HpbBlock> onCompleteObservable);
-
-    
-    Observable<HpbBlock> catchUpToLatestBlockObservable(
-            DefaultBlockParameter startBlock, boolean fullTransactionObjects);
-
-    
-    Observable<Transaction> catchUpToLatestTransactionObservable(
+    Flowable<Transaction> replayPastTransactionsFlowable(
             DefaultBlockParameter startBlock);
 
     
-    Observable<HpbBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
+    Flowable<HpbBlock> replayPastAndFutureBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects);
 
     
-    Observable<Transaction> catchUpToLatestAndSubscribeToNewTransactionsObservable(
+    Flowable<Transaction> replayPastAndFutureTransactionsFlowable(
             DefaultBlockParameter startBlock);
 
     
-    Observable<NewHeadsNotification> newHeadsNotifications();
+    Flowable<NewHeadsNotification> newHeadsNotifications();
 
     
-    Observable<LogNotification> logsNotifications(List<String> addresses, List<String> topics);
+    Flowable<LogNotification> logsNotifications(List<String> addresses, List<String> topics);
 }

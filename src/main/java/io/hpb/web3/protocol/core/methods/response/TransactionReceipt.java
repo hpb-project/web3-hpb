@@ -16,8 +16,8 @@ public class TransactionReceipt {
     private String gasUsed;
     private String contractAddress;
     private String root;
-    // status is only present on Byzantium transactions onwards
-    // see EIP 658 https://github.com/Hpb/EIPs/pull/658
+    
+    
     private String status;
     private String from;
     private String to;

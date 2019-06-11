@@ -1,10 +1,10 @@
 package io.hpb.web3.console;
 
+import static io.hpb.web3.codegen.SolidityFunctionWrapperGenerator.COMMAND_SOLIDITY;
 import static io.hpb.web3.utils.Collection.tail;
 
 import io.hpb.web3.codegen.Console;
 import io.hpb.web3.codegen.SolidityFunctionWrapperGenerator;
-import io.hpb.web3.codegen.TruffleJsonFunctionWrapperGenerator;
 import io.hpb.web3.utils.Version;
 
 
@@ -12,7 +12,7 @@ public class Runner {
 
     private static String USAGE = "Usage: web3 version|wallet|solidity ...";
 
-    private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
+    private static String LOGO = "\n" 
             + "              _      _____ _     _        \n"
             + "             | |    |____ (_)   (_)       \n"
             + "__      _____| |__      / /_     _   ___  \n"
@@ -32,11 +32,8 @@ public class Runner {
                 case "wallet":
                     WalletRunner.run(tail(args));
                     break;
-                case "solidity":
-                    SolidityFunctionWrapperGenerator.run(tail(args));
-                    break;
-                case "truffle":
-                    TruffleJsonFunctionWrapperGenerator.run(tail(args));
+                case COMMAND_SOLIDITY:
+                    SolidityFunctionWrapperGenerator.main(tail(args));
                     break;
                 case "version":
                     Console.exitSuccess("Version: " + Version.getVersion() + "\n"

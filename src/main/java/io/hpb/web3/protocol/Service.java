@@ -10,7 +10,7 @@ import io.hpb.web3.protocol.core.Request;
 import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.protocol.websocket.events.Notification;
 import io.hpb.web3.utils.Async;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 public abstract class Service implements Web3Service {
@@ -44,7 +44,7 @@ public abstract class Service implements Web3Service {
     }
 
     @Override
-    public <T extends Notification<?>> Observable<T> subscribe(
+    public <T extends Notification<?>> Flowable<T> subscribe(
             Request request,
             String unsubscribeMethod,
             Class<T> responseType) {

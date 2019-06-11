@@ -33,8 +33,8 @@ public class RawResponseDeserializer
         return deserializedResponse;
     }
 
-    // Must implement ResolvableDeserializer when modifying BeanDeserializer
-    // otherwise deserializing throws JsonMappingException
+    
+    
     @Override
     public void resolve(DeserializationContext ctxt) throws JsonMappingException {
         ((ResolvableDeserializer) defaultDeserializer).resolve(ctxt);

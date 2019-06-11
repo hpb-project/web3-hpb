@@ -21,7 +21,7 @@ public abstract class TransactionReceiptProcessor {
             String transactionHash)
             throws IOException, TransactionException;
 
-    Optional<TransactionReceipt> sendTransactionReceiptRequest(
+    Optional<? extends TransactionReceipt> sendTransactionReceiptRequest(
             String transactionHash) throws IOException, TransactionException {
         HpbGetTransactionReceipt transactionReceipt =
                 web3.hpbGetTransactionReceipt(transactionHash).send();

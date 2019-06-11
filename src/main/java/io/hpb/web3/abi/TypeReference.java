@@ -24,8 +24,8 @@ public abstract class TypeReference<T extends io.hpb.web3.abi.datatypes.Type>
     }
 
     public int compareTo(TypeReference<T> o) {
-        // taken from the blog post comments - this results in an errror if the
-        // type parameter is left out.
+        
+        
         return 0;
     }
 

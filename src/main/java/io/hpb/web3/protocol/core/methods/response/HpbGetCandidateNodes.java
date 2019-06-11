@@ -17,7 +17,6 @@ import io.hpb.web3.protocol.core.Response;
 /**
  * @author will
  * 获取候选节点
- * @date 20181221
  */
 public class HpbGetCandidateNodes extends Response<HpbGetCandidateNodes.CandidateNodes> {
 

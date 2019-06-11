@@ -37,7 +37,7 @@ public class TypeDecoder {
             return 0;
         } else if (DynamicBytes.class.isAssignableFrom(type)
                 || Utf8String.class.isAssignableFrom(type)) {
-            // length field + data value
+            
             return (decodeUintAsInt(input, offset) / Type.MAX_BYTE_LENGTH) + 2;
         } else {
             return 1;
@@ -96,7 +96,7 @@ public class TypeDecoder {
             byte[] resultByteArray = new byte[typeLengthAsBytes + 1];
 
             if (Int.class.isAssignableFrom(type) || Fixed.class.isAssignableFrom(type)) {
-                resultByteArray[0] = inputByteArray[0];  // take MSB as sign bit
+                resultByteArray[0] = inputByteArray[0];  
             }
 
             int valueOffset = Type.MAX_BYTE_LENGTH - typeLengthAsBytes;
@@ -114,7 +114,7 @@ public class TypeDecoder {
     }
 
     static <T extends NumericType> int getTypeLengthInBytes(Class<T> type) {
-        return getTypeLength(type) >> 3;  // divide by 8
+        return getTypeLength(type) >> 3;  
     }
 
     static <T extends NumericType> int getTypeLength(Class<T> type) {
@@ -199,7 +199,7 @@ public class TypeDecoder {
             if (elements.isEmpty()) {
                 throw new UnsupportedOperationException("Zero length fixed array is invalid type");
             } else {
-                return instantiateStaticArray(typeReference, elements);
+                return instantiateStaticArray(typeReference, elements, length);
             }
         };
 
@@ -208,13 +208,15 @@ public class TypeDecoder {
 
     @SuppressWarnings("unchecked")
     private static <T extends Type> T instantiateStaticArray(
-            TypeReference<T> typeReference, List<T> elements) {
+            TypeReference<T> typeReference, List<T> elements, int length) {
         try {
-            Class<List> listClass = List.class;
-            return typeReference.getClassType().getConstructor(listClass).newInstance(elements);
+            Class<? extends StaticArray> arrayClass =
+                    (Class<? extends StaticArray>) Class.forName(
+                            "io.hpb.web3.abi.datatypes.generated.StaticArray" + length);
+
+            return (T) arrayClass.getConstructor(List.class).newInstance(elements);
         } catch (ReflectiveOperationException e) {
-            //noinspection unchecked
-            return (T) new StaticArray<>(elements);
+            throw new UnsupportedOperationException(e);
         }
     }
 

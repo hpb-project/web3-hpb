@@ -31,12 +31,12 @@ public class LinuxSecureRandom extends SecureRandomSpi {
     static {
         try {
             File file = new File("/dev/urandom");
-            // This stream is deliberately leaked.
+            
             urandom = new FileInputStream(file);
             if (urandom.read() == -1) {
                 throw new RuntimeException("/dev/urandom not readable?");
             }
-            // Now override the default SecureRandom implementation with this one.
+            
             int position = Security.insertProviderAt(new LinuxSecureRandomProvider(), 1);
 
             if (position != -1) {
@@ -45,7 +45,7 @@ public class LinuxSecureRandom extends SecureRandomSpi {
                 log.info("Randomness is already secure.");
             }
         } catch (FileNotFoundException e) {
-            // Should never happen.
+            
             log.error("/dev/urandom does not appear to exist or is not openable");
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -57,21 +57,21 @@ public class LinuxSecureRandom extends SecureRandomSpi {
     private final DataInputStream dis;
 
     public LinuxSecureRandom() {
-        // DataInputStream is not thread safe, so each random object has its own.
+        
         dis = new DataInputStream(urandom);
     }
 
     @Override
     protected void engineSetSeed(byte[] bytes) {
-        // Ignore.
+        
     }
 
     @Override
     protected void engineNextBytes(byte[] bytes) {
         try {
-            dis.readFully(bytes); // This will block until all the bytes can be read.
+            dis.readFully(bytes); 
         } catch (IOException e) {
-            throw new RuntimeException(e); // Fatal error. Do not attempt to recover from this.
+            throw new RuntimeException(e); 
         }
     }
 

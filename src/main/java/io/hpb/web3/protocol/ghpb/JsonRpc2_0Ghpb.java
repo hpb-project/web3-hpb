@@ -14,7 +14,7 @@ import io.hpb.web3.protocol.ghpb.response.PersonalEcRecover;
 import io.hpb.web3.protocol.ghpb.response.PersonalImportRawKey;
 import io.hpb.web3.protocol.websocket.events.PendingTransactionNotification;
 import io.hpb.web3.protocol.websocket.events.SyncingNotfication;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 public class JsonRpc2_0Ghpb extends JsonRpc2_0Admin implements Ghpb {
@@ -80,7 +80,7 @@ public class JsonRpc2_0Ghpb extends JsonRpc2_0Admin implements Ghpb {
                 BooleanResponse.class);
     }
 
-    public Observable<PendingTransactionNotification> newPendingTransactionsNotifications() {
+    public Flowable<PendingTransactionNotification> newPendingTransactionsNotifications() {
         return web3Service.subscribe(
                 new Request<>(
                         "hpb_subscribe",
@@ -93,7 +93,7 @@ public class JsonRpc2_0Ghpb extends JsonRpc2_0Admin implements Ghpb {
     }
 
     @Override
-    public Observable<SyncingNotfication> syncingStatusNotifications() {
+    public Flowable<SyncingNotfication> syncingStatusNotifications() {
         return web3Service.subscribe(
                 new Request<>(
                         "hpb_subscribe",

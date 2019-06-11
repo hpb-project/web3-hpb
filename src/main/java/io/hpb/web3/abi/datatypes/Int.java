@@ -9,7 +9,7 @@ public class Int extends IntType {
     public static final Int DEFAULT = new Int(BigInteger.ZERO);
 
     public Int(BigInteger value) {
-        // "int" values should be declared as int256 in computing function selectors
+        
         this(MAX_BIT_LENGTH, value);
     }
 

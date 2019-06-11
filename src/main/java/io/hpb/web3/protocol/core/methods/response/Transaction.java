@@ -25,7 +25,7 @@ public class Transaction {
     private String raw;
     private String r;
     private String s;
-    private long v;  // see https://github.com/web3/web3/issues/44
+    private long v;  
 
     public Transaction() {
     }
@@ -217,13 +217,13 @@ public class Transaction {
         return chainId;
     }
 
-    // public void setV(byte v) {
-    //     this.v = v;
-    // }
+    
+    
+    
 
-    // Workaround until Ghpb & Parity return consistent values. At present
-    // Parity returns a byte value, Ghpb returns a hex-encoded string
-    // https://github.com/Hpb/go-Hpb/issues/3339
+    
+    
+    
     public void setV(Object v) {
         if (v instanceof String) {
             this.v = Numeric.toBigInt((String) v).longValueExact();

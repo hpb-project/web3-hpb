@@ -9,7 +9,7 @@ import io.hpb.web3.utils.Numeric;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Transaction {
-    // default as per https://github.com/Hpb/wiki/wiki/JSON-RPC#hpb_sendtransaction
+    
     public static final BigInteger DEFAULT_GAS = BigInteger.valueOf(9000);
 
     private String from;
@@ -18,7 +18,7 @@ public class Transaction {
     private BigInteger gasPrice;
     private BigInteger value;
     private String data;
-    private BigInteger nonce;  // nonce field is not present on hpb_call/hpb_estimateGas
+    private BigInteger nonce;  
 
     public Transaction(String from, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
                        String to, BigInteger value, String data) {
@@ -106,7 +106,7 @@ public class Transaction {
         if (value != null) {
             return Numeric.encodeQuantity(value);
         } else {
-            return null;  // we don't want the field to be encoded if not present
+            return null;  
         }
     }
 }

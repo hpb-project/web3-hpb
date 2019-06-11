@@ -94,6 +94,18 @@ public class WalletUtils {
         return new Bip39Wallet(walletFile, mnemonic);
     }
 
+    
+    public static Bip39Wallet generateBip39WalletFromMnemonic(
+            String password, String mnemonic, File destinationDirectory)
+            throws CipherException, IOException {
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
+        ECKeyPair privateKey = ECKeyPair.create(sha256(seed));
+
+        String walletFile = generateWalletFile(password, privateKey, destinationDirectory, false);
+
+        return new Bip39Wallet(walletFile, mnemonic);
+    }
+
     public static Credentials loadCredentials(String password, String source)
             throws IOException, CipherException {
         return loadCredentials(password, new File(source));
@@ -132,7 +144,7 @@ public class WalletUtils {
         } else if (osName.startsWith("win")) {
             return String.format("%s%sHpb", System.getenv("APPDATA"), File.separator);
         } else {
-            return String.format("%s%s.Hpb", System.getProperty("user.home"), File.separator);
+            return String.format("%s%s.hpb", System.getProperty("user.home"), File.separator);
         }
     }
 

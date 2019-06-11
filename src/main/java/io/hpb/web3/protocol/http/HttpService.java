@@ -1,9 +1,13 @@
 package io.hpb.web3.protocol.http;
 
+import static okhttp3.ConnectionSpec.CLEARTEXT;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import io.hpb.web3.protocol.Service;
 import io.hpb.web3.protocol.exceptions.ClientConnectionException;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -23,10 +29,46 @@ import okio.BufferedSource;
 
 public class HttpService extends Service {
 
+    
+    private static final CipherSuite[] INFURA_CIPHER_SUITES = new CipherSuite[] {
+        CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+        CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+        CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+        CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+        CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+        CipherSuite.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+
+        
+        
+        
+        CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+        CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+        CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+        CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+        CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256,
+        CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384,
+        CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,
+        CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
+        CipherSuite.TLS_RSA_WITH_3DES_EDE_CBC_SHA,
+
+        
+        CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+        CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+        CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA256,
+        CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA256
+    };
+
+    private static final ConnectionSpec INFURA_CIPHER_SUITE_SPEC = new ConnectionSpec
+            .Builder(ConnectionSpec.MODERN_TLS).cipherSuites(INFURA_CIPHER_SUITES).build();
+
+    
+    private static final List<ConnectionSpec> CONNECTION_SPEC_LIST = Arrays.asList(
+            INFURA_CIPHER_SUITE_SPEC, CLEARTEXT);
+
     public static final MediaType JSON_MEDIA_TYPE
             = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String DEFAULT_URL = "http://localhost:8545/";
+    public static final String DEFAULT_URL =  "http://localhost:8545/";
 
     private static final Logger log = LoggerFactory.getLogger(HttpService.class);
 
@@ -49,7 +91,7 @@ public class HttpService extends Service {
         this(DEFAULT_URL, httpClient, includeRawResponses);
     }
 
-    private HttpService(String url, OkHttpClient httpClient) {
+    public HttpService(String url, OkHttpClient httpClient) {
         this(url, httpClient, false);
     }
 
@@ -74,7 +116,8 @@ public class HttpService extends Service {
     }
 
     private static OkHttpClient createOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectionSpecs(CONNECTION_SPEC_LIST);
         configureLogging(builder);
         return builder.build();
     }
@@ -100,6 +143,7 @@ public class HttpService extends Service {
                 .build();
 
         okhttp3.Response response = httpClient.newCall(httpRequest).execute();
+        processHeaders(response.headers());
         ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
             if (responseBody != null) {
@@ -115,15 +159,19 @@ public class HttpService extends Service {
         }
     }
 
+    protected void processHeaders(Headers headers) {
+        
+    }
+
     private InputStream buildInputStream(ResponseBody responseBody) throws IOException {
         InputStream inputStream = responseBody.byteStream();
 
         if (includeRawResponse) {
-            // we have to buffer the entire input payload, so that after processing
-            // it can be re-read and used to populate the rawResponse field.
+            
+            
 
             BufferedSource source = responseBody.source();
-            source.request(Long.MAX_VALUE); // Buffer the entire body
+            source.request(Long.MAX_VALUE); 
             Buffer buffer = source.buffer();
 
             long size = buffer.size();
@@ -156,7 +204,7 @@ public class HttpService extends Service {
         headers.putAll(headersToAdd);
     }
 
-    public HashMap<String, String> getHeaders() {
+    public HashMap<String, String> ghpbeaders() {
         return headers;
     }
 
