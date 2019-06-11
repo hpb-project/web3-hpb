@@ -25,7 +25,7 @@ public class Transaction {
     private String raw;
     private String r;
     private String s;
-    private long v;  // see https://github.com/web3/web3/issues/44
+    private long v;  
 
     public Transaction() {
     }
@@ -53,11 +53,11 @@ public class Transaction {
         this.v = v;
     }
 
-    public String getHash() {
+    public String ghpbash() {
         return hash;
     }
 
-    public void setHash(String hash) {
+    public void shpbash(String hash) {
         this.hash = hash;
     }
 
@@ -217,13 +217,13 @@ public class Transaction {
         return chainId;
     }
 
-    // public void setV(byte v) {
-    //     this.v = v;
-    // }
+    
+    
+    
 
-    // Workaround until Ghpb & Parity return consistent values. At present
-    // Parity returns a byte value, Ghpb returns a hex-encoded string
-    // https://github.com/Hpb/go-Hpb/issues/3339
+    
+    
+    
     public void setV(Object v) {
         if (v instanceof String) {
             this.v = Numeric.toBigInt((String) v).longValueExact();
@@ -248,7 +248,7 @@ public class Transaction {
         if (getV() != that.getV()) {
             return false;
         }
-        if (getHash() != null ? !getHash().equals(that.getHash()) : that.getHash() != null) {
+        if (ghpbash() != null ? !ghpbash().equals(that.ghpbash()) : that.ghpbash() != null) {
             return false;
         }
         if (getNonceRaw() != null
@@ -309,7 +309,7 @@ public class Transaction {
 
     @Override
     public int hashCode() {
-        int result = getHash() != null ? getHash().hashCode() : 0;
+        int result = ghpbash() != null ? ghpbash().hashCode() : 0;
         result = 31 * result + (getNonceRaw() != null ? getNonceRaw().hashCode() : 0);
         result = 31 * result + (getBlockHash() != null ? getBlockHash().hashCode() : 0);
         result = 31 * result + (getBlockNumberRaw() != null ? getBlockNumberRaw().hashCode() : 0);

@@ -27,31 +27,32 @@ import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.protocol.core.methods.response.HpbSubscribe;
 import io.hpb.web3.protocol.core.methods.response.HpbUnsubscribe;
 import io.hpb.web3.protocol.websocket.events.Notification;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.subjects.BehaviorSubject;
 
 
 public class WebSocketService implements Web3Service {
 
     private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
 
-    // Timeout for JSON-RPC requests
+    
     static final long REQUEST_TIMEOUT = 60;
 
-    // WebSocket client
+    
     private final WebSocketClient webSocketClient;
-    // Executor to schedule request timeouts
+    
     private final ScheduledExecutorService executor;
-    // Object mapper to map incoming JSON objects
+    
     private final ObjectMapper objectMapper;
 
-    // Map of a sent request id to objects necessary to process this request
+    
     private Map<Long, WebSocketRequest<?>> requestForId = new ConcurrentHashMap<>();
-    // Map of a sent subscription request id to objects necessary to process
-    // subscription events
+    
+    
     private Map<Long, WebSocketSubscription<?>> subscriptionRequestForId
             = new ConcurrentHashMap<>();
-    // Map of a subscription id to objects necessary to process incoming events
+    
     private Map<String, WebSocketSubscription<?>> subscriptionForId = new ConcurrentHashMap<>();
 
     public WebSocketService(String serverUrl, boolean includeRawResponses) {
@@ -182,8 +183,8 @@ public class WebSocketService implements Web3Service {
         WebSocketRequest request = getAndRemoveRequest(replyId);
         try {
             Object reply = objectMapper.convertValue(replyJson, request.getResponseType());
-            // Instead of sending a reply to a caller asynchronously we need to process it here
-            // to avoid race conditions we need to modify state of this class.
+            
+            
             if (reply instanceof HpbSubscribe) {
                 processSubscriptionResponse(replyId, (HpbSubscribe) reply);
             }
@@ -216,7 +217,7 @@ public class WebSocketService implements Web3Service {
 
     private <T extends Notification<?>> void establishSubscription(
             BehaviorSubject<T> subject, Class<T> responseType, HpbSubscribe subscriptionReply) {
-        log.info("Subscribed to RPC events with id {}",
+        log.debug("Subscribed to RPC events with id {}",
                 subscriptionReply.getSubscriptionId());
         subscriptionForId.put(
                 subscriptionReply.getSubscriptionId(),
@@ -261,7 +262,7 @@ public class WebSocketService implements Web3Service {
     }
 
     private void processSubscriptionEvent(String replyStr, JsonNode replyJson) {
-        log.info("Processing event: {}", replyStr);
+        log.debug("Processing event: {}", replyStr);
         String subscriptionId = extractSubscriptionId(replyJson);
         WebSocketSubscription subscription = subscriptionForId.get(subscriptionId);
 
@@ -286,7 +287,7 @@ public class WebSocketService implements Web3Service {
     }
 
     private boolean isSubscriptionEvent(JsonNode replyJson) {
-        return replyJson.has("method");
+        return replyJson.has("Method");
     }
 
     private JsonNode parseToTree(String replyStr) throws IOException {
@@ -332,23 +333,25 @@ public class WebSocketService implements Web3Service {
     }
 
     @Override
-    public <T extends Notification<?>> Observable<T> subscribe(
+    public <T extends Notification<?>> Flowable<T> subscribe(
             Request request,
             String unsubscribeMethod,
             Class<T> responseType) {
-        // We can't use usual Observer since we can call "onError"
-        // before first client is subscribed and we need to
-        // preserve it
+        
+        
+        
         BehaviorSubject<T> subject = BehaviorSubject.create();
 
-        // We need to subscribe synchronously, since if we return
-        // an Observable to a client before we got a reply
-        // a client can unsubscribe before we know a subscription
-        // id and this can cause a race condition
+        
+        
+        
+        
         subscribeToEventsStream(request, subject, responseType);
 
+
         return subject
-                .doOnUnsubscribe(() -> closeSubscription(subject, unsubscribeMethod));
+                .doOnDispose(() -> closeSubscription(subject, unsubscribeMethod))
+                .toFlowable(BackpressureStrategy.BUFFER);
 
     }
 
@@ -370,7 +373,6 @@ public class WebSocketService implements Web3Service {
 
     private <T extends Notification<?>> void closeSubscription(
             BehaviorSubject<T> subject, String unsubscribeMethod) {
-        subject.onCompleted();
         String subscriptionId = getSubscriptionId(subject);
         if (subscriptionId != null) {
             subscriptionForId.remove(subscriptionId);
@@ -426,7 +428,7 @@ public class WebSocketService implements Web3Service {
         });
     }
 
-    // Method visible for unit-tests
+    
     boolean isWaitingForReply(long requestId) {
         return requestForId.containsKey(requestId);
     }

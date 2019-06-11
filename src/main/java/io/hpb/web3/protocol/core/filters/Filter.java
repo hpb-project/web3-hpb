@@ -53,8 +53,8 @@ public abstract class Filter<T> {
             filterId = hpbFilter.getFilterId();
             this.scheduledExecutorService = scheduledExecutorService;
             this.blockTime = blockTime;
-            // this runs in the caller thread as if any exceptions are encountered, we shouldn't
-            // proceed with creating the scheduled task below
+            
+            
             getInitialFilterLogs();
 
             
@@ -63,8 +63,8 @@ public abstract class Filter<T> {
                         try {
                             this.pollFilter(hpbFilter);
                         } catch (Throwable e) {
-                            // All exceptions must be caught, otherwise our job terminates without
-                            // any notification
+                            
+                            
                             log.error("Error sending request", e);
                         }
                     },

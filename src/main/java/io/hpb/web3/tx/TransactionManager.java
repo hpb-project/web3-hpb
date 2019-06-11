@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import io.hpb.web3.protocol.Web3;
+import io.hpb.web3.protocol.core.DefaultBlockParameter;
 import io.hpb.web3.protocol.core.methods.response.HpbSendTransaction;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.protocol.exceptions.TransactionException;
@@ -51,6 +52,10 @@ public abstract class TransactionManager {
     public abstract HpbSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, BigInteger value)
+            throws IOException;
+
+    public abstract String sendCall(
+            String to, String data, DefaultBlockParameter defaultBlockParameter)
             throws IOException;
 
     public String getFromAddress() {

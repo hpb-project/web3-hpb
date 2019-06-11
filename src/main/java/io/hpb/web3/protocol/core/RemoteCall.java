@@ -4,7 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
 import io.hpb.web3.utils.Async;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 public class RemoteCall<T> {
@@ -26,16 +26,7 @@ public class RemoteCall<T> {
     }
 
     
-    public Observable<T> observable() {
-        return Observable.create(
-                subscriber -> {
-                    try {
-                        subscriber.onNext(send());
-                        subscriber.onCompleted();
-                    } catch (Exception e) {
-                        subscriber.onError(e);
-                    }
-                }
-        );
+    public Flowable<T> flowable() {
+        return Flowable.fromCallable(this::send);
     }
 }

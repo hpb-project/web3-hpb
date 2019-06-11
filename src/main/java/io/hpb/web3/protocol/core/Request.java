@@ -6,28 +6,29 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.hpb.web3.protocol.Web3Service;
-import rx.Observable;
+import io.reactivex.Flowable;
+
 
 public class Request<S, T extends Response> {
     private static AtomicLong nextId = new AtomicLong(0);
 
     private String jsonrpc = "2.0";
-    private String method;
+    private String Method;
     private List<S> params;
     private long id;
 
     private Web3Service web3Service;
 
-    // Unfortunately require an instance of the type too, see
-    // http://stackoverflow.com/a/3437930/3211687
+    
+    
     private Class<T> responseType;
 
     public Request() {
     }
 
-    public Request(String method, List<S> params,
+    public Request(String Method, List<S> params,
                    Web3Service web3Service, Class<T> type) {
-        this.method = method;
+        this.Method = Method;
         this.params = params;
         this.id = nextId.getAndIncrement();
         this.web3Service = web3Service;
@@ -43,11 +44,11 @@ public class Request<S, T extends Response> {
     }
 
     public String getMethod() {
-        return method;
+        return Method;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setMethod(String Method) {
+        this.Method = Method;
     }
 
     public List<S> getParams() {
@@ -74,7 +75,7 @@ public class Request<S, T extends Response> {
         return  web3Service.sendAsync(this, responseType);
     }
 
-    public Observable<T> observable() {
-        return new RemoteCall<>(this::send).observable();
+    public Flowable<T> flowable() {
+        return new RemoteCall<>(this::send).flowable();
     }
 }

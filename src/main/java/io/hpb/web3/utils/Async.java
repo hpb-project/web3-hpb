@@ -19,8 +19,8 @@ public class Async {
     public static <T> CompletableFuture<T> run(Callable<T> callable) {
         CompletableFuture<T> result = new CompletableFuture<>();
         CompletableFuture.runAsync(() -> {
-            // we need to explicitly catch any exceptions,
-            // otherwise they will be silently discarded
+            
+            
             try {
                 result.complete(callable.call());
             } catch (Throwable e) {

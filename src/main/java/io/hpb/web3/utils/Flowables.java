@@ -2,18 +2,19 @@ package io.hpb.web3.utils;
 
 import java.math.BigInteger;
 
-import rx.Observable;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 
 
-public class Observables {
+public class Flowables {
 
-    public static Observable<BigInteger> range(
+    public static Flowable<BigInteger> range(
             final BigInteger startValue, final BigInteger endValue) {
         return range(startValue, endValue, true);
     }
 
     
-    public static Observable<BigInteger> range(
+    public static Flowable<BigInteger> range(
             final BigInteger startValue, final BigInteger endValue, final boolean ascending) {
         if (startValue.compareTo(BigInteger.ZERO) == -1) {
             throw new IllegalArgumentException("Negative start index cannot be used");
@@ -23,31 +24,31 @@ public class Observables {
         }
 
         if (ascending) {
-            return Observable.create(subscriber -> {
+            return Flowable.create(subscriber -> {
                 for (BigInteger i = startValue;
                         i.compareTo(endValue) < 1
-                             && !subscriber.isUnsubscribed();
+                             && !subscriber.isCancelled();
                         i = i.add(BigInteger.ONE)) {
                     subscriber.onNext(i);
                 }
 
-                if (!subscriber.isUnsubscribed()) {
-                    subscriber.onCompleted();
+                if (!subscriber.isCancelled()) {
+                    subscriber.onComplete();
                 }
-            });
+            }, BackpressureStrategy.BUFFER);
         } else {
-            return Observable.create(subscriber -> {
+            return Flowable.create(subscriber -> {
                 for (BigInteger i = endValue;
                         i.compareTo(startValue) > -1
-                             && !subscriber.isUnsubscribed();
+                             && !subscriber.isCancelled();
                         i = i.subtract(BigInteger.ONE)) {
                     subscriber.onNext(i);
                 }
 
-                if (!subscriber.isUnsubscribed()) {
-                    subscriber.onCompleted();
+                if (!subscriber.isCancelled()) {
+                    subscriber.onComplete();
                 }
-            });
+            }, BackpressureStrategy.BUFFER);
         }
     }
 }

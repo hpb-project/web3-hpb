@@ -48,7 +48,8 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
             try {
                 String transactionHash = requestWrapper.getTransactionHash();
                 Optional<TransactionReceipt> transactionReceipt =
-                        sendTransactionReceiptRequest(transactionHash);
+                        (Optional<TransactionReceipt>)
+                                sendTransactionReceiptRequest(transactionHash);
                 if (transactionReceipt.isPresent()) {
                     callback.accept(transactionReceipt.get());
                     pendingTransactions.remove(requestWrapper);
@@ -57,7 +58,7 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
                         throw new TransactionException(
                                 "No transaction receipt for txHash: " + transactionHash
                                         + "received after " + pollingAttemptsPerTxHash
-                                        + " attempts");
+                                        + " attempts", transactionHash);
                     } else {
                         requestWrapper.incrementCount();
                     }

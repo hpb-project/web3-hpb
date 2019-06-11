@@ -16,12 +16,12 @@ import io.hpb.web3.protocol.core.filters.PendingTransactionFilter;
 import io.hpb.web3.protocol.core.methods.response.HpbBlock;
 import io.hpb.web3.protocol.core.methods.response.Log;
 import io.hpb.web3.protocol.core.methods.response.Transaction;
-import io.hpb.web3.utils.Observables;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
+import io.hpb.web3.utils.Flowables;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class JsonRpc2_0Rx {
@@ -36,83 +36,83 @@ public class JsonRpc2_0Rx {
         this.scheduler = Schedulers.from(scheduledExecutorService);
     }
 
-    public Observable<String> hpbBlockHashObservable(long pollingInterval) {
-        return Observable.create(subscriber -> {
+    public Flowable<String> hpbBlockHashFlowable(long pollingInterval) {
+        return Flowable.create(subscriber -> {
             BlockFilter blockFilter = new BlockFilter(
                     web3, subscriber::onNext);
             run(blockFilter, subscriber, pollingInterval);
-        });
+        }, BackpressureStrategy.BUFFER);
     }
 
-    public Observable<String> hpbPendingTransactionHashObservable(long pollingInterval) {
-        return Observable.create(subscriber -> {
+    public Flowable<String> hpbPendingTransactionHashFlowable(long pollingInterval) {
+        return Flowable.create(subscriber -> {
             PendingTransactionFilter pendingTransactionFilter = new PendingTransactionFilter(
                     web3, subscriber::onNext);
 
             run(pendingTransactionFilter, subscriber, pollingInterval);
-        });
+        }, BackpressureStrategy.BUFFER);
     }
 
-    public Observable<Log> hpbLogObservable(
+    public Flowable<Log> hpbLogFlowable(
             io.hpb.web3.protocol.core.methods.request.HpbFilter hpbFilter, long pollingInterval) {
-        return Observable.create((Subscriber<? super Log> subscriber) -> {
+        return Flowable.create(subscriber -> {
             LogFilter logFilter = new LogFilter(
                     web3, subscriber::onNext, hpbFilter);
 
             run(logFilter, subscriber, pollingInterval);
-        });
+        }, BackpressureStrategy.BUFFER);
     }
 
     private <T> void run(
-            io.hpb.web3.protocol.core.filters.Filter<T> filter, Subscriber<? super T> subscriber,
+            io.hpb.web3.protocol.core.filters.Filter<T> filter, FlowableEmitter<? super T> emitter,
             long pollingInterval) {
 
         filter.run(scheduledExecutorService, pollingInterval);
-        subscriber.add(Subscriptions.create(filter::cancel));
+        emitter.setCancellable(filter::cancel);
     }
 
-    public Observable<Transaction> transactionObservable(long pollingInterval) {
-        return blockObservable(true, pollingInterval)
+    public Flowable<Transaction> transactionFlowable(long pollingInterval) {
+        return blockFlowable(true, pollingInterval)
                 .flatMapIterable(JsonRpc2_0Rx::toTransactions);
     }
 
-    public Observable<Transaction> pendingTransactionObservable(long pollingInterval) {
-        return hpbPendingTransactionHashObservable(pollingInterval)
+    public Flowable<Transaction> pendingTransactionFlowable(long pollingInterval) {
+        return hpbPendingTransactionHashFlowable(pollingInterval)
                 .flatMap(transactionHash ->
-                        web3.hpbGetTransactionByHash(transactionHash).observable())
+                        web3.hpbGetTransactionByHash(transactionHash).flowable())
                 .filter(hpbTransaction -> hpbTransaction.getTransaction().isPresent())
                 .map(hpbTransaction -> hpbTransaction.getTransaction().get());
     }
 
-    public Observable<HpbBlock> blockObservable(
+    public Flowable<HpbBlock> blockFlowable(
             boolean fullTransactionObjects, long pollingInterval) {
-        return hpbBlockHashObservable(pollingInterval)
+        return hpbBlockHashFlowable(pollingInterval)
                 .flatMap(blockHash ->
-                        web3.hpbGetBlockByHash(blockHash, fullTransactionObjects).observable());
+                        web3.hpbGetBlockByHash(blockHash, fullTransactionObjects).flowable());
     }
 
-    public Observable<HpbBlock> replayBlocksObservable(
+    public Flowable<HpbBlock> replayBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
-        return replayBlocksObservable(startBlock, endBlock, fullTransactionObjects, true);
+        return replayBlocksFlowable(startBlock, endBlock, fullTransactionObjects, true);
     }
 
-    public Observable<HpbBlock> replayBlocksObservable(
+    public Flowable<HpbBlock> replayBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
-        // We use a scheduler to ensure this Observable runs asynchronously for users to be
-        // consistent with the other Observables
-        return replayBlocksObservableSync(startBlock, endBlock, fullTransactionObjects, ascending)
+        
+        
+        return replayBlocksFlowableSync(startBlock, endBlock, fullTransactionObjects, ascending)
                 .subscribeOn(scheduler);
     }
 
-    private Observable<HpbBlock> replayBlocksObservableSync(
+    private Flowable<HpbBlock> replayBlocksFlowableSync(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
-        return replayBlocksObservableSync(startBlock, endBlock, fullTransactionObjects, true);
+        return replayBlocksFlowableSync(startBlock, endBlock, fullTransactionObjects, true);
     }
 
-    private Observable<HpbBlock> replayBlocksObservableSync(
+    private Flowable<HpbBlock> replayBlocksFlowableSync(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
 
@@ -122,47 +122,47 @@ public class JsonRpc2_0Rx {
             startBlockNumber = getBlockNumber(startBlock);
             endBlockNumber = getBlockNumber(endBlock);
         } catch (IOException e) {
-            Observable.error(e);
+            Flowable.error(e);
         }
 
         if (ascending) {
-            return Observables.range(startBlockNumber, endBlockNumber)
+            return Flowables.range(startBlockNumber, endBlockNumber)
                     .flatMap(i -> web3.hpbGetBlockByNumber(
                             new DefaultBlockParameterNumber(i),
-                            fullTransactionObjects).observable());
+                            fullTransactionObjects).flowable());
         } else {
-            return Observables.range(startBlockNumber, endBlockNumber, false)
+            return Flowables.range(startBlockNumber, endBlockNumber, false)
                     .flatMap(i -> web3.hpbGetBlockByNumber(
                             new DefaultBlockParameterNumber(i),
-                            fullTransactionObjects).observable());
+                            fullTransactionObjects).flowable());
         }
     }
 
-    public Observable<Transaction> replayTransactionsObservable(
+    public Flowable<Transaction> replayTransactionsFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        return replayBlocksObservable(startBlock, endBlock, true)
+        return replayBlocksFlowable(startBlock, endBlock, true)
                 .flatMapIterable(JsonRpc2_0Rx::toTransactions);
     }
 
-    public Observable<HpbBlock> catchUpToLatestBlockObservable(
+    public Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<HpbBlock> onCompleteObservable) {
-        // We use a scheduler to ensure this Observable runs asynchronously for users to be
-        // consistent with the other Observables
-        return catchUpToLatestBlockObservableSync(
-                startBlock, fullTransactionObjects, onCompleteObservable)
+            Flowable<HpbBlock> onCompleteFlowable) {
+        
+        
+        return replayPastBlocksFlowableSync(
+                startBlock, fullTransactionObjects, onCompleteFlowable)
                 .subscribeOn(scheduler);
     }
 
-    public Observable<HpbBlock> catchUpToLatestBlockObservable(
+    public Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return catchUpToLatestBlockObservable(
-                startBlock, fullTransactionObjects, Observable.empty());
+        return replayPastBlocksFlowable(
+                startBlock, fullTransactionObjects, Flowable.empty());
     }
 
-    private Observable<HpbBlock> catchUpToLatestBlockObservableSync(
+    private Flowable<HpbBlock> replayPastBlocksFlowableSync(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<HpbBlock> onCompleteObservable) {
+            Flowable<HpbBlock> onCompleteFlowable) {
 
         BigInteger startBlockNumber;
         BigInteger latestBlockNumber;
@@ -170,43 +170,43 @@ public class JsonRpc2_0Rx {
             startBlockNumber = getBlockNumber(startBlock);
             latestBlockNumber = getLatestBlockNumber();
         } catch (IOException e) {
-            return Observable.error(e);
+            return Flowable.error(e);
         }
 
         if (startBlockNumber.compareTo(latestBlockNumber) > -1) {
-            return onCompleteObservable;
+            return onCompleteFlowable;
         } else {
-            return Observable.concat(
-                    replayBlocksObservableSync(
+            return Flowable.concat(
+                    replayBlocksFlowableSync(
                             new DefaultBlockParameterNumber(startBlockNumber),
                             new DefaultBlockParameterNumber(latestBlockNumber),
                             fullTransactionObjects),
-                    Observable.defer(() -> catchUpToLatestBlockObservableSync(
+                    Flowable.defer(() -> replayPastBlocksFlowableSync(
                             new DefaultBlockParameterNumber(latestBlockNumber.add(BigInteger.ONE)),
                             fullTransactionObjects,
-                            onCompleteObservable)));
+                            onCompleteFlowable)));
         }
     }
 
-    public Observable<Transaction> catchUpToLatestTransactionObservable(
+    public Flowable<Transaction> replayPastTransactionsFlowable(
             DefaultBlockParameter startBlock) {
-        return catchUpToLatestBlockObservable(
-                startBlock, true, Observable.empty())
+        return replayPastBlocksFlowable(
+                startBlock, true, Flowable.empty())
                 .flatMapIterable(JsonRpc2_0Rx::toTransactions);
     }
 
-    public Observable<HpbBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
+    public Flowable<HpbBlock> replayPastAndFutureBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
             long pollingInterval) {
 
-        return catchUpToLatestBlockObservable(
+        return replayPastBlocksFlowable(
                 startBlock, fullTransactionObjects,
-                blockObservable(fullTransactionObjects, pollingInterval));
+                blockFlowable(fullTransactionObjects, pollingInterval));
     }
 
-    public Observable<Transaction> catchUpToLatestAndSubscribeToNewTransactionsObservable(
+    public Flowable<Transaction> replayPastAndFutureTransactionsFlowable(
             DefaultBlockParameter startBlock, long pollingInterval) {
-        return catchUpToLatestAndSubscribeToNewBlocksObservable(
+        return replayPastAndFutureBlocksFlowable(
                 startBlock, true, pollingInterval)
                 .flatMapIterable(JsonRpc2_0Rx::toTransactions);
     }
@@ -227,8 +227,8 @@ public class JsonRpc2_0Rx {
     }
 
     private static List<Transaction> toTransactions(HpbBlock hpbBlock) {
-        // If you ever see an exception thrown here, it's probably due to an incomplete chain in
-        // Ghpb/Parity. You should resync to solve.
+        
+        
         return hpbBlock.getBlock().getTransactions().stream()
                 .map(transactionResult -> (Transaction) transactionResult.get())
                 .collect(Collectors.toList());

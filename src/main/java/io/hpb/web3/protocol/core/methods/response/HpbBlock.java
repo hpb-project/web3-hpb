@@ -100,11 +100,11 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             this.number = number;
         }
 
-        public String getHash() {
+        public String ghpbash() {
             return hash;
         }
 
-        public void setHash(String hash) {
+        public void shpbash(String hash) {
             this.hash = hash;
         }
 
@@ -312,7 +312,7 @@ public class HpbBlock extends Response<HpbBlock.Block> {
                     ? !getNumberRaw().equals(block.getNumberRaw()) : block.getNumberRaw() != null) {
                 return false;
             }
-            if (getHash() != null ? !getHash().equals(block.getHash()) : block.getHash() != null) {
+            if (ghpbash() != null ? !ghpbash().equals(block.ghpbash()) : block.ghpbash() != null) {
                 return false;
             }
             if (getParentHash() != null
@@ -412,7 +412,7 @@ public class HpbBlock extends Response<HpbBlock.Block> {
         @Override
         public int hashCode() {
             int result = getNumberRaw() != null ? getNumberRaw().hashCode() : 0;
-            result = 31 * result + (getHash() != null ? getHash().hashCode() : 0);
+            result = 31 * result + (ghpbash() != null ? ghpbash().hashCode() : 0);
             result = 31 * result + (getParentHash() != null ? getParentHash().hashCode() : 0);
             result = 31 * result + (getNonceRaw() != null ? getNonceRaw().hashCode() : 0);
             result = 31 * result + (getSha3Uncles() != null ? getSha3Uncles().hashCode() : 0);
@@ -545,7 +545,7 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 return objectReader.readValue(jsonParser, Block.class);
             } else {
-                return null;  // null is wrapped by Optional in above getter
+                return null;  
             }
         }
     }

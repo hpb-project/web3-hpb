@@ -12,7 +12,7 @@ public class FastRawTransactionManager extends RawTransactionManager {
 
     private volatile BigInteger nonce = BigInteger.valueOf(-1);
 
-    public FastRawTransactionManager(Web3 web3, Credentials credentials, int chainId) {
+    public FastRawTransactionManager(Web3 web3, Credentials credentials, byte chainId) {
         super(web3, credentials, chainId);
     }
 
@@ -27,7 +27,7 @@ public class FastRawTransactionManager extends RawTransactionManager {
     }
 
     public FastRawTransactionManager(
-            Web3 web3, Credentials credentials, int chainId,
+            Web3 web3, Credentials credentials, byte chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(web3, credentials, chainId, transactionReceiptProcessor);
     }
@@ -35,7 +35,7 @@ public class FastRawTransactionManager extends RawTransactionManager {
     @Override
     protected synchronized BigInteger getNonce() throws IOException {
         if (nonce.signum() == -1) {
-            // obtain lock
+            
             nonce = super.getNonce();
         } else {
             nonce = nonce.add(BigInteger.ONE);

@@ -10,12 +10,12 @@ import java.util.concurrent.Future;
 
 import io.hpb.web3.crypto.Credentials;
 import io.hpb.web3.crypto.WalletUtils;
-import io.hpb.web3.ens.EnsResolver;
 import io.hpb.web3.protocol.Web3;
 import io.hpb.web3.protocol.core.methods.response.TransactionReceipt;
 import io.hpb.web3.protocol.core.methods.response.Web3ClientVersion;
 import io.hpb.web3.protocol.exceptions.TransactionException;
 import io.hpb.web3.protocol.http.HttpService;
+import io.hpb.web3.protocol.nodesmith.NodesmithHttpService;
 import io.hpb.web3.tx.Transfer;
 import io.hpb.web3.utils.Convert;
 
@@ -37,12 +37,11 @@ public class WalletSendFunds extends WalletManager {
         Credentials credentials = getCredentials(walletFile);
         console.printf("Wallet for address " + credentials.getAddress() + " loaded\n");
 
-        if (!WalletUtils.isValidAddress(destinationAddress)
-                && !EnsResolver.isValidEnsName(destinationAddress)) {
+        if (!WalletUtils.isValidAddress(destinationAddress)) {
             exitError("Invalid destination address specified");
         }
 
-        Web3 web3 = getHpbClient();
+        Web3 web3 = ghpbpbClient();
 
         BigDecimal amountToTransfer = getAmountToTransfer();
         Convert.Unit transferUnit = getTransferUnit();
@@ -74,7 +73,7 @@ public class WalletSendFunds extends WalletManager {
     }
 
     private Convert.Unit getTransferUnit() {
-        String unit = console.readLine("Please specify the unit (hpber, wei, ...) [hpber]: ")
+        String unit = console.readLine("Please specify the unit (hpb, wei, ...) [hpb]: ")
                 .trim();
 
         Convert.Unit transferUnit;
@@ -123,7 +122,7 @@ public class WalletSendFunds extends WalletManager {
         throw new RuntimeException("Application exit failure");
     }
 
-    private Web3 getHpbClient() {
+    private Web3 ghpbpbClient() {
         String clientAddress = console.readLine(
                 "Please confirm address of running Hpb client you wish to send "
                 + "the transfer request to [" + HttpService.DEFAULT_URL + "]: ")
@@ -132,7 +131,9 @@ public class WalletSendFunds extends WalletManager {
         Web3 web3;
         if (clientAddress.equals("")) {
             web3 = Web3.build(new HttpService());
-        }else {
+        } else if (clientAddress.contains("nodesmith.io")) {
+            web3 = Web3.build(new NodesmithHttpService(clientAddress));
+        } else {
             web3 = Web3.build(new HttpService(clientAddress));
         }
 

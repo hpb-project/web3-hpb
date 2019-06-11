@@ -7,7 +7,7 @@ import io.hpb.web3.utils.Numeric;
 
 
 public class HpbHashrate extends Response<String> {
-    public BigInteger getHashrate() {
+    public BigInteger ghpbashrate() {
         return Numeric.decodeQuantity(getResult());
     }
 }

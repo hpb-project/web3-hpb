@@ -89,9 +89,9 @@ public class TypeEncoder {
         BigInteger value = numericType.getValue();
         if (numericType instanceof Ufixed || numericType instanceof Uint) {
             if (value.bitLength() == MAX_BIT_LENGTH) {
-                // As BigInteger is signed, if we have a 256 bit value, the resultant byte array
-                // will contain a sign byte in it's MSB, which we should ignore for this unsigned
-                // integer type.
+                
+                
+                
                 byte[] byteArray = new byte[MAX_BYTE_LENGTH];
                 System.arraycopy(value.toByteArray(), 1, byteArray, 0, MAX_BYTE_LENGTH);
                 return byteArray;
@@ -151,11 +151,44 @@ public class TypeEncoder {
     static <T extends Type> String encodeDynamicArray(DynamicArray<T> value) {
         int size = value.getValue().size();
         String encodedLength = encode(new Uint(BigInteger.valueOf(size)));
+        String valuesOffsets = encodeArrayValuesOffsets(value);
         String encodedValues = encodeArrayValues(value);
 
         StringBuilder result = new StringBuilder();
         result.append(encodedLength);
+        result.append(valuesOffsets);
         result.append(encodedValues);
+        return result.toString();
+    }
+
+    private static <T extends Type> String encodeArrayValuesOffsets(DynamicArray<T> value) {
+        StringBuilder result = new StringBuilder();
+        boolean arrayOfBytes = !value.getValue().isEmpty()
+                                       && value.getValue().get(0) instanceof DynamicBytes;
+        boolean arrayOfString = !value.getValue().isEmpty()
+                                        && value.getValue().get(0) instanceof Utf8String;
+        if (arrayOfBytes || arrayOfString) {
+            long offset = 0;
+            for (int i = 0; i < value.getValue().size(); i++) {
+                if (i == 0) {
+                    offset = value.getValue().size() * MAX_BYTE_LENGTH;
+                } else {
+                    int bytesLength = arrayOfBytes
+                            ? ((byte[]) value.getValue().get(i - 1).getValue()).length
+                            : ((String) value.getValue().get(i - 1).getValue()).length();
+                    int numberOfWords = (bytesLength + MAX_BYTE_LENGTH - 1) / MAX_BYTE_LENGTH;
+                    int totalBytesLength = numberOfWords * MAX_BYTE_LENGTH;
+                    offset += totalBytesLength + MAX_BYTE_LENGTH;
+                }
+                result.append(
+                        Numeric.toHexStringNoPrefix(
+                                Numeric.toBytesPadded(
+                                        new BigInteger(Long.toString(offset)), MAX_BYTE_LENGTH
+                                )
+                        )
+                );
+            }
+        }
         return result.toString();
     }
 }

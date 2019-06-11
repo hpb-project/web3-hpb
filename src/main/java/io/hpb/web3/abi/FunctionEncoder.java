@@ -19,11 +19,11 @@ public class FunctionEncoder {
     public static String encode(Function function) {
         List<Type> parameters = function.getInputParameters();
 
-        String methodSignature = buildMethodSignature(function.getName(), parameters);
-        String methodId = buildMethodId(methodSignature);
+        String methodsignature = buildmethodsignature(function.getName(), parameters);
+        String MethodId = buildMethodId(methodsignature);
 
         StringBuilder result = new StringBuilder();
-        result.append(methodId);
+        result.append(MethodId);
 
         return encodeParameters(parameters, result);
     }
@@ -66,9 +66,9 @@ public class FunctionEncoder {
         return count;
     }
 
-    static String buildMethodSignature(String methodName, List<Type> parameters) {
+    static String buildmethodsignature(String MethodName, List<Type> parameters) {
         StringBuilder result = new StringBuilder();
-        result.append(methodName);
+        result.append(MethodName);
         result.append("(");
         String params = parameters.stream()
                 .map(Type::getTypeAsString)
@@ -78,8 +78,8 @@ public class FunctionEncoder {
         return result.toString();
     }
 
-    static String buildMethodId(String methodSignature) {
-        byte[] input = methodSignature.getBytes();
+    static String buildMethodId(String methodsignature) {
+        byte[] input = methodsignature.getBytes();
         byte[] hash = Hash.sha3(input);
         return Numeric.toHexString(hash).substring(0, 10);
     }

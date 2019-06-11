@@ -14,8 +14,8 @@ import io.hpb.web3.protocol.Web3Service;
 import io.hpb.web3.protocol.core.methods.request.ShhFilter;
 import io.hpb.web3.protocol.core.methods.request.ShhPost;
 import io.hpb.web3.protocol.core.methods.request.Transaction;
-import io.hpb.web3.protocol.core.methods.response.DbGetHex;
 import io.hpb.web3.protocol.core.methods.response.DbGetString;
+import io.hpb.web3.protocol.core.methods.response.DbGhpbex;
 import io.hpb.web3.protocol.core.methods.response.DbPutHex;
 import io.hpb.web3.protocol.core.methods.response.DbPutString;
 import io.hpb.web3.protocol.core.methods.response.HpbAccounts;
@@ -69,7 +69,7 @@ import io.hpb.web3.protocol.websocket.events.LogNotification;
 import io.hpb.web3.protocol.websocket.events.NewHeadsNotification;
 import io.hpb.web3.utils.Async;
 import io.hpb.web3.utils.Numeric;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 public class JsonRpc2_0Web3 implements Web3 {
@@ -592,12 +592,12 @@ public class JsonRpc2_0Web3 implements Web3 {
     }
 
     @Override
-    public Request<?, DbGetHex> dbGetHex(String databaseName, String keyName) {
+    public Request<?, DbGhpbex> dbGhpbex(String databaseName, String keyName) {
         return new Request<>(
-                "db_getHex",
+                "db_ghpbex",
                 Arrays.asList(databaseName, keyName),
                 web3Service,
-                DbGetHex.class);
+                DbGhpbex.class);
     }
 
     @Override
@@ -691,7 +691,7 @@ public class JsonRpc2_0Web3 implements Web3 {
     }
 
     @Override
-    public Observable<NewHeadsNotification> newHeadsNotifications() {
+    public Flowable<NewHeadsNotification> newHeadsNotifications() {
         return web3Service.subscribe(
                 new Request<>(
                         "hpb_subscribe",
@@ -704,7 +704,7 @@ public class JsonRpc2_0Web3 implements Web3 {
     }
 
     @Override
-    public Observable<LogNotification> logsNotifications(
+    public Flowable<LogNotification> logsNotifications(
             List<String> addresses, List<String> topics) {
 
         Map<String, Object> params = createLogsParams(addresses, topics);
@@ -732,92 +732,92 @@ public class JsonRpc2_0Web3 implements Web3 {
     }
 
     @Override
-    public Observable<String> hpbBlockHashObservable() {
-        return web3Rx.hpbBlockHashObservable(blockTime);
+    public Flowable<String> hpbBlockHashFlowable() {
+        return web3Rx.hpbBlockHashFlowable(blockTime);
     }
 
     @Override
-    public Observable<String> hpbPendingTransactionHashObservable() {
-        return web3Rx.hpbPendingTransactionHashObservable(blockTime);
+    public Flowable<String> hpbPendingTransactionHashFlowable() {
+        return web3Rx.hpbPendingTransactionHashFlowable(blockTime);
     }
 
     @Override
-    public Observable<Log> hpbLogObservable(
+    public Flowable<Log> hpbLogFlowable(
             io.hpb.web3.protocol.core.methods.request.HpbFilter hpbFilter) {
-        return web3Rx.hpbLogObservable(hpbFilter, blockTime);
+        return web3Rx.hpbLogFlowable(hpbFilter, blockTime);
     }
 
     @Override
-    public Observable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            transactionObservable() {
-        return web3Rx.transactionObservable(blockTime);
+    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
+            transactionFlowable() {
+        return web3Rx.transactionFlowable(blockTime);
     }
 
     @Override
-    public Observable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            pendingTransactionObservable() {
-        return web3Rx.pendingTransactionObservable(blockTime);
+    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
+            pendingTransactionFlowable() {
+        return web3Rx.pendingTransactionFlowable(blockTime);
     }
 
     @Override
-    public Observable<HpbBlock> blockObservable(boolean fullTransactionObjects) {
-        return web3Rx.blockObservable(fullTransactionObjects, blockTime);
+    public Flowable<HpbBlock> blockFlowable(boolean fullTransactionObjects) {
+        return web3Rx.blockFlowable(fullTransactionObjects, blockTime);
     }
 
     @Override
-    public Observable<HpbBlock> replayBlocksObservable(
+    public Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
-        return web3Rx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
+        return web3Rx.replayBlocksFlowable(startBlock, endBlock, fullTransactionObjects);
     }
 
     @Override
-    public Observable<HpbBlock> replayBlocksObservable(
-            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
-            boolean fullTransactionObjects, boolean ascending) {
-        return web3Rx.replayBlocksObservable(startBlock, endBlock,
+    public Flowable<HpbBlock> replayPastBlocksFlowable(DefaultBlockParameter startBlock,
+                                                      DefaultBlockParameter endBlock,
+                                                      boolean fullTransactionObjects,
+                                                      boolean ascending) {
+        return web3Rx.replayBlocksFlowable(startBlock, endBlock,
                 fullTransactionObjects, ascending);
     }
 
     @Override
-    public Observable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            replayTransactionsObservable(
-            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        return web3Rx.replayTransactionsObservable(startBlock, endBlock);
-    }
-
-    @Override
-    public Observable<HpbBlock> catchUpToLatestBlockObservable(
+    public Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<HpbBlock> onCompleteObservable) {
-        return web3Rx.catchUpToLatestBlockObservable(
-                startBlock, fullTransactionObjects, onCompleteObservable);
+            Flowable<HpbBlock> onCompleteFlowable) {
+        return web3Rx.replayPastBlocksFlowable(
+                startBlock, fullTransactionObjects, onCompleteFlowable);
     }
 
     @Override
-    public Observable<HpbBlock> catchUpToLatestBlockObservable(
+    public Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return web3Rx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
+        return web3Rx.replayPastBlocksFlowable(startBlock, fullTransactionObjects);
     }
 
     @Override
-    public Observable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            catchUpToLatestTransactionObservable(DefaultBlockParameter startBlock) {
-        return web3Rx.catchUpToLatestTransactionObservable(startBlock);
+    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
+            replayPastTransactionsFlowable(DefaultBlockParameter startBlock,
+                                          DefaultBlockParameter endBlock) {
+        return web3Rx.replayTransactionsFlowable(startBlock, endBlock);
     }
 
     @Override
-    public Observable<HpbBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
+    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
+            replayPastTransactionsFlowable(DefaultBlockParameter startBlock) {
+        return web3Rx.replayPastTransactionsFlowable(startBlock);
+    }
+
+    @Override
+    public Flowable<HpbBlock> replayPastAndFutureBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return web3Rx.catchUpToLatestAndSubscribeToNewBlocksObservable(
+        return web3Rx.replayPastAndFutureBlocksFlowable(
                 startBlock, fullTransactionObjects, blockTime);
     }
 
     @Override
-    public Observable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            catchUpToLatestAndSubscribeToNewTransactionsObservable(
-            DefaultBlockParameter startBlock) {
-        return web3Rx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
+    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
+            replayPastAndFutureTransactionsFlowable(DefaultBlockParameter startBlock) {
+        return web3Rx.replayPastAndFutureTransactionsFlowable(
                 startBlock, blockTime);
     }
 

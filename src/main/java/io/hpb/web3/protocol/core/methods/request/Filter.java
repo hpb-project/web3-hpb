@@ -28,7 +28,7 @@ public abstract class Filter<T extends Filter> {
         return getThis();
     }
 
-    // how to pass in null topic?
+    
     public T addOptionalTopics(String... optionalTopics) {
         topics.add(new ListTopic(optionalTopics));
         return getThis();
@@ -50,7 +50,7 @@ public abstract class Filter<T extends Filter> {
         private String topic;
 
         public SingleTopic() {
-            this.topic = null;  // null topic
+            this.topic = null;  
         }
 
         public SingleTopic(String topic) {

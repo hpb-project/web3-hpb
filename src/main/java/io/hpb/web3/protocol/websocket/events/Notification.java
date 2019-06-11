@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification<T> {
     private String jsonrpc;
-    private String method;
+    private String Method;
     private NotificationParams<T> params;
 
     public String getJsonrpc() {
@@ -14,7 +14,7 @@ public class Notification<T> {
     }
 
     public String getMethod() {
-        return method;
+        return Method;
     }
 
     public NotificationParams<T> getParams() {

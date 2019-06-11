@@ -19,11 +19,11 @@ public class RlpString implements RlpType {
         return value;
     }
 
-    public BigInteger asBigInteger() {
+    public BigInteger asPositiveBigInteger() {
         if (value.length == 0) {
             return BigInteger.ZERO;
         }
-        return new BigInteger(value);
+        return new BigInteger(1, value);
     }
 
     public String asString() {
@@ -39,12 +39,12 @@ public class RlpString implements RlpType {
     }
 
     public static RlpString create(BigInteger value) {
-        // RLP encoding only supports positive integer values
+        
         if (value.signum() < 1) {
             return new RlpString(EMPTY);
         } else {
             byte[] bytes = value.toByteArray();
-            if (bytes[0] == 0) {  // remove leading zero
+            if (bytes[0] == 0) {  
                 return new RlpString(Arrays.copyOfRange(bytes, 1, bytes.length));
             } else {
                 return new RlpString(bytes);

@@ -3,6 +3,7 @@ package io.hpb.web3.abi.datatypes.generated;
 import io.hpb.web3.abi.datatypes.Address;
 import io.hpb.web3.abi.datatypes.Bool;
 import io.hpb.web3.abi.datatypes.DynamicBytes;
+import io.hpb.web3.abi.datatypes.Type;
 import io.hpb.web3.abi.datatypes.Utf8String;
 
 
@@ -10,7 +11,7 @@ public final class AbiTypes {
     private AbiTypes() {
     }
 
-    public static Class<?> getType(String type) {
+    public static Class<? extends Type> getType(String type) {
         switch (type) {
             case "address":
                     return Address.class;
@@ -215,6 +216,16 @@ public final class AbiTypes {
             default:
                     throw new UnsupportedOperationException("Unsupported type encountered: "
                             + type);
+        }
+    }
+
+    public static String getTypeAString(Class<? extends Type> type) {
+        if (Utf8String.class.equals(type)) {
+            return "string";
+        } else if (DynamicBytes.class.equals(type)) {
+            return "bytes";
+        } else {
+            return type.getSimpleName().toLowerCase();
         }
     }
 }

@@ -117,8 +117,8 @@ public class Wallet {
             throw new CipherException("Unsupported prf:" + prf);
         }
 
-        // Java 8 supports this, but you have to convert the password to a character array, see
-        // http://stackoverflow.com/a/27928435/3211687
+        
+        
 
         PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
         gen.init(password, salt, c);

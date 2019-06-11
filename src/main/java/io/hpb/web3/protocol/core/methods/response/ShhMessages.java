@@ -40,11 +40,11 @@ public class ShhMessages extends Response<List<ShhMessages.SshMessage>> {
             this.workProved = workProved;
         }
 
-        public String getHash() {
+        public String ghpbash() {
             return hash;
         }
 
-        public void setHash(String hash) {
+        public void shpbash(String hash) {
             this.hash = hash;
         }
 
@@ -139,7 +139,7 @@ public class ShhMessages extends Response<List<ShhMessages.SshMessage>> {
 
             SshMessage that = (SshMessage) o;
 
-            if (getHash() != null ? !getHash().equals(that.getHash()) : that.getHash() != null) {
+            if (ghpbash() != null ? !ghpbash().equals(that.ghpbash()) : that.ghpbash() != null) {
                 return false;
             }
             if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null) {
@@ -175,7 +175,7 @@ public class ShhMessages extends Response<List<ShhMessages.SshMessage>> {
 
         @Override
         public int hashCode() {
-            int result = getHash() != null ? getHash().hashCode() : 0;
+            int result = ghpbash() != null ? ghpbash().hashCode() : 0;
             result = 31 * result + (getFrom() != null ? getFrom().hashCode() : 0);
             result = 31 * result + (getTo() != null ? getTo().hashCode() : 0);
             result = 31 * result + (getExpiryRaw() != null ? getExpiryRaw().hashCode() : 0);

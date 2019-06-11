@@ -20,10 +20,30 @@ import io.hpb.web3.utils.Numeric;
 
 public class Sign {
 
-    private static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName("secp256k1");
+    public static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName("secp256k1");
     static final ECDomainParameters CURVE = new ECDomainParameters(
             CURVE_PARAMS.getCurve(), CURVE_PARAMS.getG(), CURVE_PARAMS.getN(), CURVE_PARAMS.getH());
     static final BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
+
+    static final String MESSAGE_PREFIX = "\u0019Hpb Signed Message:\n";
+
+    static byte[] ghpbpbMessagePrefix(int messageLength) {
+        return MESSAGE_PREFIX.concat(String.valueOf(messageLength)).getBytes();
+    }
+
+    static byte[] ghpbpbMessageHash(byte[] message) {
+        byte[] prefix = ghpbpbMessagePrefix(message.length);
+
+        byte[] result = new byte[prefix.length + message.length];
+        System.arraycopy(prefix, 0, result, 0, prefix.length);
+        System.arraycopy(message, 0, result, prefix.length, message.length);
+
+        return Hash.sha3(result);
+    }
+
+    public static SignatureData signPrefixedMessage(byte[] message, ECKeyPair keyPair) {
+        return signMessage(ghpbpbMessageHash(message), keyPair, false);
+    }
 
     public static SignatureData signMessage(byte[] message, ECKeyPair keyPair) {
         return signMessage(message, keyPair, true);
@@ -39,7 +59,7 @@ public class Sign {
         }
 
         ECDSASignature sig = keyPair.sign(messageHash);
-        // Now we have to work backwards to figure out the recId needed to recover the signature.
+        
         int recId = -1;
         for (int i = 0; i < 4; i++) {
             BigInteger k = recoverFromSignature(i, sig, messageHash);
@@ -50,13 +70,13 @@ public class Sign {
         }
         if (recId == -1) {
             throw new RuntimeException(
-                    "Could not construct a recoverable key. This should never happen.");
+                    "Could not construct a recoverable key. Are your credentials valid?");
         }
 
         int headerByte = recId + 27;
 
-        // 1 header + 32 bytes for R + 32 bytes for S
-        int v =headerByte;
+        
+        byte[] v = new byte[]{(byte) headerByte};
         byte[] r = Numeric.toBytesPadded(sig.r, 32);
         byte[] s = Numeric.toBytesPadded(sig.s, 32);
 
@@ -70,47 +90,47 @@ public class Sign {
         verifyPrecondition(sig.s.signum() >= 0, "s must be positive");
         verifyPrecondition(message != null, "message cannot be null");
 
-        // 1.0 For j from 0 to h   (h == recId here and the loop is outside this function)
-        //   1.1 Let x = r + jn
-        BigInteger n = CURVE.getN();  // Curve order.
+        
+        
+        BigInteger n = CURVE.getN();  
         BigInteger i = BigInteger.valueOf((long) recId / 2);
         BigInteger x = sig.r.add(i.multiply(n));
-        //   1.2. Convert the integer x to an octet string X of length mlen using the conversion
-        //        routine specified in Section 2.3.7, where mlen = ⌈(log2 p)/8⌉ or mlen = ⌈m/8⌉.
-        //   1.3. Convert the octet string (16 set binary digits)||X to an elliptic curve point R
-        //        using the conversion routine specified in Section 2.3.4. If this conversion
-        //        routine outputs "invalid", then do another iteration of Step 1.
-        //
-        // More concisely, what these points mean is to use X as a compressed public key.
+        
+        
+        
+        
+        
+        
+        
         BigInteger prime = SecP256K1Curve.q;
         if (x.compareTo(prime) >= 0) {
-            // Cannot have point co-ordinates larger than this as everything takes place modulo Q.
+            
             return null;
         }
-        // Compressed keys require you to know an extra bit of data about the y-coord as there are
-        // two possibilities. So it's encoded in the recId.
+        
+        
         ECPoint R = decompressKey(x, (recId & 1) == 1);
-        //   1.4. If nR != point at infinity, then do another iteration of Step 1 (callers
-        //        responsibility).
+        
+        
         if (!R.multiply(n).isInfinity()) {
             return null;
         }
-        //   1.8. Compute e from M using Steps 2 and 3 of ECDSA signature verification.
+        
         BigInteger e = new BigInteger(1, message);
-        //   1.6. For k from 1 to 2 do the following.   (loop is outside this function via
-        //        iterating recId)
-        //   1.6.1. Compute a candidate public key as:
-        //               Q = mi(r) * (sR - eG)
-        //
-        // Where mi(x) is the modular multiplicative inverse. We transform this into the following:
-        //               Q = (mi(r) * s ** R) + (mi(r) * -e ** G)
-        // Where -e is the modular additive inverse of e, that is z such that z + e = 0 (mod n).
-        // In the above equation ** is point multiplication and + is point addition (the EC group
-        // operator).
-        //
-        // We can find the additive inverse by subtracting e from zero then taking the mod. For
-        // example the additive inverse of 3 modulo 11 is 8 because 3 + 8 mod 11 = 0, and
-        // -3 mod 11 = 8.
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         BigInteger eInv = BigInteger.ZERO.subtract(e).mod(n);
         BigInteger rInv = sig.r.modInverse(n);
         BigInteger srInv = rInv.multiply(sig.s).mod(n);
@@ -118,7 +138,7 @@ public class Sign {
         ECPoint q = ECAlgorithms.sumOfTwoMultiplies(CURVE.getG(), eInvrInv, R, srInv);
 
         byte[] qBytes = q.getEncoded(false);
-        // We remove the prefix
+        
         return new BigInteger(1, Arrays.copyOfRange(qBytes, 1, qBytes.length));
     }
 
@@ -133,15 +153,26 @@ public class Sign {
     
     public static BigInteger signedMessageToKey(
             byte[] message, SignatureData signatureData) throws SignatureException {
+        return signedMessageHashToKey(Hash.sha3(message), signatureData);
+    }
+
+    
+    public static BigInteger signedPrefixedMessageToKey(
+            byte[] message, SignatureData signatureData) throws SignatureException {
+        return signedMessageHashToKey(ghpbpbMessageHash(message), signatureData);
+    }
+
+    static BigInteger signedMessageHashToKey(
+            byte[] messageHash, SignatureData signatureData) throws SignatureException {
 
         byte[] r = signatureData.getR();
         byte[] s = signatureData.getS();
         verifyPrecondition(r != null && r.length == 32, "r must be 32 bytes");
         verifyPrecondition(s != null && s.length == 32, "s must be 32 bytes");
 
-        int header = signatureData.getV() & 0xFF;
-        // The header byte: 0x1B = first key with even y, 0x1C = first key with odd y,
-        //                  0x1D = second key with even y, 0x1E = second key with odd y
+        int header = signatureData.getV()[0] & 0xFF;
+        
+        
         if (header < 27 || header > 34) {
             throw new SignatureException("Header byte out of range: " + header);
         }
@@ -150,7 +181,6 @@ public class Sign {
                 new BigInteger(1, signatureData.getR()),
                 new BigInteger(1, signatureData.getS()));
 
-        byte[] messageHash = Hash.sha3(message);
         int recId = header - 27;
         BigInteger key = recoverFromSignature(recId, sig, messageHash);
         if (key == null) {
@@ -164,11 +194,11 @@ public class Sign {
         ECPoint point = publicPointFromPrivate(privKey);
 
         byte[] encoded = point.getEncoded(false);
-        return new BigInteger(1, Arrays.copyOfRange(encoded, 1, encoded.length));  // remove prefix
+        return new BigInteger(1, Arrays.copyOfRange(encoded, 1, encoded.length));  
     }
 
     
-    private static ECPoint publicPointFromPrivate(BigInteger privKey) {
+    public static ECPoint publicPointFromPrivate(BigInteger privKey) {
         
         if (privKey.bitLength() > CURVE.getN().bitLength()) {
             privKey = privKey.mod(CURVE.getN());
@@ -176,18 +206,27 @@ public class Sign {
         return new FixedPointCombMultiplier().multiply(CURVE.getG(), privKey);
     }
 
+    
+    public static BigInteger publicFromPoint(byte[] bits) {
+        return new BigInteger(1, Arrays.copyOfRange(bits, 1, bits.length));  
+    }
+
     public static class SignatureData {
-        private final int v;
+        private final byte[] v;
         private final byte[] r;
         private final byte[] s;
 
-        public SignatureData(int v, byte[] r, byte[] s) {
+        public SignatureData(byte v, byte[] r, byte[] s) {
+            this(new byte[]{v}, r, s);
+        }
+
+        public SignatureData(byte[] v, byte[] r, byte[] s) {
             this.v = v;
             this.r = r;
             this.s = s;
         }
 
-        public int getV() {
+        public byte[] getV() {
             return v;
         }
 
@@ -210,7 +249,7 @@ public class Sign {
 
             SignatureData that = (SignatureData) o;
 
-            if (v != that.v) {
+            if (!Arrays.equals(v, that.v)) {
                 return false;
             }
             if (!Arrays.equals(r, that.r)) {
@@ -221,7 +260,7 @@ public class Sign {
 
         @Override
         public int hashCode() {
-            int result =v;
+            int result = Arrays.hashCode(v);
             result = 31 * result + Arrays.hashCode(r);
             result = 31 * result + Arrays.hashCode(s);
             return result;

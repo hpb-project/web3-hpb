@@ -3,7 +3,6 @@ package io.hpb.web3.utils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 import io.hpb.web3.exceptions.MessageDecodingException;
 import io.hpb.web3.exceptions.MessageEncodingException;
@@ -26,10 +25,6 @@ public final class Numeric {
 
     public static BigInteger decodeQuantity(String value) {
         if (!isValidHexQuantity(value)) {
-        	boolean isInt = Pattern.compile("\\d").matcher(value).find();
-        	if(isInt) {
-        		return new BigInteger(value);
-        	}
             throw new MessageDecodingException("Value must be in format 0x[1-9]+[0-9]* or 0x0");
         }
         try {
@@ -52,11 +47,11 @@ public final class Numeric {
             return false;
         }
 
-        // If TestRpc resolves the following issue, we can reinstate this code
-        // https://github.com/Hpbjs/testrpc/issues/220
-        // if (value.length() > 3 && value.charAt(2) == '0') {
-        //    return false;
-        // }
+        
+        
+        
+        
+        
 
         return true;
     }

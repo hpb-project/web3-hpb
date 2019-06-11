@@ -10,7 +10,7 @@ import io.hpb.web3.protocol.ghpb.response.PersonalEcRecover;
 import io.hpb.web3.protocol.ghpb.response.PersonalImportRawKey;
 import io.hpb.web3.protocol.websocket.events.PendingTransactionNotification;
 import io.hpb.web3.protocol.websocket.events.SyncingNotfication;
-import rx.Observable;
+import io.reactivex.Flowable;
 
 
 public interface Ghpb extends Admin {
@@ -31,9 +31,9 @@ public interface Ghpb extends Admin {
     Request<?, BooleanResponse> minerStop();
 
     
-    Observable<PendingTransactionNotification> newPendingTransactionsNotifications();
+    Flowable<PendingTransactionNotification> newPendingTransactionsNotifications();
 
     
-    Observable<SyncingNotfication> syncingStatusNotifications();
+    Flowable<SyncingNotfication> syncingStatusNotifications();
 
 }

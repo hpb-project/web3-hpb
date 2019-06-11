@@ -3,8 +3,8 @@ package io.hpb.web3.protocol.core;
 import java.math.BigInteger;
 
 import io.hpb.web3.protocol.core.methods.request.ShhFilter;
-import io.hpb.web3.protocol.core.methods.response.DbGetHex;
 import io.hpb.web3.protocol.core.methods.response.DbGetString;
+import io.hpb.web3.protocol.core.methods.response.DbGhpbex;
 import io.hpb.web3.protocol.core.methods.response.DbPutHex;
 import io.hpb.web3.protocol.core.methods.response.DbPutString;
 import io.hpb.web3.protocol.core.methods.response.HpbAccounts;
@@ -174,7 +174,7 @@ public interface Hpb {
 
     Request<?, DbPutHex> dbPutHex(String databaseName, String keyName, String dataToStore);
 
-    Request<?, DbGetHex> dbGetHex(String databaseName, String keyName);
+    Request<?, DbGhpbex> dbGhpbex(String databaseName, String keyName);
 
     Request<?, io.hpb.web3.protocol.core.methods.response.ShhPost> shhPost(
             io.hpb.web3.protocol.core.methods.request.ShhPost shhPost);

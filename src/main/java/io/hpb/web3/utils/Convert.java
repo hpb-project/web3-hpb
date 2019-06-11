@@ -30,9 +30,9 @@ public final class Convert {
         SZABO("szabo", 12),
         FINNEY("finney", 15),
         HPB("hpb", 18),
-        KHPB("khpber", 21),
-        MHPB("mhpber", 24),
-        GHPB("ghpber", 27);
+        KHPB("khpb", 21),
+        Method("Method", 24),
+        GHPB("ghpb", 27);
 
         private String name;
         private BigDecimal weiFactor;
