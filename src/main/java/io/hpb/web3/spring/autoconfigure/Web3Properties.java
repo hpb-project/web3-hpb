@@ -15,6 +15,8 @@ public class Web3Properties {
     private Boolean adminClient;
     
     private String networkId;
+    
+    private String logLevel;
 
     private Long httpTimeoutSeconds;
 
@@ -49,5 +51,13 @@ public class Web3Properties {
     public void shpbttpTimeoutSeconds(Long httpTimeoutSeconds) {
         this.httpTimeoutSeconds = httpTimeoutSeconds;
     }
+
+	public String getLogLevel() {
+		return logLevel;
+	}
+
+	public void setLogLevel(String logLevel) {
+		this.logLevel = logLevel;
+	}
     
 }

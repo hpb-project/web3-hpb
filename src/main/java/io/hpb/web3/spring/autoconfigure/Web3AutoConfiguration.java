@@ -83,10 +83,19 @@ public class Web3AutoConfiguration {
         }
     }
 
-    private static void configureLogging(OkHttpClient.Builder builder) {
+    private void configureLogging(OkHttpClient.Builder builder) {
         if (log.isDebugEnabled()) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(log::debug);
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            String logLevel = properties.getLogLevel();
+            if("NONE".equalsIgnoreCase(logLevel)) {
+            	logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+            }else if("BASIC".equalsIgnoreCase(logLevel)) {
+            	logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            }else if("HEADERS".equalsIgnoreCase(logLevel)) {
+            	logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            }else {
+            	logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            }
             builder.addInterceptor(logging);
         }
     }
