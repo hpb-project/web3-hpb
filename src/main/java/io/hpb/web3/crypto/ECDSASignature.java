@@ -17,16 +17,8 @@ public class ECDSASignature {
         return s.compareTo(Sign.HALF_CURVE_ORDER) <= 0;
     }
 
-    
-
     public ECDSASignature toCanonicalised() {
         if (!isCanonical()) {
-            
-            
-            
-            
-            
-            
             return new ECDSASignature(r, Sign.CURVE.getN().subtract(s));
         } else {
             return this;

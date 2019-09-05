@@ -69,7 +69,7 @@ public class RawTransactionManager extends TransactionManager {
 
     protected BigInteger getNonce() throws IOException {
         HpbGetTransactionCount hpbGetTransactionCount = web3.hpbGetTransactionCount(
-                credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
+                credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
 
         return hpbGetTransactionCount.getTransactionCount();
     }

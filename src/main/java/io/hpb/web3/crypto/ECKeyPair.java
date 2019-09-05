@@ -47,10 +47,6 @@ public class ECKeyPair {
         BCECPublicKey publicKey = (BCECPublicKey) keyPair.getPublic();
 
         BigInteger privateKeyValue = privateKey.getD();
-
-        
-        
-        
         byte[] publicKeyBytes = publicKey.getQ().getEncoded(false);
         BigInteger publicKeyValue =
                 new BigInteger(1, Arrays.copyOfRange(publicKeyBytes, 1, publicKeyBytes.length));
