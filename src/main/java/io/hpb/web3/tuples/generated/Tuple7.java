@@ -1,25 +1,14 @@
 package io.hpb.web3.tuples.generated;
-
 import io.hpb.web3.tuples.Tuple;
-
-
 public final class Tuple7<T1, T2, T3, T4, T5, T6, T7> implements Tuple {
     private static final int SIZE = 7;
-
     private final T1 value1;
-
     private final T2 value2;
-
     private final T3 value3;
-
     private final T4 value4;
-
     private final T5 value5;
-
     private final T6 value6;
-
     private final T7 value7;
-
     public Tuple7(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7) {
         this.value1 = value1;
         this.value2 = value2;
@@ -29,40 +18,59 @@ public final class Tuple7<T1, T2, T3, T4, T5, T6, T7> implements Tuple {
         this.value6 = value6;
         this.value7 = value7;
     }
-
+    @Deprecated
     public T1 getValue1() {
         return value1;
     }
-
+    public T1 component1() {
+        return value1;
+    }
+    @Deprecated
     public T2 getValue2() {
         return value2;
     }
-
+    public T2 component2() {
+        return value2;
+    }
+    @Deprecated
     public T3 getValue3() {
         return value3;
     }
-
+    public T3 component3() {
+        return value3;
+    }
+    @Deprecated
     public T4 getValue4() {
         return value4;
     }
-
+    public T4 component4() {
+        return value4;
+    }
+    @Deprecated
     public T5 getValue5() {
         return value5;
     }
-
+    public T5 component5() {
+        return value5;
+    }
+    @Deprecated
     public T6 getValue6() {
         return value6;
     }
-
+    public T6 component6() {
+        return value6;
+    }
+    @Deprecated
     public T7 getValue7() {
         return value7;
     }
-
+    public T7 component7() {
+        return value7;
+    }
     @Override
     public int getSize() {
         return SIZE;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -92,7 +100,6 @@ public final class Tuple7<T1, T2, T3, T4, T5, T6, T7> implements Tuple {
         }
         return value7 != null ? value7.equals(tuple7.value7) : tuple7.value7 == null;
     }
-
     @Override
     public int hashCode() {
         int result = value1.hashCode();
@@ -104,7 +111,6 @@ public final class Tuple7<T1, T2, T3, T4, T5, T6, T7> implements Tuple {
         result = 31 * result + (value7 != null ? value7.hashCode() : 0);
         return result;
     }
-
     @Override
     public String toString() {
         return "Tuple7{" +

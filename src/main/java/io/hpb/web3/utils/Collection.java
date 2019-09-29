@@ -1,15 +1,9 @@
 package io.hpb.web3.utils;
-
 import java.util.Arrays;
 import java.util.List;
-
-
 public class Collection {
-
-    static String[] EMPTY_STRING_ARRAY = { };
-
-    private Collection() { }
-
+    static String[] EMPTY_STRING_ARRAY = {};
+    private Collection() {}
     public static String[] tail(String[] args) {
         if (args.length == 0) {
             return EMPTY_STRING_ARRAY;
@@ -17,12 +11,10 @@ public class Collection {
             return Arrays.copyOfRange(args, 1, args.length);
         }
     }
-
     @SafeVarargs
     public static <T> T[] create(T... args) {
         return args;
     }
-
     public static <T> String join(List<T> list, String separator, Function<T, String> function) {
         String result = "";
         for (int i = 0; i < list.size(); i++) {
@@ -33,7 +25,6 @@ public class Collection {
         }
         return result;
     }
-
     public static String join(List<String> list, String separator) {
         String result = "";
         for (int i = 0; i < list.size(); i++) {
@@ -44,7 +35,6 @@ public class Collection {
         }
         return result;
     }
-
     public interface Function<R, S> {
         S apply(R r);
     }

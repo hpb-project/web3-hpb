@@ -1,5 +1,4 @@
 package io.hpb.web3.protocol.admin;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,23 +10,20 @@ import io.hpb.web3.protocol.Web3Service;
 import io.hpb.web3.protocol.admin.methods.response.NewAccountIdentifier;
 import io.hpb.web3.protocol.admin.methods.response.PersonalListAccounts;
 import io.hpb.web3.protocol.admin.methods.response.PersonalUnlockAccount;
-import io.hpb.web3.protocol.core.JsonRpc2_0Web3;
 import io.hpb.web3.protocol.core.Request;
 import io.hpb.web3.protocol.core.methods.request.Transaction;
 import io.hpb.web3.protocol.core.methods.response.HpbSendTransaction;
-
-
-public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
-
+import io.hpb.web3.protocol.prometheus.JsonRpc2_0Prometheus;
+public class JsonRpc2_0Admin extends JsonRpc2_0Prometheus implements Admin {
     public JsonRpc2_0Admin(Web3Service web3Service) {
         super(web3Service);
     }
-    
-    public JsonRpc2_0Admin(Web3Service web3Service, long pollingInterval,
+    public JsonRpc2_0Admin(
+            Web3Service web3Service,
+            long pollingInterval,
             ScheduledExecutorService scheduledExecutorService) {
         super(web3Service, pollingInterval, scheduledExecutorService);
     }
-
     @Override
     public Request<?, PersonalListAccounts> personalListAccounts() {
         return new Request<>(
@@ -36,7 +32,6 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
                 web3Service,
                 PersonalListAccounts.class);
     }
-
     @Override
     public Request<?, NewAccountIdentifier> personalNewAccount(String password) {
         return new Request<>(
@@ -44,39 +39,26 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
                 Arrays.asList(password),
                 web3Service,
                 NewAccountIdentifier.class);
-    }   
-
+    }
     @Override
     public Request<?, PersonalUnlockAccount> personalUnlockAccount(
-            String accountId, String password,
-            BigInteger duration) {
+            String accountId, String password, BigInteger duration) {
         List<Object> attributes = new ArrayList<>(3);
         attributes.add(accountId);
         attributes.add(password);
-        
         if (duration != null) {
-            
-            
             attributes.add(duration.longValue());
         } else {
-            
             attributes.add(null);
         }
-        
         return new Request<>(
-                "personal_unlockAccount",
-                attributes,
-                web3Service,
-                PersonalUnlockAccount.class);
+                "personal_unlockAccount", attributes, web3Service, PersonalUnlockAccount.class);
     }
-    
     @Override
     public Request<?, PersonalUnlockAccount> personalUnlockAccount(
             String accountId, String password) {
-        
         return personalUnlockAccount(accountId, password, null);
     }
-    
     @Override
     public Request<?, HpbSendTransaction> personalSendTransaction(
             Transaction transaction, String passphrase) {
@@ -86,5 +68,4 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3 implements Admin {
                 web3Service,
                 HpbSendTransaction.class);
     }
-    
 }

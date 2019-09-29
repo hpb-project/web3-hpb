@@ -1,5 +1,4 @@
 package io.hpb.web3.crypto;
-
 import java.io.IOException;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -11,55 +10,41 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-
 public class WalletFile {
     private String address;
     private Crypto crypto;
     private String id;
     private int version;
-
-    public WalletFile() {
-    }
-
+    public WalletFile() {}
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
-
     public Crypto getCrypto() {
         return crypto;
     }
-
     @JsonSetter("crypto")
     public void setCrypto(Crypto crypto) {
         this.crypto = crypto;
     }
-
-    @JsonSetter("Crypto")  
+    @JsonSetter("Crypto") 
     public void setCryptoV1(Crypto crypto) {
         setCrypto(crypto);
     }
-
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
-
     public int getVersion() {
         return version;
     }
-
     public void setVersion(int version) {
         this.version = version;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,27 +53,22 @@ public class WalletFile {
         if (!(o instanceof WalletFile)) {
             return false;
         }
-        
         WalletFile that = (WalletFile) o;
-        
-        if (getAddress() != null 
+        if (getAddress() != null
                 ? !getAddress().equals(that.getAddress())
                 : that.getAddress() != null) {
             return false;
         }
-        if (getCrypto() != null 
+        if (getCrypto() != null
                 ? !getCrypto().equals(that.getCrypto())
                 : that.getCrypto() != null) {
             return false;
-        } 
-        if (getId() != null 
-                ? !getId().equals(that.getId())
-                : that.getId() != null) {
+        }
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
             return false;
         }
         return version == that.version;
-    } 
-
+    }
     @Override
     public int hashCode() {
         int result = getAddress() != null ? getAddress().hashCode() : 0;
@@ -96,81 +76,59 @@ public class WalletFile {
         result = 31 * result + (getId() != null ? getId().hashCode() : 0);
         result = 31 * result + version;
         return result;
-    }  
-
+    }
     public static class Crypto {
         private String cipher;
         private String ciphertext;
         private CipherParams cipherparams;
-
         private String kdf;
         private KdfParams kdfparams;
-
         private String mac;
-
-        public Crypto() {
-        }
-
+        public Crypto() {}
         public String getCipher() {
             return cipher;
         }
-
         public void setCipher(String cipher) {
             this.cipher = cipher;
         }
-
         public String getCiphertext() {
             return ciphertext;
         }
-
         public void setCiphertext(String ciphertext) {
             this.ciphertext = ciphertext;
         }
-
         public CipherParams getCipherparams() {
             return cipherparams;
         }
-
         public void setCipherparams(CipherParams cipherparams) {
             this.cipherparams = cipherparams;
         }
-
         public String getKdf() {
             return kdf;
         }
-
         public void setKdf(String kdf) {
             this.kdf = kdf;
         }
-
         public KdfParams getKdfparams() {
             return kdfparams;
         }
-
         @JsonTypeInfo(
                 use = JsonTypeInfo.Id.NAME,
                 include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
                 property = "kdf")
         @JsonSubTypes({
-                @JsonSubTypes.Type(value = Aes128CtrKdfParams.class, name = Wallet.AES_128_CTR),
-                @JsonSubTypes.Type(value = ScryptKdfParams.class, name = Wallet.SCRYPT)
+            @JsonSubTypes.Type(value = Aes128CtrKdfParams.class, name = Wallet.AES_128_CTR),
+            @JsonSubTypes.Type(value = ScryptKdfParams.class, name = Wallet.SCRYPT)
         })
-        
-        
-        
-        
         public void setKdfparams(KdfParams kdfparams) {
             this.kdfparams = kdfparams;
         }
-
         public String getMac() {
             return mac;
         }
-
         public void setMac(String mac) {
             this.mac = mac;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -179,9 +137,7 @@ public class WalletFile {
             if (!(o instanceof Crypto)) {
                 return false;
             }
-            
             Crypto that = (Crypto) o;
-            
             if (getCipher() != null
                     ? !getCipher().equals(that.getCipher())
                     : that.getCipher() != null) {
@@ -197,9 +153,7 @@ public class WalletFile {
                     : that.getCipherparams() != null) {
                 return false;
             }
-            if (getKdf() != null
-                    ? !getKdf().equals(that.getKdf())
-                    : that.getKdf() != null) {
+            if (getKdf() != null ? !getKdf().equals(that.getKdf()) : that.getKdf() != null) {
                 return false;
             }
             if (getKdfparams() != null
@@ -207,10 +161,8 @@ public class WalletFile {
                     : that.getKdfparams() != null) {
                 return false;
             }
-            return getMac() != null
-                    ? getMac().equals(that.getMac()) : that.getMac() == null;
-        }  
-
+            return getMac() != null ? getMac().equals(that.getMac()) : that.getMac() == null;
+        }
         @Override
         public int hashCode() {
             int result = getCipher() != null ? getCipher().hashCode() : 0;
@@ -221,23 +173,16 @@ public class WalletFile {
             result = 31 * result + (getMac() != null ? getMac().hashCode() : 0);
             return result;
         }
-        
     }
-
     public static class CipherParams {
         private String iv;
-
-        public CipherParams() {
-        }
-
+        public CipherParams() {}
         public String getIv() {
             return iv;
         }
-
         public void setIv(String iv) {
             this.iv = iv;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -246,68 +191,49 @@ public class WalletFile {
             if (!(o instanceof CipherParams)) {
                 return false;
             }
-            
             CipherParams that = (CipherParams) o;
-            
-            return getIv() != null
-                    ? getIv().equals(that.getIv()) : that.getIv() == null;
-        }  
-
+            return getIv() != null ? getIv().equals(that.getIv()) : that.getIv() == null;
+        }
         @Override
         public int hashCode() {
             int result = getIv() != null ? getIv().hashCode() : 0;
             return result;
-        }      
-        
+        }
     }
-
     interface KdfParams {
         int getDklen();
-
         String getSalt();
     }
-
     public static class Aes128CtrKdfParams implements KdfParams {
         private int dklen;
         private int c;
         private String prf;
         private String salt;
-
-        public Aes128CtrKdfParams() {
-        }
-
+        public Aes128CtrKdfParams() {}
         public int getDklen() {
             return dklen;
         }
-
         public void setDklen(int dklen) {
             this.dklen = dklen;
         }
-
         public int getC() {
             return c;
         }
-
         public void setC(int c) {
             this.c = c;
         }
-
         public String getPrf() {
             return prf;
         }
-
         public void setPrf(String prf) {
             this.prf = prf;
         }
-
         public String getSalt() {
             return salt;
         }
-
         public void setSalt(String salt) {
             this.salt = salt;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -316,24 +242,18 @@ public class WalletFile {
             if (!(o instanceof Aes128CtrKdfParams)) {
                 return false;
             }
-            
             Aes128CtrKdfParams that = (Aes128CtrKdfParams) o;
-            
             if (dklen != that.dklen) {
                 return false;
             }
             if (c != that.c) {
                 return false;
             }
-            if (getPrf() != null
-                    ? !getPrf().equals(that.getPrf())
-                    : that.getPrf() != null) {
+            if (getPrf() != null ? !getPrf().equals(that.getPrf()) : that.getPrf() != null) {
                 return false;
             }
-            return getSalt() != null
-                ? getSalt().equals(that.getSalt()) : that.getSalt() == null;
+            return getSalt() != null ? getSalt().equals(that.getSalt()) : that.getSalt() == null;
         }
-
         @Override
         public int hashCode() {
             int result = dklen;
@@ -341,59 +261,45 @@ public class WalletFile {
             result = 31 * result + (getPrf() != null ? getPrf().hashCode() : 0);
             result = 31 * result + (getSalt() != null ? getSalt().hashCode() : 0);
             return result;
-        }        
+        }
     }
-
     public static class ScryptKdfParams implements KdfParams {
         private int dklen;
         private int n;
         private int p;
         private int r;
         private String salt;
-
-        public ScryptKdfParams() {
-        }
-
+        public ScryptKdfParams() {}
         public int getDklen() {
             return dklen;
         }
-
         public void setDklen(int dklen) {
             this.dklen = dklen;
         }
-
         public int getN() {
             return n;
         }
-
         public void setN(int n) {
             this.n = n;
         }
-
         public int getP() {
             return p;
         }
-
         public void setP(int p) {
             this.p = p;
         }
-
         public int getR() {
             return r;
         }
-
         public void setR(int r) {
             this.r = r;
         }
-
         public String getSalt() {
             return salt;
         }
-
         public void setSalt(String salt) {
             this.salt = salt;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -402,9 +308,7 @@ public class WalletFile {
             if (!(o instanceof ScryptKdfParams)) {
                 return false;
             }
-            
             ScryptKdfParams that = (ScryptKdfParams) o;
-            
             if (dklen != that.dklen) {
                 return false;
             }
@@ -417,10 +321,8 @@ public class WalletFile {
             if (r != that.r) {
                 return false;
             }
-            return getSalt() != null
-                ? getSalt().equals(that.getSalt()) : that.getSalt() == null;
-        }  
-
+            return getSalt() != null ? getSalt().equals(that.getSalt()) : that.getSalt() == null;
+        }
         @Override
         public int hashCode() {
             int result = dklen;
@@ -429,31 +331,22 @@ public class WalletFile {
             result = 31 * result + r;
             result = 31 * result + (getSalt() != null ? getSalt().hashCode() : 0);
             return result;
-        }     
+        }
     }
-
-    
-    
     static class KdfParamsDeserialiser extends JsonDeserializer<KdfParams> {
-
         @Override
         public KdfParams deserialize(
                 JsonParser jsonParser, DeserializationContext deserializationContext)
                 throws IOException {
-
             ObjectMapper objectMapper = (ObjectMapper) jsonParser.getCodec();
             ObjectNode root = objectMapper.readTree(jsonParser);
             KdfParams kdfParams;
-
-            
-            
             JsonNode n = root.get("n");
             if (n == null) {
                 kdfParams = objectMapper.convertValue(root, Aes128CtrKdfParams.class);
             } else {
                 kdfParams = objectMapper.convertValue(root, ScryptKdfParams.class);
             }
-
             return kdfParams;
         }
     }

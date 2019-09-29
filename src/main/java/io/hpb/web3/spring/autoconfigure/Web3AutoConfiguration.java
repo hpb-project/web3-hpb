@@ -59,9 +59,9 @@ public class Web3AutoConfiguration {
         } else if (clientAddress.startsWith("http")) {
             web3Service = new HttpService(clientAddress, createOkHttpClient(), false);
         } else if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
-            web3Service = new WindowsIpcService(clientAddress);
+            web3Service = new WindowsIpcService(clientAddress,properties.isIncludeRawResponse(),properties.getLogLevel());
         } else {
-            web3Service = new UnixIpcService(clientAddress);
+            web3Service = new UnixIpcService(clientAddress,properties.isIncludeRawResponse(),properties.getLogLevel());
         }
 
         return web3Service;
@@ -75,7 +75,7 @@ public class Web3AutoConfiguration {
     }
 
     private void configureTimeouts(OkHttpClient.Builder builder) {
-        Long tos = properties.ghpbttpTimeoutSeconds();
+        Long tos = properties.getHttpTimeoutSeconds();
         if (tos != null) {
             builder.connectTimeout(tos, TimeUnit.SECONDS);
             builder.readTimeout(tos, TimeUnit.SECONDS);  

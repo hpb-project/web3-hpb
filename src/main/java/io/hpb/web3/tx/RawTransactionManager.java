@@ -1,5 +1,4 @@
 package io.hpb.web3.tx;
-
 import java.io.IOException;
 import java.math.BigInteger;
 
@@ -17,117 +16,89 @@ import io.hpb.web3.tx.exceptions.TxHashMismatchException;
 import io.hpb.web3.tx.response.TransactionReceiptProcessor;
 import io.hpb.web3.utils.Numeric;
 import io.hpb.web3.utils.TxHashVerifier;
-
-
 public class RawTransactionManager extends TransactionManager {
-
     private final Web3 web3;
     final Credentials credentials;
-
     private final long chainId;
-
     protected TxHashVerifier txHashVerifier = new TxHashVerifier();
-
     public RawTransactionManager(Web3 web3, Credentials credentials, long chainId) {
         super(web3, credentials.getAddress());
-
         this.web3 = web3;
         this.credentials = credentials;
-
         this.chainId = chainId;
     }
-
     public RawTransactionManager(
-            Web3 web3, Credentials credentials, long chainId,
+            Web3 web3,
+            Credentials credentials,
+            long chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(transactionReceiptProcessor, credentials.getAddress());
-
         this.web3 = web3;
         this.credentials = credentials;
-
         this.chainId = chainId;
     }
-
     public RawTransactionManager(
             Web3 web3, Credentials credentials, long chainId, int attempts, long sleepDuration) {
         super(web3, attempts, sleepDuration, credentials.getAddress());
-
         this.web3 = web3;
         this.credentials = credentials;
-
         this.chainId = chainId;
     }
-
     public RawTransactionManager(Web3 web3, Credentials credentials) {
-        this(web3, credentials, ChainId.NONE);
+        this(web3, credentials, ChainIdLong.MAINNET);
     }
-
     public RawTransactionManager(
             Web3 web3, Credentials credentials, int attempts, int sleepDuration) {
-        this(web3, credentials, ChainId.NONE, attempts, sleepDuration);
+        this(web3, credentials, ChainIdLong.MAINNET, attempts, sleepDuration);
     }
-
     protected BigInteger getNonce() throws IOException {
-        HpbGetTransactionCount hpbGetTransactionCount = web3.hpbGetTransactionCount(
-                credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
-
+        HpbGetTransactionCount hpbGetTransactionCount =
+                web3.hpbGetTransactionCount(
+                                credentials.getAddress(), DefaultBlockParameterName.LATEST)
+                        .send();
         return hpbGetTransactionCount.getTransactionCount();
     }
-
     public TxHashVerifier getTxHashVerifier() {
         return txHashVerifier;
     }
-
     public void setTxHashVerifier(TxHashVerifier txHashVerifier) {
         this.txHashVerifier = txHashVerifier;
     }
-
     @Override
     public HpbSendTransaction sendTransaction(
-            BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, BigInteger value) throws IOException {
-
+            BigInteger gasPrice,
+            BigInteger gasLimit,
+            String to,
+            String data,
+            BigInteger value,
+            boolean constructor)
+            throws IOException {
         BigInteger nonce = getNonce();
-
-        RawTransaction rawTransaction = RawTransaction.createTransaction(
-                nonce,
-                gasPrice,
-                gasLimit,
-                to,
-                value,
-                data);
-
+        RawTransaction rawTransaction =
+                RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
         return signAndSend(rawTransaction);
     }
-
     @Override
     public String sendCall(String to, String data, DefaultBlockParameter defaultBlockParameter)
             throws IOException {
         return web3.hpbCall(
-                Transaction.createHpbCallTransaction(getFromAddress(), to, data),
-                defaultBlockParameter)
-                .send().getValue();
+                        Transaction.createHpbCallTransaction(getFromAddress(), to, data),
+                        defaultBlockParameter)
+                .send()
+                .getValue();
     }
-
-    
     public String sign(RawTransaction rawTransaction) {
-
         byte[] signedMessage;
-
-        if (chainId > ChainId.NONE) {
+        if (chainId > ChainIdLong.NONE) {
             signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
         } else {
             signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
         }
-
         return Numeric.toHexString(signedMessage);
     }
-
-    public HpbSendTransaction signAndSend(RawTransaction rawTransaction)
-            throws IOException {
+    public HpbSendTransaction signAndSend(RawTransaction rawTransaction) throws IOException {
         String hexValue = sign(rawTransaction);
         HpbSendTransaction hpbSendTransaction = web3.hpbSendRawTransaction(hexValue).send();
-
         if (hpbSendTransaction != null && !hpbSendTransaction.hasError()) {
             String txHashLocal = Hash.sha3(hexValue);
             String txHashRemote = hpbSendTransaction.getTransactionHash();
@@ -135,7 +106,6 @@ public class RawTransactionManager extends TransactionManager {
                 throw new TxHashMismatchException(txHashLocal, txHashRemote);
             }
         }
-
         return hpbSendTransaction;
     }
 }

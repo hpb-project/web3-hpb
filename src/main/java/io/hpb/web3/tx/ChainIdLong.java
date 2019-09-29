@@ -1,8 +1,6 @@
 package io.hpb.web3.tx;
-
 public class ChainIdLong {
     public static final long NONE = -1;
-//    public static final long MAINNET = 1;
     public static final long MAINNET = 269;
     public static final long EXPANSE_MAINNET = 2;
     public static final long ROPSTEN = 3;
@@ -10,6 +8,4 @@ public class ChainIdLong {
     public static final long ROOTSTOCK_MAINNET = 30;
     public static final long ROOTSTOCK_TESTNET = 31;
     public static final long KOVAN = 42;
-    public static final long HPB_CLASSIC_MAINNET = 61;
-    public static final long HPB_CLASSIC_TESTNET = 62;
 }

@@ -1,5 +1,4 @@
 package io.hpb.web3.protocol.core;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -14,8 +13,8 @@ import io.hpb.web3.protocol.Web3Service;
 import io.hpb.web3.protocol.core.methods.request.ShhFilter;
 import io.hpb.web3.protocol.core.methods.request.ShhPost;
 import io.hpb.web3.protocol.core.methods.request.Transaction;
+import io.hpb.web3.protocol.core.methods.response.DbGetHex;
 import io.hpb.web3.protocol.core.methods.response.DbGetString;
-import io.hpb.web3.protocol.core.methods.response.DbGhpbex;
 import io.hpb.web3.protocol.core.methods.response.DbPutHex;
 import io.hpb.web3.protocol.core.methods.response.DbPutString;
 import io.hpb.web3.protocol.core.methods.response.HpbAccounts;
@@ -70,30 +69,24 @@ import io.hpb.web3.protocol.websocket.events.NewHeadsNotification;
 import io.hpb.web3.utils.Async;
 import io.hpb.web3.utils.Numeric;
 import io.reactivex.Flowable;
-
-
 public class JsonRpc2_0Web3 implements Web3 {
-
     public static final int DEFAULT_BLOCK_TIME = 15 * 1000;
-
     protected final Web3Service web3Service;
     private final JsonRpc2_0Rx web3Rx;
     private final long blockTime;
     private final ScheduledExecutorService scheduledExecutorService;
-
     public JsonRpc2_0Web3(Web3Service web3Service) {
         this(web3Service, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
     }
-
     public JsonRpc2_0Web3(
-            Web3Service web3Service, long pollingInterval,
+            Web3Service web3Service,
+            long pollingInterval,
             ScheduledExecutorService scheduledExecutorService) {
         this.web3Service = web3Service;
         this.web3Rx = new JsonRpc2_0Rx(this, scheduledExecutorService);
         this.blockTime = pollingInterval;
         this.scheduledExecutorService = scheduledExecutorService;
     }
-
     @Override
     public Request<?, Web3ClientVersion> web3ClientVersion() {
         return new Request<>(
@@ -102,43 +95,25 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 Web3ClientVersion.class);
     }
-
     @Override
     public Request<?, Web3Sha3> web3Sha3(String data) {
-        return new Request<>(
-                "web3_sha3",
-                Arrays.asList(data),
-                web3Service,
-                Web3Sha3.class);
+        return new Request<>("web3_sha3", Arrays.asList(data), web3Service, Web3Sha3.class);
     }
-
     @Override
     public Request<?, NetVersion> netVersion() {
         return new Request<>(
-                "net_version",
-                Collections.<String>emptyList(),
-                web3Service,
-                NetVersion.class);
+                "net_version", Collections.<String>emptyList(), web3Service, NetVersion.class);
     }
-
     @Override
     public Request<?, NetListening> netListening() {
         return new Request<>(
-                "net_listening",
-                Collections.<String>emptyList(),
-                web3Service,
-                NetListening.class);
+                "net_listening", Collections.<String>emptyList(), web3Service, NetListening.class);
     }
-
     @Override
     public Request<?, NetPeerCount> netPeerCount() {
         return new Request<>(
-                "net_peerCount",
-                Collections.<String>emptyList(),
-                web3Service,
-                NetPeerCount.class);
+                "net_peerCount", Collections.<String>emptyList(), web3Service, NetPeerCount.class);
     }
-
     @Override
     public Request<?, HpbProtocolVersion> hpbProtocolVersion() {
         return new Request<>(
@@ -147,61 +122,36 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbProtocolVersion.class);
     }
-
     @Override
     public Request<?, HpbCoinbase> hpbCoinbase() {
         return new Request<>(
-                "hpb_coinbase",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbCoinbase.class);
+                "hpb_coinbase", Collections.<String>emptyList(), web3Service, HpbCoinbase.class);
     }
-
     @Override
     public Request<?, HpbSyncing> hpbSyncing() {
         return new Request<>(
-                "hpb_syncing",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbSyncing.class);
+                "hpb_syncing", Collections.<String>emptyList(), web3Service, HpbSyncing.class);
     }
-
     @Override
     public Request<?, HpbMining> hpbMining() {
         return new Request<>(
-                "hpb_mining",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbMining.class);
+                "hpb_mining", Collections.<String>emptyList(), web3Service, HpbMining.class);
     }
-
     @Override
     public Request<?, HpbHashrate> hpbHashrate() {
         return new Request<>(
-                "hpb_hashrate",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbHashrate.class);
+                "hpb_hashrate", Collections.<String>emptyList(), web3Service, HpbHashrate.class);
     }
-
     @Override
     public Request<?, HpbGasPrice> hpbGasPrice() {
         return new Request<>(
-                "hpb_gasPrice",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbGasPrice.class);
+                "hpb_gasPrice", Collections.<String>emptyList(), web3Service, HpbGasPrice.class);
     }
-
     @Override
     public Request<?, HpbAccounts> hpbAccounts() {
         return new Request<>(
-                "hpb_accounts",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbAccounts.class);
+                "hpb_accounts", Collections.<String>emptyList(), web3Service, HpbAccounts.class);
     }
-
     @Override
     public Request<?, HpbBlockNumber> hpbBlockNumber() {
         return new Request<>(
@@ -210,7 +160,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbBlockNumber.class);
     }
-
     @Override
     public Request<?, HpbGetBalance> hpbGetBalance(
             String address, DefaultBlockParameter defaultBlockParameter) {
@@ -220,7 +169,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetBalance.class);
     }
-
     @Override
     public Request<?, HpbGetStorageAt> hpbGetStorageAt(
             String address, BigInteger position, DefaultBlockParameter defaultBlockParameter) {
@@ -233,7 +181,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetStorageAt.class);
     }
-
     @Override
     public Request<?, HpbGetTransactionCount> hpbGetTransactionCount(
             String address, DefaultBlockParameter defaultBlockParameter) {
@@ -243,7 +190,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetTransactionCount.class);
     }
-
     @Override
     public Request<?, HpbGetBlockTransactionCountByHash> hpbGetBlockTransactionCountByHash(
             String blockHash) {
@@ -253,7 +199,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetBlockTransactionCountByHash.class);
     }
-
     @Override
     public Request<?, HpbGetBlockTransactionCountByNumber> hpbGetBlockTransactionCountByNumber(
             DefaultBlockParameter defaultBlockParameter) {
@@ -263,7 +208,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetBlockTransactionCountByNumber.class);
     }
-
     @Override
     public Request<?, HpbGetUncleCountByBlockHash> hpbGetUncleCountByBlockHash(String blockHash) {
         return new Request<>(
@@ -272,7 +216,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetUncleCountByBlockHash.class);
     }
-
     @Override
     public Request<?, HpbGetUncleCountByBlockNumber> hpbGetUncleCountByBlockNumber(
             DefaultBlockParameter defaultBlockParameter) {
@@ -282,7 +225,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetUncleCountByBlockNumber.class);
     }
-
     @Override
     public Request<?, HpbGetCode> hpbGetCode(
             String address, DefaultBlockParameter defaultBlockParameter) {
@@ -292,7 +234,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetCode.class);
     }
-
     @Override
     public Request<?, HpbSign> hpbSign(String address, String sha3HashOfDataToSign) {
         return new Request<>(
@@ -301,29 +242,24 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbSign.class);
     }
-
     @Override
     public Request<?, io.hpb.web3.protocol.core.methods.response.HpbSendTransaction>
-            hpbSendTransaction(
-            Transaction transaction) {
+            hpbSendTransaction(Transaction transaction) {
         return new Request<>(
                 "hpb_sendTransaction",
                 Arrays.asList(transaction),
                 web3Service,
                 io.hpb.web3.protocol.core.methods.response.HpbSendTransaction.class);
     }
-
     @Override
     public Request<?, io.hpb.web3.protocol.core.methods.response.HpbSendTransaction>
-            hpbSendRawTransaction(
-            String signedTransactionData) {
+            hpbSendRawTransaction(String signedTransactionData) {
         return new Request<>(
                 "hpb_sendRawTransaction",
                 Arrays.asList(signedTransactionData),
                 web3Service,
                 io.hpb.web3.protocol.core.methods.response.HpbSendTransaction.class);
     }
-
     @Override
     public Request<?, io.hpb.web3.protocol.core.methods.response.HpbCall> hpbCall(
             Transaction transaction, DefaultBlockParameter defaultBlockParameter) {
@@ -333,41 +269,29 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 io.hpb.web3.protocol.core.methods.response.HpbCall.class);
     }
-
     @Override
     public Request<?, HpbEstimateGas> hpbEstimateGas(Transaction transaction) {
         return new Request<>(
-                "hpb_estimateGas",
-                Arrays.asList(transaction),
-                web3Service,
-                HpbEstimateGas.class);
+                "hpb_estimateGas", Arrays.asList(transaction), web3Service, HpbEstimateGas.class);
     }
-
     @Override
     public Request<?, HpbBlock> hpbGetBlockByHash(
             String blockHash, boolean returnFullTransactionObjects) {
         return new Request<>(
                 "hpb_getBlockByHash",
-                Arrays.asList(
-                        blockHash,
-                        returnFullTransactionObjects),
+                Arrays.asList(blockHash, returnFullTransactionObjects),
                 web3Service,
                 HpbBlock.class);
     }
-
     @Override
     public Request<?, HpbBlock> hpbGetBlockByNumber(
-            DefaultBlockParameter defaultBlockParameter,
-            boolean returnFullTransactionObjects) {
+            DefaultBlockParameter defaultBlockParameter, boolean returnFullTransactionObjects) {
         return new Request<>(
                 "hpb_getBlockByNumber",
-                Arrays.asList(
-                        defaultBlockParameter.getValue(),
-                        returnFullTransactionObjects),
+                Arrays.asList(defaultBlockParameter.getValue(), returnFullTransactionObjects),
                 web3Service,
                 HpbBlock.class);
     }
-
     @Override
     public Request<?, HpbTransaction> hpbGetTransactionByHash(String transactionHash) {
         return new Request<>(
@@ -376,31 +300,25 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbTransaction.class);
     }
-
     @Override
     public Request<?, HpbTransaction> hpbGetTransactionByBlockHashAndIndex(
             String blockHash, BigInteger transactionIndex) {
         return new Request<>(
                 "hpb_getTransactionByBlockHashAndIndex",
-                Arrays.asList(
-                        blockHash,
-                        Numeric.encodeQuantity(transactionIndex)),
+                Arrays.asList(blockHash, Numeric.encodeQuantity(transactionIndex)),
                 web3Service,
                 HpbTransaction.class);
     }
-
     @Override
     public Request<?, HpbTransaction> hpbGetTransactionByBlockNumberAndIndex(
             DefaultBlockParameter defaultBlockParameter, BigInteger transactionIndex) {
         return new Request<>(
                 "hpb_getTransactionByBlockNumberAndIndex",
                 Arrays.asList(
-                        defaultBlockParameter.getValue(),
-                        Numeric.encodeQuantity(transactionIndex)),
+                        defaultBlockParameter.getValue(), Numeric.encodeQuantity(transactionIndex)),
                 web3Service,
                 HpbTransaction.class);
     }
-
     @Override
     public Request<?, HpbGetTransactionReceipt> hpbGetTransactionReceipt(String transactionHash) {
         return new Request<>(
@@ -409,31 +327,24 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetTransactionReceipt.class);
     }
-
     @Override
     public Request<?, HpbBlock> hpbGetUncleByBlockHashAndIndex(
             String blockHash, BigInteger transactionIndex) {
         return new Request<>(
                 "hpb_getUncleByBlockHashAndIndex",
-                Arrays.asList(
-                        blockHash,
-                        Numeric.encodeQuantity(transactionIndex)),
+                Arrays.asList(blockHash, Numeric.encodeQuantity(transactionIndex)),
                 web3Service,
                 HpbBlock.class);
     }
-
     @Override
     public Request<?, HpbBlock> hpbGetUncleByBlockNumberAndIndex(
             DefaultBlockParameter defaultBlockParameter, BigInteger uncleIndex) {
         return new Request<>(
                 "hpb_getUncleByBlockNumberAndIndex",
-                Arrays.asList(
-                        defaultBlockParameter.getValue(),
-                        Numeric.encodeQuantity(uncleIndex)),
+                Arrays.asList(defaultBlockParameter.getValue(), Numeric.encodeQuantity(uncleIndex)),
                 web3Service,
                 HpbBlock.class);
     }
-
     @Override
     public Request<?, HpbGetCompilers> hpbGetCompilers() {
         return new Request<>(
@@ -442,16 +353,11 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbGetCompilers.class);
     }
-
     @Override
     public Request<?, HpbCompileLLL> hpbCompileLLL(String sourceCode) {
         return new Request<>(
-                "hpb_compileLLL",
-                Arrays.asList(sourceCode),
-                web3Service,
-                HpbCompileLLL.class);
+                "hpb_compileLLL", Arrays.asList(sourceCode), web3Service, HpbCompileLLL.class);
     }
-
     @Override
     public Request<?, HpbCompileSolidity> hpbCompileSolidity(String sourceCode) {
         return new Request<>(
@@ -460,7 +366,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbCompileSolidity.class);
     }
-
     @Override
     public Request<?, HpbCompileSerpent> hpbCompileSerpent(String sourceCode) {
         return new Request<>(
@@ -469,17 +374,12 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbCompileSerpent.class);
     }
-
     @Override
     public Request<?, HpbFilter> hpbNewFilter(
             io.hpb.web3.protocol.core.methods.request.HpbFilter hpbFilter) {
         return new Request<>(
-                "hpb_newFilter",
-                Arrays.asList(hpbFilter),
-                web3Service,
-                HpbFilter.class);
+                "hpb_newFilter", Arrays.asList(hpbFilter), web3Service, HpbFilter.class);
     }
-
     @Override
     public Request<?, HpbFilter> hpbNewBlockFilter() {
         return new Request<>(
@@ -488,7 +388,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbFilter.class);
     }
-
     @Override
     public Request<?, HpbFilter> hpbNewPendingTransactionFilter() {
         return new Request<>(
@@ -497,7 +396,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbFilter.class);
     }
-
     @Override
     public Request<?, HpbUninstallFilter> hpbUninstallFilter(BigInteger filterId) {
         return new Request<>(
@@ -506,7 +404,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbUninstallFilter.class);
     }
-
     @Override
     public Request<?, HpbLog> hpbGetFilterChanges(BigInteger filterId) {
         return new Request<>(
@@ -515,7 +412,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbLog.class);
     }
-
     @Override
     public Request<?, HpbLog> hpbGetFilterLogs(BigInteger filterId) {
         return new Request<>(
@@ -524,26 +420,16 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbLog.class);
     }
-
     @Override
     public Request<?, HpbLog> hpbGetLogs(
             io.hpb.web3.protocol.core.methods.request.HpbFilter hpbFilter) {
-        return new Request<>(
-                "hpb_getLogs",
-                Arrays.asList(hpbFilter),
-                web3Service,
-                HpbLog.class);
+        return new Request<>("hpb_getLogs", Arrays.asList(hpbFilter), web3Service, HpbLog.class);
     }
-
     @Override
     public Request<?, HpbGetWork> hpbGetWork() {
         return new Request<>(
-                "hpb_getWork",
-                Collections.<String>emptyList(),
-                web3Service,
-                HpbGetWork.class);
+                "hpb_getWork", Collections.<String>emptyList(), web3Service, HpbGetWork.class);
     }
-
     @Override
     public Request<?, HpbSubmitWork> hpbSubmitWork(
             String nonce, String headerPowHash, String mixDigest) {
@@ -553,7 +439,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbSubmitWork.class);
     }
-
     @Override
     public Request<?, HpbSubmitHashrate> hpbSubmitHashrate(String hashrate, String clientId) {
         return new Request<>(
@@ -562,7 +447,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 HpbSubmitHashrate.class);
     }
-
     @Override
     public Request<?, DbPutString> dbPutString(
             String databaseName, String keyName, String stringToStore) {
@@ -572,7 +456,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 DbPutString.class);
     }
-
     @Override
     public Request<?, DbGetString> dbGetString(String databaseName, String keyName) {
         return new Request<>(
@@ -581,7 +464,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 DbGetString.class);
     }
-
     @Override
     public Request<?, DbPutHex> dbPutHex(String databaseName, String keyName, String dataToStore) {
         return new Request<>(
@@ -590,16 +472,11 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 DbPutHex.class);
     }
-
     @Override
-    public Request<?, DbGhpbex> dbGhpbex(String databaseName, String keyName) {
+    public Request<?, DbGetHex> dbGetHex(String databaseName, String keyName) {
         return new Request<>(
-                "db_ghpbex",
-                Arrays.asList(databaseName, keyName),
-                web3Service,
-                DbGhpbex.class);
+                "db_getHex", Arrays.asList(databaseName, keyName), web3Service, DbGetHex.class);
     }
-
     @Override
     public Request<?, io.hpb.web3.protocol.core.methods.response.ShhPost> shhPost(ShhPost shhPost) {
         return new Request<>(
@@ -608,16 +485,11 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 io.hpb.web3.protocol.core.methods.response.ShhPost.class);
     }
-
     @Override
     public Request<?, ShhVersion> shhVersion() {
         return new Request<>(
-                "shh_version",
-                Collections.<String>emptyList(),
-                web3Service,
-                ShhVersion.class);
+                "shh_version", Collections.<String>emptyList(), web3Service, ShhVersion.class);
     }
-
     @Override
     public Request<?, ShhNewIdentity> shhNewIdentity() {
         return new Request<>(
@@ -626,7 +498,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 ShhNewIdentity.class);
     }
-
     @Override
     public Request<?, ShhHasIdentity> shhHasIdentity(String identityAddress) {
         return new Request<>(
@@ -635,16 +506,11 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 ShhHasIdentity.class);
     }
-
     @Override
     public Request<?, ShhNewGroup> shhNewGroup() {
         return new Request<>(
-                "shh_newGroup",
-                Collections.<String>emptyList(),
-                web3Service,
-                ShhNewGroup.class);
+                "shh_newGroup", Collections.<String>emptyList(), web3Service, ShhNewGroup.class);
     }
-
     @Override
     public Request<?, ShhAddToGroup> shhAddToGroup(String identityAddress) {
         return new Request<>(
@@ -653,16 +519,11 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 ShhAddToGroup.class);
     }
-
     @Override
     public Request<?, ShhNewFilter> shhNewFilter(ShhFilter shhFilter) {
         return new Request<>(
-                "shh_newFilter",
-                Arrays.asList(shhFilter),
-                web3Service,
-                ShhNewFilter.class);
+                "shh_newFilter", Arrays.asList(shhFilter), web3Service, ShhNewFilter.class);
     }
-
     @Override
     public Request<?, ShhUninstallFilter> shhUninstallFilter(BigInteger filterId) {
         return new Request<>(
@@ -671,7 +532,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 ShhUninstallFilter.class);
     }
-
     @Override
     public Request<?, ShhMessages> shhGetFilterChanges(BigInteger filterId) {
         return new Request<>(
@@ -680,7 +540,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 ShhMessages.class);
     }
-
     @Override
     public Request<?, ShhMessages> shhGetMessages(BigInteger filterId) {
         return new Request<>(
@@ -689,7 +548,6 @@ public class JsonRpc2_0Web3 implements Web3 {
                 web3Service,
                 ShhMessages.class);
     }
-
     @Override
     public Flowable<NewHeadsNotification> newHeadsNotifications() {
         return web3Service.subscribe(
@@ -699,16 +557,12 @@ public class JsonRpc2_0Web3 implements Web3 {
                         web3Service,
                         HpbSubscribe.class),
                 "hpb_unsubscribe",
-                NewHeadsNotification.class
-        );
+                NewHeadsNotification.class);
     }
-
     @Override
     public Flowable<LogNotification> logsNotifications(
             List<String> addresses, List<String> topics) {
-
         Map<String, Object> params = createLogsParams(addresses, topics);
-
         return web3Service.subscribe(
                 new Request<>(
                         "hpb_subscribe",
@@ -716,10 +570,8 @@ public class JsonRpc2_0Web3 implements Web3 {
                         web3Service,
                         HpbSubscribe.class),
                 "hpb_unsubscribe",
-                LogNotification.class
-        );
+                LogNotification.class);
     }
-
     private Map<String, Object> createLogsParams(List<String> addresses, List<String> topics) {
         Map<String, Object> params = new HashMap<>();
         if (!addresses.isEmpty()) {
@@ -730,97 +582,83 @@ public class JsonRpc2_0Web3 implements Web3 {
         }
         return params;
     }
-
     @Override
     public Flowable<String> hpbBlockHashFlowable() {
         return web3Rx.hpbBlockHashFlowable(blockTime);
     }
-
     @Override
     public Flowable<String> hpbPendingTransactionHashFlowable() {
         return web3Rx.hpbPendingTransactionHashFlowable(blockTime);
     }
-
     @Override
     public Flowable<Log> hpbLogFlowable(
             io.hpb.web3.protocol.core.methods.request.HpbFilter hpbFilter) {
         return web3Rx.hpbLogFlowable(hpbFilter, blockTime);
     }
-
     @Override
-    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            transactionFlowable() {
+    public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction> transactionFlowable() {
         return web3Rx.transactionFlowable(blockTime);
     }
-
     @Override
     public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
             pendingTransactionFlowable() {
         return web3Rx.pendingTransactionFlowable(blockTime);
     }
-
     @Override
     public Flowable<HpbBlock> blockFlowable(boolean fullTransactionObjects) {
         return web3Rx.blockFlowable(fullTransactionObjects, blockTime);
     }
-
     @Override
     public Flowable<HpbBlock> replayPastBlocksFlowable(
-            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
+            DefaultBlockParameter startBlock,
+            DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
         return web3Rx.replayBlocksFlowable(startBlock, endBlock, fullTransactionObjects);
     }
-
-    @Override
-    public Flowable<HpbBlock> replayPastBlocksFlowable(DefaultBlockParameter startBlock,
-                                                      DefaultBlockParameter endBlock,
-                                                      boolean fullTransactionObjects,
-                                                      boolean ascending) {
-        return web3Rx.replayBlocksFlowable(startBlock, endBlock,
-                fullTransactionObjects, ascending);
-    }
-
     @Override
     public Flowable<HpbBlock> replayPastBlocksFlowable(
-            DefaultBlockParameter startBlock, boolean fullTransactionObjects,
+            DefaultBlockParameter startBlock,
+            DefaultBlockParameter endBlock,
+            boolean fullTransactionObjects,
+            boolean ascending) {
+        return web3Rx.replayBlocksFlowable(
+                startBlock, endBlock, fullTransactionObjects, ascending);
+    }
+    @Override
+    public Flowable<HpbBlock> replayPastBlocksFlowable(
+            DefaultBlockParameter startBlock,
+            boolean fullTransactionObjects,
             Flowable<HpbBlock> onCompleteFlowable) {
         return web3Rx.replayPastBlocksFlowable(
                 startBlock, fullTransactionObjects, onCompleteFlowable);
     }
-
     @Override
     public Flowable<HpbBlock> replayPastBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
         return web3Rx.replayPastBlocksFlowable(startBlock, fullTransactionObjects);
     }
-
     @Override
     public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
-            replayPastTransactionsFlowable(DefaultBlockParameter startBlock,
-                                          DefaultBlockParameter endBlock) {
+            replayPastTransactionsFlowable(
+                    DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         return web3Rx.replayTransactionsFlowable(startBlock, endBlock);
     }
-
     @Override
     public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
             replayPastTransactionsFlowable(DefaultBlockParameter startBlock) {
         return web3Rx.replayPastTransactionsFlowable(startBlock);
     }
-
     @Override
     public Flowable<HpbBlock> replayPastAndFutureBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
         return web3Rx.replayPastAndFutureBlocksFlowable(
                 startBlock, fullTransactionObjects, blockTime);
     }
-
     @Override
     public Flowable<io.hpb.web3.protocol.core.methods.response.Transaction>
             replayPastAndFutureTransactionsFlowable(DefaultBlockParameter startBlock) {
-        return web3Rx.replayPastAndFutureTransactionsFlowable(
-                startBlock, blockTime);
+        return web3Rx.replayPastAndFutureTransactionsFlowable(startBlock, blockTime);
     }
-
     @Override
     public void shutdown() {
         scheduledExecutorService.shutdown();

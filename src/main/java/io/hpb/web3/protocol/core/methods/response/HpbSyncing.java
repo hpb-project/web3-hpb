@@ -1,5 +1,5 @@
-package io.hpb.web3.protocol.core.methods.response;
 
+package io.hpb.web3.protocol.core.methods.response;
 import java.io.IOException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,49 +13,39 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.core.Response;
 
-
 public class HpbSyncing extends Response<HpbSyncing.Result> {
-
     @Override
     @JsonDeserialize(using = HpbSyncing.ResponseDeserialiser.class)
     public void setResult(HpbSyncing.Result result) {
         super.setResult(result);
     }
-
     public boolean isSyncing() {
         return getResult().isSyncing();
     }
-
     public static class Result {
         private boolean isSyncing = true;
-
-        public Result() {
-        }
-
+        public Result() {}
         public boolean isSyncing() {
             return isSyncing;
         }
-
         public void setSyncing(boolean syncing) {
             isSyncing = syncing;
         }
     }
-
     @JsonIgnoreProperties({"knownStates", "pulledStates"})
-    
+    // these fields although not present in the RPC specification are returned by Geth 1.4.10
     public static class Syncing extends Result {
-
         private String startingBlock;
         private String currentBlock;
         private String highestBlock;
         private String knownStates;
         private String pulledStates;
-
-        public Syncing() {
-        }
-
+        public Syncing() {}
         public Syncing(
-                String startingBlock, String currentBlock, String highestBlock, String knownStates,
+                String startingBlock,
+                String currentBlock,
+                String highestBlock,
+                String knownStates,
                 String pulledStates) {
             this.startingBlock = startingBlock;
             this.currentBlock = currentBlock;
@@ -63,31 +53,24 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
             this.knownStates = knownStates;
             this.pulledStates = pulledStates;
         }
-
         public String getStartingBlock() {
             return startingBlock;
         }
-
         public void setStartingBlock(String startingBlock) {
             this.startingBlock = startingBlock;
         }
-
         public String getCurrentBlock() {
             return currentBlock;
         }
-
         public void setCurrentBlock(String currentBlock) {
             this.currentBlock = currentBlock;
         }
-
-        public String ghpbighestBlock() {
+        public String getHighestBlock() {
             return highestBlock;
         }
-
-        public void shpbighestBlock(String highestBlock) {
+        public void setHighestBlock(String highestBlock) {
             this.highestBlock = highestBlock;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -96,9 +79,7 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
             if (!(o instanceof Syncing)) {
                 return false;
             }
-
             Syncing syncing = (Syncing) o;
-
             if (isSyncing() != syncing.isSyncing()) {
                 return false;
             }
@@ -112,9 +93,9 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
                     : syncing.getCurrentBlock() != null) {
                 return false;
             }
-            if (ghpbighestBlock() != null
-                    ? !ghpbighestBlock().equals(syncing.ghpbighestBlock())
-                    : syncing.ghpbighestBlock() != null) {
+            if (getHighestBlock() != null
+                    ? !getHighestBlock().equals(syncing.getHighestBlock())
+                    : syncing.getHighestBlock() != null) {
                 return false;
             }
             if (knownStates != null
@@ -126,23 +107,19 @@ public class HpbSyncing extends Response<HpbSyncing.Result> {
                     ? pulledStates.equals(syncing.pulledStates)
                     : syncing.pulledStates == null;
         }
-
         @Override
         public int hashCode() {
             int result = getStartingBlock() != null ? getStartingBlock().hashCode() : 0;
             result = 31 * result + Boolean.hashCode(isSyncing());
             result = 31 * result + (getCurrentBlock() != null ? getCurrentBlock().hashCode() : 0);
-            result = 31 * result + (ghpbighestBlock() != null ? ghpbighestBlock().hashCode() : 0);
+            result = 31 * result + (getHighestBlock() != null ? getHighestBlock().hashCode() : 0);
             result = 31 * result + (knownStates != null ? knownStates.hashCode() : 0);
             result = 31 * result + (pulledStates != null ? pulledStates.hashCode() : 0);
             return result;
         }
     }
-
     public static class ResponseDeserialiser extends JsonDeserializer<Result> {
-
         private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
-
         @Override
         public Result deserialize(
                 JsonParser jsonParser, DeserializationContext deserializationContext)

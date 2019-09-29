@@ -1,47 +1,49 @@
 package io.hpb.web3.tuples.generated;
-
 import io.hpb.web3.tuples.Tuple;
-
-
 public final class Tuple4<T1, T2, T3, T4> implements Tuple {
     private static final int SIZE = 4;
-
     private final T1 value1;
-
     private final T2 value2;
-
     private final T3 value3;
-
     private final T4 value4;
-
     public Tuple4(T1 value1, T2 value2, T3 value3, T4 value4) {
         this.value1 = value1;
         this.value2 = value2;
         this.value3 = value3;
         this.value4 = value4;
     }
-
+    @Deprecated
     public T1 getValue1() {
         return value1;
     }
-
+    public T1 component1() {
+        return value1;
+    }
+    @Deprecated
     public T2 getValue2() {
         return value2;
     }
-
+    public T2 component2() {
+        return value2;
+    }
+    @Deprecated
     public T3 getValue3() {
         return value3;
     }
-
+    public T3 component3() {
+        return value3;
+    }
+    @Deprecated
     public T4 getValue4() {
         return value4;
     }
-
+    public T4 component4() {
+        return value4;
+    }
     @Override
     public int getSize() {
         return SIZE;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,7 +64,6 @@ public final class Tuple4<T1, T2, T3, T4> implements Tuple {
         }
         return value4 != null ? value4.equals(tuple4.value4) : tuple4.value4 == null;
     }
-
     @Override
     public int hashCode() {
         int result = value1.hashCode();
@@ -71,7 +72,6 @@ public final class Tuple4<T1, T2, T3, T4> implements Tuple {
         result = 31 * result + (value4 != null ? value4.hashCode() : 0);
         return result;
     }
-
     @Override
     public String toString() {
         return "Tuple4{" +

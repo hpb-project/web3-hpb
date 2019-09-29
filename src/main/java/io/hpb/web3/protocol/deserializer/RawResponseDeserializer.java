@@ -1,5 +1,4 @@
 package io.hpb.web3.protocol.deserializer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -13,45 +12,31 @@ import com.fasterxml.jackson.databind.deser.ResolvableDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import io.hpb.web3.protocol.core.Response;
-
-
-public class RawResponseDeserializer
-        extends StdDeserializer<Response> implements ResolvableDeserializer {
-
+public class RawResponseDeserializer extends StdDeserializer<Response>
+        implements ResolvableDeserializer {
     private final JsonDeserializer<?> defaultDeserializer;
-
     public RawResponseDeserializer(JsonDeserializer<?> defaultDeserializer) {
         super(Response.class);
         this.defaultDeserializer = defaultDeserializer;
     }
-
     @Override
     public Response deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         Response deserializedResponse = (Response) defaultDeserializer.deserialize(jp, ctxt);
-
         deserializedResponse.setRawResponse(getRawResponse(jp));
         return deserializedResponse;
     }
-
-    
-    
     @Override
     public void resolve(DeserializationContext ctxt) throws JsonMappingException {
         ((ResolvableDeserializer) defaultDeserializer).resolve(ctxt);
     }
-
     private String getRawResponse(JsonParser jp) throws IOException {
         final InputStream inputSource = (InputStream) jp.getInputSource();
-
         if (inputSource == null) {
             return "";
         }
-
         inputSource.reset();
-
         return streamToString(inputSource);
     }
-
     private String streamToString(InputStream input) throws IOException {
         return new Scanner(input, StandardCharsets.UTF_8.name()).useDelimiter("\\Z").next();
     }

@@ -1,17 +1,12 @@
 package io.hpb.web3.console;
-
 import static io.hpb.web3.utils.Collection.tail;
 
 import io.hpb.web3.codegen.Console;
-
-
 public class WalletRunner {
     private static final String USAGE = "wallet create|update|send|fromkey";
-
     public static void run(String[] args) {
         main(args);
     }
-
     public static void main(String[] args) {
         if (args.length < 1) {
             Console.exitError(USAGE);

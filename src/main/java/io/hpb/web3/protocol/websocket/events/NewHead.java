@@ -1,5 +1,4 @@
 package io.hpb.web3.protocol.websocket.events;
-
 public class NewHead {
     private String difficulty;
     private String extraData;
@@ -16,63 +15,48 @@ public class NewHead {
     private String stateRoot;
     private String timestamp;
     private String transactionRoot;
-
     public String getDifficulty() {
         return difficulty;
     }
-
     public String getExtraData() {
         return extraData;
     }
-
     public String getGasLimit() {
         return gasLimit;
     }
-
     public String getGasUsed() {
         return gasUsed;
     }
-
     public String getHash() {
         return hash;
     }
-
     public String getLogsBloom() {
         return logsBloom;
     }
-
     public String getMiner() {
         return miner;
     }
-
     public String getNonce() {
         return nonce;
     }
-
     public String getNumber() {
         return number;
     }
-
     public String getParentHash() {
         return parentHash;
     }
-
     public String getReceiptRoot() {
         return receiptRoot;
     }
-
     public String getSha3Uncles() {
         return sha3Uncles;
     }
-
     public String getStateRoot() {
         return stateRoot;
     }
-
     public String getTimestamp() {
         return timestamp;
     }
-
     public String getTransactionRoot() {
         return transactionRoot;
     }

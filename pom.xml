@@ -5,7 +5,7 @@
 
 	<groupId>io.hpb.web3</groupId>
 	<artifactId>web3-hpb</artifactId>
-	<version>4.0.7</version>
+	<version>4.2.6</version>
 	<url>https://github.com/hpb-project</url>
 	<packaging>jar</packaging>
 

@@ -1,65 +1,50 @@
 package io.hpb.web3.rlp;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 
 import io.hpb.web3.utils.Numeric;
-
-
 public class RlpString implements RlpType {
-    private static final byte[] EMPTY = new byte[]{ };
-
+    private static final byte[] EMPTY = new byte[] {};
     private final byte[] value;
-
     private RlpString(byte[] value) {
         this.value = value;
     }
-
     public byte[] getBytes() {
         return value;
     }
-
     public BigInteger asPositiveBigInteger() {
         if (value.length == 0) {
             return BigInteger.ZERO;
         }
         return new BigInteger(1, value);
     }
-
     public String asString() {
         return Numeric.toHexString(value);
     }
-
     public static RlpString create(byte[] value) {
         return new RlpString(value);
     }
-
     public static RlpString create(byte value) {
-        return new RlpString(new byte[]{ value });
+        return new RlpString(new byte[] {value});
     }
-
     public static RlpString create(BigInteger value) {
-        
         if (value.signum() < 1) {
             return new RlpString(EMPTY);
         } else {
             byte[] bytes = value.toByteArray();
-            if (bytes[0] == 0) {  
+            if (bytes[0] == 0) { 
                 return new RlpString(Arrays.copyOfRange(bytes, 1, bytes.length));
             } else {
                 return new RlpString(bytes);
             }
         }
     }
-
     public static RlpString create(long value) {
         return create(BigInteger.valueOf(value));
     }
-
     public static RlpString create(String value) {
         return new RlpString(value.getBytes());
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,12 +53,9 @@ public class RlpString implements RlpType {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         RlpString rlpString = (RlpString) o;
-
         return Arrays.equals(value, rlpString.value);
     }
-
     @Override
     public int hashCode() {
         return Arrays.hashCode(value);

@@ -1,12 +1,8 @@
-
 package io.hpb.web3.protocol.core.methods.response;
-
 import java.math.BigInteger;
 import java.util.List;
 
 import io.hpb.web3.utils.Numeric;
-
-
 public class TransactionReceipt {
     private String transactionHash;
     private String transactionIndex;
@@ -16,21 +12,26 @@ public class TransactionReceipt {
     private String gasUsed;
     private String contractAddress;
     private String root;
-    
-    
     private String status;
     private String from;
     private String to;
     private List<Log> logs;
     private String logsBloom;
-
-    public TransactionReceipt() {
-    }
-
-    public TransactionReceipt(String transactionHash, String transactionIndex,
-                              String blockHash, String blockNumber, String cumulativeGasUsed,
-                              String gasUsed, String contractAddress, String root, String status,
-                              String from, String to, List<Log> logs, String logsBloom) {
+    public TransactionReceipt() {}
+    public TransactionReceipt(
+            String transactionHash,
+            String transactionIndex,
+            String blockHash,
+            String blockNumber,
+            String cumulativeGasUsed,
+            String gasUsed,
+            String contractAddress,
+            String root,
+            String status,
+            String from,
+            String to,
+            List<Log> logs,
+            String logsBloom) {
         this.transactionHash = transactionHash;
         this.transactionIndex = transactionIndex;
         this.blockHash = blockHash;
@@ -45,95 +46,72 @@ public class TransactionReceipt {
         this.logs = logs;
         this.logsBloom = logsBloom;
     }
-
     public String getTransactionHash() {
         return transactionHash;
     }
-
     public void setTransactionHash(String transactionHash) {
         this.transactionHash = transactionHash;
     }
-
     public BigInteger getTransactionIndex() {
         return Numeric.decodeQuantity(transactionIndex);
     }
-
     public String getTransactionIndexRaw() {
         return transactionIndex;
     }
-
     public void setTransactionIndex(String transactionIndex) {
         this.transactionIndex = transactionIndex;
     }
-
     public String getBlockHash() {
         return blockHash;
     }
-
     public void setBlockHash(String blockHash) {
         this.blockHash = blockHash;
     }
-
     public BigInteger getBlockNumber() {
         return Numeric.decodeQuantity(blockNumber);
     }
-
     public String getBlockNumberRaw() {
         return blockNumber;
     }
-
     public void setBlockNumber(String blockNumber) {
         this.blockNumber = blockNumber;
     }
-
     public BigInteger getCumulativeGasUsed() {
         return Numeric.decodeQuantity(cumulativeGasUsed);
     }
-
     public String getCumulativeGasUsedRaw() {
         return cumulativeGasUsed;
     }
-
     public void setCumulativeGasUsed(String cumulativeGasUsed) {
         this.cumulativeGasUsed = cumulativeGasUsed;
     }
-
     public BigInteger getGasUsed() {
         return Numeric.decodeQuantity(gasUsed);
     }
-
     public String getGasUsedRaw() {
         return gasUsed;
     }
-
     public void setGasUsed(String gasUsed) {
         this.gasUsed = gasUsed;
     }
-
     public String getContractAddress() {
         return contractAddress;
     }
-
     public void setContractAddress(String contractAddress) {
         this.contractAddress = contractAddress;
     }
-
     public String getRoot() {
         return root;
     }
-
     public void setRoot(String root) {
         this.root = root;
     }
-
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
-
     public boolean isStatusOK() {
         if (null == status) {
             return true;
@@ -141,39 +119,30 @@ public class TransactionReceipt {
         BigInteger statusQuantity = Numeric.decodeQuantity(status);
         return BigInteger.ONE.equals(statusQuantity);
     }
-
     public String getFrom() {
         return from;
     }
-
     public void setFrom(String from) {
         this.from = from;
     }
-
     public String getTo() {
         return to;
     }
-
     public void setTo(String to) {
         this.to = to;
     }
-
     public List<Log> getLogs() {
         return logs;
     }
-
     public void setLogs(List<Log> logs) {
         this.logs = logs;
     }
-
     public String getLogsBloom() {
         return logsBloom;
     }
-
     public void setLogsBloom(String logsBloom) {
         this.logsBloom = logsBloom;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -182,9 +151,7 @@ public class TransactionReceipt {
         if (!(o instanceof TransactionReceipt)) {
             return false;
         }
-
         TransactionReceipt that = (TransactionReceipt) o;
-
         if (getTransactionHash() != null
                 ? !getTransactionHash().equals(that.getTransactionHash())
                 : that.getTransactionHash() != null) {
@@ -201,7 +168,8 @@ public class TransactionReceipt {
             return false;
         }
         if (blockNumber != null
-                ? !blockNumber.equals(that.blockNumber) : that.blockNumber != null) {
+                ? !blockNumber.equals(that.blockNumber)
+                : that.blockNumber != null) {
             return false;
         }
         if (cumulativeGasUsed != null
@@ -217,12 +185,12 @@ public class TransactionReceipt {
                 : that.getContractAddress() != null) {
             return false;
         }
-        if (getRoot() != null
-                ? !getRoot().equals(that.getRoot()) : that.getRoot() != null) {
+        if (getRoot() != null ? !getRoot().equals(that.getRoot()) : that.getRoot() != null) {
             return false;
         }
         if (getStatus() != null
-                ? !getStatus().equals(that.getStatus()) : that.getStatus() != null) {
+                ? !getStatus().equals(that.getStatus())
+                : that.getStatus() != null) {
             return false;
         }
         if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null) {
@@ -235,9 +203,9 @@ public class TransactionReceipt {
             return false;
         }
         return getLogsBloom() != null
-                ? getLogsBloom().equals(that.getLogsBloom()) : that.getLogsBloom() == null;
+                ? getLogsBloom().equals(that.getLogsBloom())
+                : that.getLogsBloom() == null;
     }
-
     @Override
     public int hashCode() {
         int result = getTransactionHash() != null ? getTransactionHash().hashCode() : 0;
@@ -255,23 +223,47 @@ public class TransactionReceipt {
         result = 31 * result + (getLogsBloom() != null ? getLogsBloom().hashCode() : 0);
         return result;
     }
-
     @Override
     public String toString() {
         return "TransactionReceipt{"
-                + "transactionHash='" + transactionHash + '\''
-                + ", transactionIndex='" + transactionIndex + '\''
-                + ", blockHash='" + blockHash + '\''
-                + ", blockNumber='" + blockNumber + '\''
-                + ", cumulativeGasUsed='" + cumulativeGasUsed + '\''
-                + ", gasUsed='" + gasUsed + '\''
-                + ", contractAddress='" + contractAddress + '\''
-                + ", root='" + root + '\''
-                + ", status='" + status + '\''
-                + ", from='" + from + '\''
-                + ", to='" + to + '\''
-                + ", logs=" + logs
-                + ", logsBloom='" + logsBloom + '\''
+                + "transactionHash='"
+                + transactionHash
+                + '\''
+                + ", transactionIndex='"
+                + transactionIndex
+                + '\''
+                + ", blockHash='"
+                + blockHash
+                + '\''
+                + ", blockNumber='"
+                + blockNumber
+                + '\''
+                + ", cumulativeGasUsed='"
+                + cumulativeGasUsed
+                + '\''
+                + ", gasUsed='"
+                + gasUsed
+                + '\''
+                + ", contractAddress='"
+                + contractAddress
+                + '\''
+                + ", root='"
+                + root
+                + '\''
+                + ", status='"
+                + status
+                + '\''
+                + ", from='"
+                + from
+                + '\''
+                + ", to='"
+                + to
+                + '\''
+                + ", logs="
+                + logs
+                + ", logsBloom='"
+                + logsBloom
+                + '\''
                 + '}';
     }
 }

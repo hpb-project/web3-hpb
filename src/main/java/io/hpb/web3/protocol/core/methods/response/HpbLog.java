@@ -1,5 +1,5 @@
-package io.hpb.web3.protocol.core.methods.response;
 
+package io.hpb.web3.protocol.core.methods.response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,60 +15,61 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.core.Response;
 
-
 public class HpbLog extends Response<List<HpbLog.LogResult>> {
-
     @Override
     @JsonDeserialize(using = LogResultDeserialiser.class)
     public void setResult(List<LogResult> result) {
         super.setResult(result);
     }
-
     public List<LogResult> getLogs() {
         return getResult();
     }
-
     public interface LogResult<T> {
         T get();
     }
-
     public static class LogObject extends Log implements LogResult<Log> {
-
-        public LogObject() {
+        public LogObject() {}
+        public LogObject(
+                boolean removed,
+                String logIndex,
+                String transactionIndex,
+                String transactionHash,
+                String blockHash,
+                String blockNumber,
+                String address,
+                String data,
+                String type,
+                List<String> topics) {
+            super(
+                    removed,
+                    logIndex,
+                    transactionIndex,
+                    transactionHash,
+                    blockHash,
+                    blockNumber,
+                    address,
+                    data,
+                    type,
+                    topics);
         }
-
-        public LogObject(boolean removed, String logIndex, String transactionIndex,
-                         String transactionHash, String blockHash, String blockNumber,
-                         String address, String data, String type, List<String> topics) {
-            super(removed, logIndex, transactionIndex, transactionHash, blockHash, blockNumber,
-                    address, data, type, topics);
-        }
-
         @Override
         public Log get() {
             return this;
         }
     }
-
     public static class Hash implements LogResult<String> {
         private String value;
-
-        public Hash() {
-        }
-
+        public Hash() {}
         public Hash(String value) {
             this.value = value;
         }
-
         @Override
         public String get() {
             return value;
         }
-
         public void setValue(String value) {
             this.value = value;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -77,31 +78,22 @@ public class HpbLog extends Response<List<HpbLog.LogResult>> {
             if (!(o instanceof Hash)) {
                 return false;
             }
-
             Hash hash = (Hash) o;
-
             return value != null ? value.equals(hash.value) : hash.value == null;
         }
-
         @Override
         public int hashCode() {
             return value != null ? value.hashCode() : 0;
         }
     }
-
-
     public static class LogResultDeserialiser extends JsonDeserializer<List<LogResult>> {
-
         private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
-
         @Override
         public List<LogResult> deserialize(
-                JsonParser jsonParser,
-                DeserializationContext deserializationContext) throws IOException {
-
+                JsonParser jsonParser, DeserializationContext deserializationContext)
+                throws IOException {
             List<LogResult> logResults = new ArrayList<>();
             JsonToken nextToken = jsonParser.nextToken();
-
             if (nextToken == JsonToken.START_OBJECT) {
                 Iterator<LogObject> logObjectIterator =
                         objectReader.readValues(jsonParser, LogObject.class);
@@ -110,7 +102,6 @@ public class HpbLog extends Response<List<HpbLog.LogResult>> {
                 }
             } else if (nextToken == JsonToken.VALUE_STRING) {
                 jsonParser.getValueAsString();
-
                 Iterator<Hash> transactionHashIterator =
                         objectReader.readValues(jsonParser, Hash.class);
                 while (transactionHashIterator.hasNext()) {

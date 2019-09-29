@@ -1,5 +1,5 @@
-package io.hpb.web3.protocol.core.methods.response;
 
+package io.hpb.web3.protocol.core.methods.response;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -12,25 +12,20 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.core.Response;
 
-
 public class HpbGetTransactionReceipt extends Response<TransactionReceipt> {
-
     public Optional<TransactionReceipt> getTransactionReceipt() {
         return Optional.ofNullable(getResult());
     }
-
     public static class ResponseDeserialiser extends JsonDeserializer<TransactionReceipt> {
-
         private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
-
         @Override
         public TransactionReceipt deserialize(
-                JsonParser jsonParser,
-                DeserializationContext deserializationContext) throws IOException {
+                JsonParser jsonParser, DeserializationContext deserializationContext)
+                throws IOException {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 return objectReader.readValue(jsonParser, TransactionReceipt.class);
             } else {
-                return null;  
+                return null; // null is wrapped by Optional in above getter
             }
         }
     }

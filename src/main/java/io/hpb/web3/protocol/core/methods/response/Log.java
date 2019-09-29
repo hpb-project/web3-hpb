@@ -1,11 +1,8 @@
 package io.hpb.web3.protocol.core.methods.response;
-
 import java.math.BigInteger;
 import java.util.List;
 
 import io.hpb.web3.utils.Numeric;
-
-
 public class Log {
     private boolean removed;
     private String logIndex;
@@ -17,13 +14,18 @@ public class Log {
     private String data;
     private String type;
     private List<String> topics;
-
-    public Log() {
-    }
-
-    public Log(boolean removed, String logIndex, String transactionIndex, String transactionHash,
-               String blockHash, String blockNumber, String address, String data, String type,
-               List<String> topics) {
+    public Log() {}
+    public Log(
+            boolean removed,
+            String logIndex,
+            String transactionIndex,
+            String transactionHash,
+            String blockHash,
+            String blockNumber,
+            String address,
+            String data,
+            String type,
+            List<String> topics) {
         this.removed = removed;
         this.logIndex = logIndex;
         this.transactionIndex = transactionIndex;
@@ -35,99 +37,75 @@ public class Log {
         this.type = type;
         this.topics = topics;
     }
-
     public boolean isRemoved() {
         return removed;
     }
-
     public void setRemoved(boolean removed) {
         this.removed = removed;
     }
-
     public BigInteger getLogIndex() {
         return convert(logIndex);
     }
-
     public String getLogIndexRaw() {
         return logIndex;
     }
-
     public void setLogIndex(String logIndex) {
         this.logIndex = logIndex;
     }
-
     public BigInteger getTransactionIndex() {
         return convert(transactionIndex);
     }
-
     public String getTransactionIndexRaw() {
         return transactionIndex;
     }
-
     public void setTransactionIndex(String transactionIndex) {
         this.transactionIndex = transactionIndex;
     }
-
     public String getTransactionHash() {
         return transactionHash;
     }
-
     public void setTransactionHash(String transactionHash) {
         this.transactionHash = transactionHash;
     }
-
     public String getBlockHash() {
         return blockHash;
     }
-
     public void setBlockHash(String blockHash) {
         this.blockHash = blockHash;
     }
-
     public BigInteger getBlockNumber() {
         return convert(blockNumber);
     }
-
     public String getBlockNumberRaw() {
         return blockNumber;
     }
-
     public void setBlockNumber(String blockNumber) {
         this.blockNumber = blockNumber;
     }
-
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
-
     public String getData() {
         return data;
     }
-
     public void setData(String data) {
         this.data = data;
     }
-
     public String getType() {
         return type;
     }
-
     public void setType(String type) {
         this.type = type;
     }
-
     public List<String> getTopics() {
         return topics;
     }
-
     public void setTopics(List<String> topics) {
         this.topics = topics;
     }
-
     private BigInteger convert(String value) {
         if (value != null) {
             return Numeric.decodeQuantity(value);
@@ -135,7 +113,6 @@ public class Log {
             return null;
         }
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -144,14 +121,13 @@ public class Log {
         if (!(o instanceof Log)) {
             return false;
         }
-
         Log log = (Log) o;
-
         if (isRemoved() != log.isRemoved()) {
             return false;
         }
         if (getLogIndexRaw() != null
-                ? !getLogIndexRaw().equals(log.getLogIndexRaw()) : log.getLogIndexRaw() != null) {
+                ? !getLogIndexRaw().equals(log.getLogIndexRaw())
+                : log.getLogIndexRaw() != null) {
             return false;
         }
         if (getTransactionIndexRaw() != null
@@ -165,7 +141,8 @@ public class Log {
             return false;
         }
         if (getBlockHash() != null
-                ? !getBlockHash().equals(log.getBlockHash()) : log.getBlockHash() != null) {
+                ? !getBlockHash().equals(log.getBlockHash())
+                : log.getBlockHash() != null) {
             return false;
         }
         if (getBlockNumberRaw() != null
@@ -174,7 +151,8 @@ public class Log {
             return false;
         }
         if (getAddress() != null
-                ? !getAddress().equals(log.getAddress()) : log.getAddress() != null) {
+                ? !getAddress().equals(log.getAddress())
+                : log.getAddress() != null) {
             return false;
         }
         if (getData() != null ? !getData().equals(log.getData()) : log.getData() != null) {
@@ -185,13 +163,15 @@ public class Log {
         }
         return getTopics() != null ? getTopics().equals(log.getTopics()) : log.getTopics() == null;
     }
-
     @Override
     public int hashCode() {
         int result = (isRemoved() ? 1 : 0);
         result = 31 * result + (getLogIndexRaw() != null ? getLogIndexRaw().hashCode() : 0);
-        result = 31 * result
-                + (getTransactionIndexRaw() != null ? getTransactionIndexRaw().hashCode() : 0);
+        result =
+                31 * result
+                        + (getTransactionIndexRaw() != null
+                                ? getTransactionIndexRaw().hashCode()
+                                : 0);
         result = 31 * result + (getTransactionHash() != null ? getTransactionHash().hashCode() : 0);
         result = 31 * result + (getBlockHash() != null ? getBlockHash().hashCode() : 0);
         result = 31 * result + (getBlockNumberRaw() != null ? getBlockNumberRaw().hashCode() : 0);
@@ -201,20 +181,37 @@ public class Log {
         result = 31 * result + (getTopics() != null ? getTopics().hashCode() : 0);
         return result;
     }
-
     @Override
     public String toString() {
         return "Log{"
-                + "removed=" + removed
-                + ", logIndex='" + logIndex + '\''
-                + ", transactionIndex='" + transactionIndex + '\''
-                + ", transactionHash='" + transactionHash + '\''
-                + ", blockHash='" + blockHash + '\''
-                + ", blockNumber='" + blockNumber + '\''
-                + ", address='" + address + '\''
-                + ", data='" + data + '\''
-                + ", type='" + type + '\''
-                + ", topics=" + topics
+                + "removed="
+                + removed
+                + ", logIndex='"
+                + logIndex
+                + '\''
+                + ", transactionIndex='"
+                + transactionIndex
+                + '\''
+                + ", transactionHash='"
+                + transactionHash
+                + '\''
+                + ", blockHash='"
+                + blockHash
+                + '\''
+                + ", blockNumber='"
+                + blockNumber
+                + '\''
+                + ", address='"
+                + address
+                + '\''
+                + ", data='"
+                + data
+                + '\''
+                + ", type='"
+                + type
+                + '\''
+                + ", topics="
+                + topics
                 + '}';
     }
 }

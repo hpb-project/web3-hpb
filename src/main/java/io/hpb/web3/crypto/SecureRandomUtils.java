@@ -1,27 +1,17 @@
 package io.hpb.web3.crypto;
-
 import java.security.SecureRandom;
-
-
 final class SecureRandomUtils {
-
     private static final SecureRandom SECURE_RANDOM;
-
     static {
         if (isAndroidRuntime()) {
             new LinuxSecureRandom();
         }
         SECURE_RANDOM = new SecureRandom();
     }
-
     static SecureRandom secureRandom() {
         return SECURE_RANDOM;
     }
-
-    
-    
     private static int isAndroid = -1;
-
     static boolean isAndroidRuntime() {
         if (isAndroid == -1) {
             final String runtime = System.getProperty("java.runtime.name");
@@ -29,6 +19,5 @@ final class SecureRandomUtils {
         }
         return isAndroid == 1;
     }
-
-    private SecureRandomUtils() { }
+    private SecureRandomUtils() {}
 }

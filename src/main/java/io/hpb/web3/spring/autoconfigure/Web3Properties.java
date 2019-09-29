@@ -17,10 +17,22 @@ public class Web3Properties {
     private String networkId;
     
     private String logLevel;
+    
+    private String solcCmd;
 
     private Long httpTimeoutSeconds;
+    
+    private boolean includeRawResponse;
 
-    public String getClientAddress() {
+    public boolean isIncludeRawResponse() {
+		return includeRawResponse;
+	}
+
+	public void setIncludeRawResponse(boolean includeRawResponse) {
+		this.includeRawResponse = includeRawResponse;
+	}
+
+	public String getClientAddress() {
         return clientAddress;
     }
 
@@ -28,7 +40,11 @@ public class Web3Properties {
         this.clientAddress = clientAddress;
     }
 
-    public Boolean isAdminClient() {
+    public Boolean getAdminClient() {
+		return adminClient;
+	}
+
+	public Boolean isAdminClient() {
         return adminClient;
     }
 
@@ -44,11 +60,11 @@ public class Web3Properties {
         this.networkId = networkId;
     }
 
-    public Long ghpbttpTimeoutSeconds() {
+    public Long getHttpTimeoutSeconds() {
         return httpTimeoutSeconds;
     }
 
-    public void shpbttpTimeoutSeconds(Long httpTimeoutSeconds) {
+    public void setHttpTimeoutSeconds(Long httpTimeoutSeconds) {
         this.httpTimeoutSeconds = httpTimeoutSeconds;
     }
 
@@ -59,5 +75,14 @@ public class Web3Properties {
 	public void setLogLevel(String logLevel) {
 		this.logLevel = logLevel;
 	}
+
+	public String getSolcCmd() {
+		return solcCmd;
+	}
+
+	public void setSolcCmd(String solcCmd) {
+		this.solcCmd = solcCmd;
+	}
     
+	
 }

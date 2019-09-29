@@ -1,5 +1,4 @@
 package io.hpb.web3.crypto;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,39 +7,36 @@ import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.jcajce.provider.digest.Blake2b;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 
 import io.hpb.web3.utils.Numeric;
-
-
 public class Hash {
-    private Hash() { }
-
-    
+    private Hash() {}
+    public static byte[] hash(byte[] input, String algorithm) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance(algorithm.toUpperCase());
+            return digest.digest(input);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Couldn't find a " + algorithm + " provider", e);
+        }
+    }
     public static String sha3(String hexInput) {
         byte[] bytes = Numeric.hexStringToByteArray(hexInput);
         byte[] result = sha3(bytes);
         return Numeric.toHexString(result);
     }
-
-    
     public static byte[] sha3(byte[] input, int offset, int length) {
         Keccak.DigestKeccak kecc = new Keccak.Digest256();
         kecc.update(input, offset, length);
         return kecc.digest();
     }
-
-    
     public static byte[] sha3(byte[] input) {
         return sha3(input, 0, input.length);
     }
-
-    
     public static String sha3String(String utf8String) {
         return Numeric.toHexString(sha3(utf8String.getBytes(StandardCharsets.UTF_8)));
     }
-
-    
     public static byte[] sha256(byte[] input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -49,7 +45,6 @@ public class Hash {
             throw new RuntimeException("Couldn't find a SHA-256 provider", e);
         }
     }
-
     public static byte[] hmacSha512(byte[] key, byte[] input) {
         HMac hMac = new HMac(new SHA512Digest());
         hMac.init(new KeyParameter(key));
@@ -58,7 +53,6 @@ public class Hash {
         hMac.doFinal(out, 0);
         return out;
     }
-
     public static byte[] sha256hash160(byte[] input) {
         byte[] sha256 = sha256(input);
         RIPEMD160Digest digest = new RIPEMD160Digest();
@@ -66,5 +60,8 @@ public class Hash {
         byte[] out = new byte[20];
         digest.doFinal(out, 0);
         return out;
+    }
+    public static byte[] blake2b256(byte[] input) {
+        return new Blake2b.Blake2b256().digest(input);
     }
 }

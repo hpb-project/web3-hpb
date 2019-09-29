@@ -1,0 +1,12 @@
+package io.hpb.web3.abi.datatypes.primitive;
+import io.hpb.web3.abi.datatypes.Type;
+import io.hpb.web3.abi.datatypes.Utf8String;
+public final class Char extends PrimitiveType<Character> {
+    public Char(char value) {
+        super(value);
+    }
+    @Override
+    public Type toSolidityType() {
+        return new Utf8String(String.valueOf(getValue()));
+    }
+}

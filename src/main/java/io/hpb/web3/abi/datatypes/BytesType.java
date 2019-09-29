@@ -1,28 +1,20 @@
 package io.hpb.web3.abi.datatypes;
-
 import java.util.Arrays;
-
-
-public class BytesType implements Type<byte[]> {
-
+public abstract class BytesType implements Type<byte[]> {
     private byte[] value;
     private String type;
-
     public BytesType(byte[] src, String type) {
         this.value = src;
         this.type = type;
     }
-
     @Override
     public byte[] getValue() {
         return value;
     }
-
     @Override
     public String getTypeAsString() {
         return type;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -31,16 +23,12 @@ public class BytesType implements Type<byte[]> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         BytesType bytesType = (BytesType) o;
-
         if (!Arrays.equals(value, bytesType.value)) {
             return false;
         }
         return type.equals(bytesType.type);
-
     }
-
     @Override
     public int hashCode() {
         int result = Arrays.hashCode(value);

@@ -1,33 +1,18 @@
 package io.hpb.web3.tuples.generated;
-
 import io.hpb.web3.tuples.Tuple;
-
-
 public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> implements Tuple {
     private static final int SIZE = 11;
-
     private final T1 value1;
-
     private final T2 value2;
-
     private final T3 value3;
-
     private final T4 value4;
-
     private final T5 value5;
-
     private final T6 value6;
-
     private final T7 value7;
-
     private final T8 value8;
-
     private final T9 value9;
-
     private final T10 value10;
-
     private final T11 value11;
-
     public Tuple11(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11) {
         this.value1 = value1;
         this.value2 = value2;
@@ -41,56 +26,87 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
         this.value10 = value10;
         this.value11 = value11;
     }
-
+    @Deprecated
     public T1 getValue1() {
         return value1;
     }
-
+    public T1 component1() {
+        return value1;
+    }
+    @Deprecated
     public T2 getValue2() {
         return value2;
     }
-
+    public T2 component2() {
+        return value2;
+    }
+    @Deprecated
     public T3 getValue3() {
         return value3;
     }
-
+    public T3 component3() {
+        return value3;
+    }
+    @Deprecated
     public T4 getValue4() {
         return value4;
     }
-
+    public T4 component4() {
+        return value4;
+    }
+    @Deprecated
     public T5 getValue5() {
         return value5;
     }
-
+    public T5 component5() {
+        return value5;
+    }
+    @Deprecated
     public T6 getValue6() {
         return value6;
     }
-
+    public T6 component6() {
+        return value6;
+    }
+    @Deprecated
     public T7 getValue7() {
         return value7;
     }
-
+    public T7 component7() {
+        return value7;
+    }
+    @Deprecated
     public T8 getValue8() {
         return value8;
     }
-
+    public T8 component8() {
+        return value8;
+    }
+    @Deprecated
     public T9 getValue9() {
         return value9;
     }
-
+    public T9 component9() {
+        return value9;
+    }
+    @Deprecated
     public T10 getValue10() {
         return value10;
     }
-
+    public T10 component10() {
+        return value10;
+    }
+    @Deprecated
     public T11 getValue11() {
         return value11;
     }
-
+    public T11 component11() {
+        return value11;
+    }
     @Override
     public int getSize() {
         return SIZE;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -132,7 +148,6 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
         }
         return value11 != null ? value11.equals(tuple11.value11) : tuple11.value11 == null;
     }
-
     @Override
     public int hashCode() {
         int result = value1.hashCode();
@@ -148,7 +163,6 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
         result = 31 * result + (value11 != null ? value11.hashCode() : 0);
         return result;
     }
-
     @Override
     public String toString() {
         return "Tuple11{" +

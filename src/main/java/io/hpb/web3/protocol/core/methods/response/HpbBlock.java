@@ -1,5 +1,5 @@
-package io.hpb.web3.protocol.core.methods.response;
 
+package io.hpb.web3.protocol.core.methods.response;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -17,19 +17,15 @@ import io.hpb.web3.protocol.ObjectMapperFactory;
 import io.hpb.web3.protocol.core.Response;
 import io.hpb.web3.utils.Numeric;
 
-
 public class HpbBlock extends Response<HpbBlock.Block> {
-
     @Override
     @JsonDeserialize(using = HpbBlock.ResponseDeserialiser.class)
     public void setResult(Block result) {
         super.setResult(result);
     }
-
     public Block getBlock() {
         return getResult();
     }
-
     public static class Block {
         private String number;
         private String hash;
@@ -53,17 +49,30 @@ public class HpbBlock extends Response<HpbBlock.Block> {
         private List<TransactionResult> transactions;
         private List<String> uncles;
         private List<String> sealFields;
-
-        public Block() {
-        }
-
-        public Block(String number, String hash, String parentHash, String nonce,
-                     String sha3Uncles, String logsBloom, String transactionsRoot,
-                     String stateRoot, String receiptsRoot, String author, String miner, 
-                     String mixHash, String difficulty, String totalDifficulty, String extraData, 
-                     String size, String gasLimit, String gasUsed, String timestamp,
-                     List<TransactionResult> transactions, List<String> uncles,
-                     List<String> sealFields) {
+        public Block() {}
+        public Block(
+                String number,
+                String hash,
+                String parentHash,
+                String nonce,
+                String sha3Uncles,
+                String logsBloom,
+                String transactionsRoot,
+                String stateRoot,
+                String receiptsRoot,
+                String author,
+                String miner,
+                String mixHash,
+                String difficulty,
+                String totalDifficulty,
+                String extraData,
+                String size,
+                String gasLimit,
+                String gasUsed,
+                String timestamp,
+                List<TransactionResult> transactions,
+                List<String> uncles,
+                List<String> sealFields) {
             this.number = number;
             this.hash = hash;
             this.parentHash = parentHash;
@@ -87,216 +96,163 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             this.uncles = uncles;
             this.sealFields = sealFields;
         }
-
         public BigInteger getNumber() {
             return Numeric.decodeQuantity(number);
         }
-
         public String getNumberRaw() {
             return number;
         }
-
         public void setNumber(String number) {
             this.number = number;
         }
-
         public String getHash() {
             return hash;
         }
-
         public void setHash(String hash) {
             this.hash = hash;
         }
-
         public String getParentHash() {
             return parentHash;
         }
-
         public void setParentHash(String parentHash) {
             this.parentHash = parentHash;
         }
-
         public BigInteger getNonce() {
             return Numeric.decodeQuantity(nonce);
         }
-
         public String getNonceRaw() {
             return nonce;
         }
-
         public void setNonce(String nonce) {
             this.nonce = nonce;
         }
-
         public String getSha3Uncles() {
             return sha3Uncles;
         }
-
         public void setSha3Uncles(String sha3Uncles) {
             this.sha3Uncles = sha3Uncles;
         }
-
         public String getLogsBloom() {
             return logsBloom;
         }
-
         public void setLogsBloom(String logsBloom) {
             this.logsBloom = logsBloom;
         }
-
         public String getTransactionsRoot() {
             return transactionsRoot;
         }
-
         public void setTransactionsRoot(String transactionsRoot) {
             this.transactionsRoot = transactionsRoot;
         }
-
         public String getStateRoot() {
             return stateRoot;
         }
-
         public void setStateRoot(String stateRoot) {
             this.stateRoot = stateRoot;
         }
-
         public String getReceiptsRoot() {
             return receiptsRoot;
         }
-
         public void setReceiptsRoot(String receiptsRoot) {
             this.receiptsRoot = receiptsRoot;
         }
-
         public String getAuthor() {
             return author;
         }
-
         public void setAuthor(String author) {
             this.author = author;
         }
-
         public String getMiner() {
             return miner;
         }
-
         public void setMiner(String miner) {
             this.miner = miner;
         }
-
         public String getMixHash() {
             return mixHash;
         }
-
         public void setMixHash(String mixHash) {
             this.mixHash = mixHash;
         }
-
         public BigInteger getDifficulty() {
             return Numeric.decodeQuantity(difficulty);
         }
-
         public String getDifficultyRaw() {
             return difficulty;
         }
-
         public void setDifficulty(String difficulty) {
             this.difficulty = difficulty;
         }
-
         public BigInteger getTotalDifficulty() {
             return Numeric.decodeQuantity(totalDifficulty);
         }
-
         public String getTotalDifficultyRaw() {
             return totalDifficulty;
         }
-
         public void setTotalDifficulty(String totalDifficulty) {
             this.totalDifficulty = totalDifficulty;
         }
-
         public String getExtraData() {
             return extraData;
         }
-
         public void setExtraData(String extraData) {
             this.extraData = extraData;
         }
-
         public BigInteger getSize() {
-            return Numeric.decodeQuantity(size);
+            return size != null ? Numeric.decodeQuantity(size) : BigInteger.ZERO;
         }
-
         public String getSizeRaw() {
             return size;
         }
-
         public void setSize(String size) {
             this.size = size;
         }
-
         public BigInteger getGasLimit() {
             return Numeric.decodeQuantity(gasLimit);
         }
-
         public String getGasLimitRaw() {
             return gasLimit;
         }
-
         public void setGasLimit(String gasLimit) {
             this.gasLimit = gasLimit;
         }
-
         public BigInteger getGasUsed() {
             return Numeric.decodeQuantity(gasUsed);
         }
-
         public String getGasUsedRaw() {
             return gasUsed;
         }
-
         public void setGasUsed(String gasUsed) {
             this.gasUsed = gasUsed;
         }
-
         public BigInteger getTimestamp() {
             return Numeric.decodeQuantity(timestamp);
         }
-
         public String getTimestampRaw() {
             return timestamp;
         }
-
         public void setTimestamp(String timestamp) {
             this.timestamp = timestamp;
         }
-
         public List<TransactionResult> getTransactions() {
             return transactions;
         }
-
         @JsonDeserialize(using = ResultTransactionDeserialiser.class)
         public void setTransactions(List<TransactionResult> transactions) {
             this.transactions = transactions;
         }
-
         public List<String> getUncles() {
             return uncles;
         }
-
         public void setUncles(List<String> uncles) {
             this.uncles = uncles;
         }
-
         public List<String> getSealFields() {
             return sealFields;
         }
-
         public void setSealFields(List<String> sealFields) {
             this.sealFields = sealFields;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -305,11 +261,10 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             if (!(o instanceof Block)) {
                 return false;
             }
-
             Block block = (Block) o;
-
             if (getNumberRaw() != null
-                    ? !getNumberRaw().equals(block.getNumberRaw()) : block.getNumberRaw() != null) {
+                    ? !getNumberRaw().equals(block.getNumberRaw())
+                    : block.getNumberRaw() != null) {
                 return false;
             }
             if (getHash() != null ? !getHash().equals(block.getHash()) : block.getHash() != null) {
@@ -321,7 +276,8 @@ public class HpbBlock extends Response<HpbBlock.Block> {
                 return false;
             }
             if (getNonceRaw() != null
-                    ? !getNonceRaw().equals(block.getNonceRaw()) : block.getNonceRaw() != null) {
+                    ? !getNonceRaw().equals(block.getNonceRaw())
+                    : block.getNonceRaw() != null) {
                 return false;
             }
             if (getSha3Uncles() != null
@@ -350,15 +306,18 @@ public class HpbBlock extends Response<HpbBlock.Block> {
                 return false;
             }
             if (getAuthor() != null
-                    ? !getAuthor().equals(block.getAuthor()) : block.getAuthor() != null) {
+                    ? !getAuthor().equals(block.getAuthor())
+                    : block.getAuthor() != null) {
                 return false;
             }
             if (getMiner() != null
-                    ? !getMiner().equals(block.getMiner()) : block.getMiner() != null) {
+                    ? !getMiner().equals(block.getMiner())
+                    : block.getMiner() != null) {
                 return false;
             }
             if (getMixHash() != null
-                    ? !getMixHash().equals(block.getMixHash()) : block.getMixHash() != null) {
+                    ? !getMixHash().equals(block.getMixHash())
+                    : block.getMixHash() != null) {
                 return false;
             }
             if (getDifficultyRaw() != null
@@ -402,13 +361,14 @@ public class HpbBlock extends Response<HpbBlock.Block> {
                 return false;
             }
             if (getUncles() != null
-                    ? !getUncles().equals(block.getUncles()) : block.getUncles() != null) {
+                    ? !getUncles().equals(block.getUncles())
+                    : block.getUncles() != null) {
                 return false;
             }
             return getSealFields() != null
-                    ? getSealFields().equals(block.getSealFields()) : block.getSealFields() == null;
+                    ? getSealFields().equals(block.getSealFields())
+                    : block.getSealFields() == null;
         }
-
         @Override
         public int hashCode() {
             int result = getNumberRaw() != null ? getNumberRaw().hashCode() : 0;
@@ -417,16 +377,22 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             result = 31 * result + (getNonceRaw() != null ? getNonceRaw().hashCode() : 0);
             result = 31 * result + (getSha3Uncles() != null ? getSha3Uncles().hashCode() : 0);
             result = 31 * result + (getLogsBloom() != null ? getLogsBloom().hashCode() : 0);
-            result = 31 * result
-                    + (getTransactionsRoot() != null ? getTransactionsRoot().hashCode() : 0);
+            result =
+                    31 * result
+                            + (getTransactionsRoot() != null
+                                    ? getTransactionsRoot().hashCode()
+                                    : 0);
             result = 31 * result + (getStateRoot() != null ? getStateRoot().hashCode() : 0);
             result = 31 * result + (getReceiptsRoot() != null ? getReceiptsRoot().hashCode() : 0);
             result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
             result = 31 * result + (getMiner() != null ? getMiner().hashCode() : 0);
             result = 31 * result + (getMixHash() != null ? getMixHash().hashCode() : 0);
             result = 31 * result + (getDifficultyRaw() != null ? getDifficultyRaw().hashCode() : 0);
-            result = 31 * result
-                    + (getTotalDifficultyRaw() != null ? getTotalDifficultyRaw().hashCode() : 0);
+            result =
+                    31 * result
+                            + (getTotalDifficultyRaw() != null
+                                    ? getTotalDifficultyRaw().hashCode()
+                                    : 0);
             result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
             result = 31 * result + (getSizeRaw() != null ? getSizeRaw().hashCode() : 0);
             result = 31 * result + (getGasLimitRaw() != null ? getGasLimitRaw().hashCode() : 0);
@@ -438,30 +404,22 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             return result;
         }
     }
-
     public interface TransactionResult<T> {
         T get();
     }
-
     public static class TransactionHash implements TransactionResult<String> {
         private String value;
-
-        public TransactionHash() {
-        }
-
+        public TransactionHash() {}
         public TransactionHash(String value) {
             this.value = value;
         }
-
         @Override
         public String get() {
             return value;
         }
-
         public void setValue(String value) {
             this.value = value;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -470,50 +428,68 @@ public class HpbBlock extends Response<HpbBlock.Block> {
             if (!(o instanceof TransactionHash)) {
                 return false;
             }
-
             TransactionHash that = (TransactionHash) o;
-
             return value != null ? value.equals(that.value) : that.value == null;
         }
-
         @Override
         public int hashCode() {
             return value != null ? value.hashCode() : 0;
         }
     }
-
     public static class TransactionObject extends Transaction
             implements TransactionResult<Transaction> {
-        public TransactionObject() {
+        public TransactionObject() {}
+        public TransactionObject(
+                String hash,
+                String nonce,
+                String blockHash,
+                String blockNumber,
+                String transactionIndex,
+                String from,
+                String to,
+                String value,
+                String gasPrice,
+                String gas,
+                String input,
+                String creates,
+                String publicKey,
+                String raw,
+                String r,
+                String s,
+                int v) {
+            super(
+                    hash,
+                    nonce,
+                    blockHash,
+                    blockNumber,
+                    transactionIndex,
+                    from,
+                    to,
+                    value,
+                    gas,
+                    gasPrice,
+                    input,
+                    creates,
+                    publicKey,
+                    raw,
+                    r,
+                    s,
+                    v);
         }
-
-        public TransactionObject(String hash, String nonce, String blockHash, String blockNumber,
-                                 String transactionIndex, String from, String to, String value,
-                                 String gasPrice, String gas, String input, String creates,
-                                 String publicKey, String raw, String r, String s, int v) {
-            super(hash, nonce, blockHash, blockNumber, transactionIndex, from, to, value,
-                    gasPrice, gas, input, creates, publicKey, raw, r, s, v);
-        }
-
         @Override
         public Transaction get() {
             return this;
         }
     }
-
     public static class ResultTransactionDeserialiser
             extends JsonDeserializer<List<TransactionResult>> {
-
         private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
-
         @Override
         public List<TransactionResult> deserialize(
-                JsonParser jsonParser,
-                DeserializationContext deserializationContext) throws IOException {
-
+                JsonParser jsonParser, DeserializationContext deserializationContext)
+                throws IOException {
             List<TransactionResult> transactionResults = new ArrayList<>();
             JsonToken nextToken = jsonParser.nextToken();
-
             if (nextToken == JsonToken.START_OBJECT) {
                 Iterator<TransactionObject> transactionObjectIterator =
                         objectReader.readValues(jsonParser, TransactionObject.class);
@@ -522,30 +498,25 @@ public class HpbBlock extends Response<HpbBlock.Block> {
                 }
             } else if (nextToken == JsonToken.VALUE_STRING) {
                 jsonParser.getValueAsString();
-
                 Iterator<TransactionHash> transactionHashIterator =
                         objectReader.readValues(jsonParser, TransactionHash.class);
                 while (transactionHashIterator.hasNext()) {
                     transactionResults.add(transactionHashIterator.next());
                 }
             }
-
             return transactionResults;
         }
     }
-
     public static class ResponseDeserialiser extends JsonDeserializer<Block> {
-
         private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
-
         @Override
         public Block deserialize(
-                JsonParser jsonParser,
-                DeserializationContext deserializationContext) throws IOException {
+                JsonParser jsonParser, DeserializationContext deserializationContext)
+                throws IOException {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 return objectReader.readValue(jsonParser, Block.class);
             } else {
-                return null;  
+                return null; // null is wrapped by Optional in above getter
             }
         }
     }
